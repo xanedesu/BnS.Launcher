@@ -1,4 +1,4 @@
-using BNSLauncher.Net;
+﻿using BNSLauncher.Net;
 using BNSLauncher.Net.Exceptions;
 using BNSLauncher.Shared.Providers.Interfaces;
 using BNSLauncher.WebSockets;
@@ -33,8 +33,8 @@ namespace BNSLauncher
         {
             this.textLabel.Text = message;
 
-            this.loginPanel.Visible = false;
-            this.comfirmationCodePanel.Visible = true;
+            this.loginPanel.Hide();
+            this.comfirmationCodePanel.Show();
         }
 
         private void ShowGameLauncherPanel()
