@@ -1,16 +1,39 @@
 ﻿using System.Threading.Tasks;
 using WebSocketSharp;
+using BNSLauncher.Shared.Providers.Interfaces;
+using BNSLauncher.Utils;
+using Newtonsoft.Json.Linq;
 
 namespace BNSLauncher.WebSockets
 {
     class WebSocketClient
     {
+        private static readonly string WS_URL = "wss://launcherbff.ru.4game.com/";
+
+        private IComputerNameProvider computerNameProvider;
+
+        private ILauncherIdProvider launcherIdProvider;
+
+        private IHardwareIdProvider hardwareIdProvider;
+
         private WebSocket _ws;
 
-        public WebSocketClient(string url)
+        public WebSocketClient(IComputerNameProvider computerNameProvider, ILauncherIdProvider launcherIdProvider, IHardwareIdProvider hardwareIdProvider)
         {
-            _ws = new WebSocket(url);
+            this.computerNameProvider = computerNameProvider;
+            this.launcherIdProvider = launcherIdProvider;
+            this.hardwareIdProvider = hardwareIdProvider;
 
+            
+        }
+
+        public void Connect(string accessToken)
+        {
+            string computerName = Base64.Base64Encode(computerNameProvider.Get());
+            string launcherId = launcherIdProvider.Get();
+            string hardwareId = Base64.Base64Encode(hardwareIdProvider.Get());
+
+            _ws = new WebSocket($"{WS_URL}?token={accessToken}&hardware-id={hardwareId}&launcher-id={launcherId}&computer-name={computerName}");
             _ws.Connect();
         }
 

@@ -4,11 +4,15 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using BNSLauncher.Net.Exceptions;
 
 namespace BNSLauncher.Net
 {
     class Request
     {
+        private static readonly string DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36";
+
         private IComputerNameProvider computerNameProvider;
 
         private ILauncherIdProvider launcherIdProvider;
@@ -36,7 +40,7 @@ namespace BNSLauncher.Net
             {
                 using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("POST"), "https://launcherbff.ru.4game.com/connect/token"))
                 {
-                    request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+                    request.Headers.TryAddWithoutValidation("User-Agent", DEFAULT_USER_AGENT);
                     request.Headers.TryAddWithoutValidation("computer-name", computerName);
                     request.Headers.TryAddWithoutValidation("hardware-id", hardwareId);
                     request.Headers.TryAddWithoutValidation("launcher-id", launcherId);
@@ -47,7 +51,50 @@ namespace BNSLauncher.Net
 
                     HttpResponseMessage response = await httpClient.SendAsync(request);
 
-                    return await response.Content.ReadAsStringAsync();
+                    string text = await response.Content.ReadAsStringAsync();
+                    JObject json = JObject.Parse(text);
+
+                    if (json.ContainsKey("error"))
+                    {
+                        string errorDescription = (string)json["error"]["description"];
+
+                        if (json.Value<JObject>("error").ContainsKey("data"))
+                        {
+                            throw new NeedConfirmWithCode(errorDescription, (string)json["error"]["data"]["sessionId"]);
+                        }
+
+                        throw new RequestException(errorDescription);
+                    }
+
+                    return (string)json["access_token"];
+                }
+            }
+        }
+
+        public async Task SendConfirmationCode(string code, string sessionId)
+        {
+            string computerName = Base64.Base64Encode(this.computerNameProvider.Get());
+            string launcherId = this.launcherIdProvider.Get();
+            string hardwareId = Base64.Base64Encode(this.hardwareIdProvider.Get());
+
+            HttpClientHandler handler = new HttpClientHandler();
+
+            handler.AutomaticDecompression = ~DecompressionMethods.None;
+
+            using (HttpClient httpClient = new HttpClient(handler))
+            {
+                using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("POST"), "https://launcherbff.ru.4game.com/api/guard/accesscodes/activate"))
+                {
+                    request.Headers.TryAddWithoutValidation("User-Agent", DEFAULT_USER_AGENT);
+                    request.Headers.TryAddWithoutValidation("Computer-Name", computerName);
+                    request.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
+                    request.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);        
+                    request.Headers.TryAddWithoutValidation("Referer", "https://launcher.ru.4game.com/auth");
+
+                    request.Content = new StringContent("{\"sessionId\":\"SID\",\"code\":\"CODE\"}".Replace("SID", sessionId).Replace("CODE", code));
+                    request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json;charset=UTF-8");
+
+                    await httpClient.SendAsync(request);
                 }
             }
         }
@@ -66,7 +113,7 @@ namespace BNSLauncher.Net
             {
                 using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("POST"), "https://launcherbff.ru.4game.com/connect/token"))
                 {
-                    request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+                    request.Headers.TryAddWithoutValidation("User-Agent", DEFAULT_USER_AGENT);
                     request.Headers.TryAddWithoutValidation("computer-name", computerName);
                     request.Headers.TryAddWithoutValidation("hardware-id", hardwareId);
                     request.Headers.TryAddWithoutValidation("launcher-id", launcherId);
