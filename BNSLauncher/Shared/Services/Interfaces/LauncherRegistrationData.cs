@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Shared.Utils
+namespace BNSLauncher.Shared.Services.Interfaces
 {
     public class LauncherRegistrationData
     {

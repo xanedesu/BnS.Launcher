@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -89,15 +89,15 @@
     <Compile Include="Net\Request.cs" />
     <Compile Include="Shared\Utils\DeleteGameSoftwareInfo.cs" />
     <Compile Include="Shared\Utils\RegisterGameSoftwareInfo.cs" />
-    <Compile Include="Shared\Utils\RegisterSoftwareInfo.cs" />
+    <Compile Include="Shared\Utils\RegisterLauncherSoftwareInfo.cs" />
     <Compile Include="Shared\Utils\RegistryConstants.cs" />
     <Compile Include="Shared\Utils\RegistryHelper.cs" />
     <Compile Include="Shared\Services\Interfaces\ILauncherIdGenarator.cs" />
     <Compile Include="Shared\Services\Interfaces\ILauncherInSystemRegistrator.cs" />
     <Compile Include="Shared\Services\LauncherInWindowsRegistration.cs" />
-    <Compile Include="Shared\Utils\LauncherRegistrationData.cs" />
-    <Compile Include="Shared\Utils\LauncherRegistrationDataUpdate.cs" />
-    <Compile Include="Shared\Utils\LauncherUnregistrationData.cs" />
+    <Compile Include="Shared\Services\Interfaces\LauncherRegistrationData.cs" />
+    <Compile Include="Shared\Services\Interfaces\LauncherRegistrationDataUpdate.cs" />
+    <Compile Include="Shared\Services\Interfaces\LauncherUnregistrationData.cs" />
     <Compile Include="Shared\Services\LauncherIdGenerator.cs" />
     <Compile Include="Shared\Providers\LauncherIdProvider.cs" />
     <Compile Include="Program.cs" />
@@ -133,7 +133,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <Folder Include="Shared\Models\" />
     <Folder Include="WebSockets\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
