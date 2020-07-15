@@ -1,13 +1,13 @@
-﻿using BNSLauncher.Net;
+using BNSLauncher.Net;
+using BNSLauncher.Net.Exceptions;
 using BNSLauncher.Shared.Providers.Interfaces;
 using BNSLauncher.WebSockets;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Windows.Forms;
-using BNSLauncher.Net.Exceptions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BNSLauncher
 {

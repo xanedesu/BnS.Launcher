@@ -36,10 +36,10 @@
             this.textLabel = new System.Windows.Forms.Label();
             this.confirmationCodeTextBox = new System.Windows.Forms.TextBox();
             this.startGamePanel = new System.Windows.Forms.Panel();
-            this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
-            this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.startGameButton = new System.Windows.Forms.Button();
+            this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
+            this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
+            this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.loginPanel.SuspendLayout();
             this.comfirmationCodePanel.SuspendLayout();
             this.startGamePanel.SuspendLayout();
@@ -122,6 +122,16 @@
             this.startGamePanel.TabIndex = 2;
             this.startGamePanel.Visible = false;
             // 
+            // startGameButton
+            // 
+            this.startGameButton.Location = new System.Drawing.Point(153, 67);
+            this.startGameButton.Name = "startGameButton";
+            this.startGameButton.Size = new System.Drawing.Size(75, 23);
+            this.startGameButton.TabIndex = 2;
+            this.startGameButton.Text = "Play";
+            this.startGameButton.UseVisualStyleBackColor = true;
+            this.startGameButton.Click += new System.EventHandler(this.startGameButton_Click);
+            // 
             // clientVersionSelectorPanel
             // 
             this.clientVersionSelectorPanel.Controls.Add(this.x64ClientRadioButton);
@@ -131,6 +141,16 @@
             this.clientVersionSelectorPanel.Name = "clientVersionSelectorPanel";
             this.clientVersionSelectorPanel.Size = new System.Drawing.Size(105, 23);
             this.clientVersionSelectorPanel.TabIndex = 0;
+            // 
+            // x64ClientRadioButton
+            // 
+            this.x64ClientRadioButton.AutoSize = true;
+            this.x64ClientRadioButton.Location = new System.Drawing.Point(60, 3);
+            this.x64ClientRadioButton.Name = "x64ClientRadioButton";
+            this.x64ClientRadioButton.Size = new System.Drawing.Size(42, 17);
+            this.x64ClientRadioButton.TabIndex = 1;
+            this.x64ClientRadioButton.Text = "x64";
+            this.x64ClientRadioButton.UseVisualStyleBackColor = true;
             // 
             // x32ClientRadioButton
             // 
@@ -144,27 +164,7 @@
             this.x32ClientRadioButton.Text = "x32";
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             // 
-            // x64ClientRadioButton
-            // 
-            this.x64ClientRadioButton.AutoSize = true;
-            this.x64ClientRadioButton.Location = new System.Drawing.Point(60, 3);
-            this.x64ClientRadioButton.Name = "x64ClientRadioButton";
-            this.x64ClientRadioButton.Size = new System.Drawing.Size(42, 17);
-            this.x64ClientRadioButton.TabIndex = 1;
-            this.x64ClientRadioButton.Text = "x64";
-            this.x64ClientRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // startGameButton
-            // 
-            this.startGameButton.Location = new System.Drawing.Point(153, 67);
-            this.startGameButton.Name = "startGameButton";
-            this.startGameButton.Size = new System.Drawing.Size(75, 23);
-            this.startGameButton.TabIndex = 2;
-            this.startGameButton.Text = "Play";
-            this.startGameButton.UseVisualStyleBackColor = true;
-            this.startGameButton.Click += new System.EventHandler(this.startGameButton_Click);
-            // 
-            // LoginForm
+            // LauncherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -174,7 +174,8 @@
             this.Controls.Add(this.loginPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "LoginForm";
+            this.Name = "LauncherForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "bns-ru";
             this.loginPanel.ResumeLayout(false);
             this.loginPanel.PerformLayout();

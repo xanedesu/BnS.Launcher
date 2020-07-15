@@ -1,11 +1,11 @@
-﻿using BNSLauncher.Shared.Providers.Interfaces;
+﻿using BNSLauncher.Net.Exceptions;
+using BNSLauncher.Shared.Providers.Interfaces;
 using BNSLauncher.Utils;
+using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using BNSLauncher.Net.Exceptions;
 
 namespace BNSLauncher.Net
 {

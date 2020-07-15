@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
-using WebSocketSharp;
-using BNSLauncher.Shared.Providers.Interfaces;
+﻿using BNSLauncher.Shared.Providers.Interfaces;
 using BNSLauncher.Utils;
-using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using WebSocketSharp;
 
 namespace BNSLauncher.WebSockets
 {
