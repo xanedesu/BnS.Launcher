@@ -45,6 +45,11 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
             this.ws.Connect();
         }
 
+        public void Disconnect()
+        {
+            this.Disconnect();
+        }
+
         private Task<bool> Send(string data)
         {
             TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();

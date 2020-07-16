@@ -22,6 +22,8 @@ namespace BNSLauncher
             var login = (await this.socketHelper.GetGameAccount(masterId)).Login;
             var password = (await this.socketHelper.CreateGameTokenCode(accessToken, masterId, login)).Password;
 
+            this.socketHelper.Disconnect();
+
             return $"/username:{login} /password:{password}";
         }
     }
