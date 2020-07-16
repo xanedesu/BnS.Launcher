@@ -1,4 +1,5 @@
 ﻿using BNSLauncher.Shared.Extensions;
+using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
 using BNSLauncher.Shared.Utils;
@@ -9,7 +10,7 @@ using WebSocketSharp;
 
 namespace BNSLauncher.Shared.Infrastructure.Internet
 {
-    class WebSocketHelper
+    class WebSocketHelper: IWebSocketHelper
     {
         private static readonly string WS_URL = "wss://launcherbff.ru.4game.com/";
 

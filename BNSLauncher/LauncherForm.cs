@@ -4,8 +4,6 @@ using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
 using System;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BNSLauncher
@@ -14,7 +12,7 @@ namespace BNSLauncher
     {
         private WebHelper webHelper;
 
-        private WebSocketHelper socketHelper;
+        private GameLauncher launcher;
 
         private string sessionId;
 
@@ -25,7 +23,7 @@ namespace BNSLauncher
             InitializeComponent();
 
             this.webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
-            this.socketHelper = new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            this.launcher = new GameLauncher(new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider));
         }
 
         private void ShowConfirmationCodePanel(string message)
@@ -84,30 +82,18 @@ namespace BNSLauncher
 
         private async void startGameButton_Click(object sender, EventArgs e)
         {
-            string gameAuthData = await this.GetGameAuthString(this.accessToken);
+            string gameAuthString = await launcher.GetGameAuthString(this.accessToken);
 
             if (x32ClientRadioButton.Checked)
             {
-                Process.Start("C:\\Blade and Soul\\bin\\Client.exe", gameAuthData);
+                Process.Start("C:\\Blade and Soul\\bin\\Client.exe", gameAuthString);
                 return;
             }
 
             if (x64ClientRadioButton.Checked)
             {
-                Process.Start("C:\\Blade and Soul\\bin64\\Client.exe", gameAuthData);
+                Process.Start("C:\\Blade and Soul\\bin64\\Client.exe", gameAuthString);
             }
-        }
-
-        private async Task<string> GetGameAuthString(string accessToken)
-        {
-            string masterId = new JwtSecurityToken(accessToken).Subject;
-
-            this.socketHelper.Connect(accessToken);
-
-            var login = (await this.socketHelper.GetGameAccount(masterId)).Login;
-            var password = (await this.socketHelper.CreateGameTokenCode(accessToken, masterId, login)).Password;
-
-            return $"/username:{login} /password:{password}";
         }
     }
 }

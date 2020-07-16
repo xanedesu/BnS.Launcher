@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BNSLauncher.Shared.Infrastructure.Internet
 {
-    class WebHelper
+    class WebHelper: IWebHelper
     {
         private IComputerNameProvider computerNameProvider;
 
