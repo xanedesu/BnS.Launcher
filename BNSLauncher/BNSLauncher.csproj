@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -70,8 +70,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Net\Exceptions\NeedConfirmWithCode.cs" />
-    <Compile Include="Net\Exceptions\RequestException.cs" />
+    <Compile Include="Shared\Infrastructure\Internet\Exceptions\NeedConfirmWithCode.cs" />
+    <Compile Include="Shared\Infrastructure\Internet\WebSocketHelper.cs" />
+    <Compile Include="Shared\Models\ConfirmCodePayload.cs" />
+    <Compile Include="Shared\Infrastructure\Internet\Interfaces\FetchInit.cs" />
+    <Compile Include="Shared\Infrastructure\Internet\WebHelper.cs" />
+    <Compile Include="Shared\Models\AuthData.cs" />
+    <Compile Include="Shared\Models\CreateGameTokenCodeMessage.cs" />
+    <Compile Include="Shared\Models\GameAccount.cs" />
+    <Compile Include="Shared\Models\GameToken.cs" />
+    <Compile Include="Shared\Models\GetGameAccountMessage.cs" />
+    <Compile Include="Shared\Models\WebSocketMessage.cs" />
+    <Compile Include="Shared\Models\WebSocketResponse.cs" />
     <Compile Include="Utils\Base64.cs" />
     <Compile Include="Shared\Exceptions\BadRegistryPathPart.cs" />
     <Compile Include="Shared\Extensions\StringExtensions.cs" />
@@ -86,7 +96,6 @@
     <Compile Include="Shared\Providers\Interfaces\IComputerNameProvider.cs" />
     <Compile Include="Shared\Providers\Interfaces\IHardwareIdProvider.cs" />
     <Compile Include="Shared\Providers\Interfaces\ILauncherIdProvider.cs" />
-    <Compile Include="Net\Request.cs" />
     <Compile Include="Shared\Utils\DeleteGameSoftwareInfo.cs" />
     <Compile Include="Shared\Utils\RegisterGameSoftwareInfo.cs" />
     <Compile Include="Shared\Utils\RegisterLauncherSoftwareInfo.cs" />
@@ -133,7 +142,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Shared\Models\" />
     <Folder Include="WebSockets\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,7 @@
-﻿using BNSLauncher.Net;
-using BNSLauncher.Net.Exceptions;
+﻿using BNSLauncher.Shared.Infrastructure.Internet;
+using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
+using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
-using BNSLauncher.WebSockets;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,9 +12,9 @@ namespace BNSLauncher
 {
     public partial class LauncherForm : Form
     {
-        private Request _request;
+        private WebHelper webHelper;
 
-        private WebSocketClient _ws;
+        private WebSocketHelper socketHelper;
 
         private string sessionId;
 
@@ -25,8 +24,8 @@ namespace BNSLauncher
         {
             InitializeComponent();
 
-            this._request = new Request(computerNameProvider, launcherIdProvider, hardwareIdProvider);
-            this._ws = new WebSocketClient(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            this.webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            this.socketHelper = new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
         }
 
         private void ShowConfirmationCodePanel(string message)
@@ -48,7 +47,9 @@ namespace BNSLauncher
         {
             try
             {
-                this.accessToken = await this._request.Auth(usernameTextBox.Text, passwordTextBox.Text);
+                AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
+                this.accessToken = authData.AccessToken;
+
                 this.ShowGameLauncherPanel();
             }
             catch (Exception ex)
@@ -72,9 +73,11 @@ namespace BNSLauncher
         {
             if (confirmationCodeTextBox.TextLength == 6)
             {
-                await this._request.SendConfirmationCode(confirmationCodeTextBox.Text, this.sessionId);
+                await this.webHelper.SendVerificationCode(this.sessionId, confirmationCodeTextBox.Text);
 
-                this.accessToken = await this._request.Auth(usernameTextBox.Text, passwordTextBox.Text);
+                AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
+                this.accessToken = authData.AccessToken;
+
                 this.ShowGameLauncherPanel();
             }
         }
@@ -99,32 +102,12 @@ namespace BNSLauncher
         {
             string masterId = new JwtSecurityToken(accessToken).Subject;
 
-            this._ws.Connect(accessToken);
+            this.socketHelper.Connect(accessToken);
 
-            string gameAccountString = await this._ws.Send(
-                "{\"method\":\"getGameAccount\",\"params\":{\"masterId\":\"MASTER_ID\",\"toPartnerId\":\"bns-ru\"},\"id\": \"UUID\"}"
-                    .Replace("MASTER_ID", masterId)
-                    .Replace("UUID", Guid.NewGuid().ToString())
-            );
+            var login = (await this.socketHelper.GetGameAccount(masterId)).Login;
+            var password = (await this.socketHelper.CreateGameTokenCode(accessToken, masterId, login)).Password;
 
-            JObject gameAccountObject = JObject.Parse(gameAccountString);
-
-            string login = (string)gameAccountObject["result"][0]["login"];
-
-            string gameTokenString = await this._ws.Send(
-                "{\"method\":\"createGameTokenCode\",\"params\":{\"accessToken\":\"TOKEN\",\"ignoreLicenseAcceptance\":false,\"login\":\"LOGIN\",\"masterId\":\"MASTERID\",\"toPartnerId\":\"bns-ru\"},\"id\":\"UUID\"}"
-                    .Replace("TOKEN", accessToken)
-                    .Replace("LOGIN", login)
-                    .Replace("MASTERID", masterId)
-                    .Replace("UUID", Guid.NewGuid().ToString())
-            );
-
-            JObject gameTokenObject = JObject.Parse(gameTokenString);
-
-            string username = (string)gameTokenObject["result"]["login"];
-            string password = (string)gameTokenObject["result"]["password"];
-
-            return $"/username:{username} /password:{password}";
+            return $"/username:{login} /password:{password}";
         }
     }
 }

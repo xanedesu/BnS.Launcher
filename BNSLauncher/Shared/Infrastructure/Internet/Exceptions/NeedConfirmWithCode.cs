@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Net.Exceptions
+namespace BNSLauncher.Shared.Infrastructure.Internet.Exceptions
 {
     class NeedConfirmWithCode : Exception
     {
