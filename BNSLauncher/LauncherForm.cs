@@ -32,6 +32,7 @@ namespace BNSLauncher
 
             this.loginPanel.Hide();
             this.comfirmationCodePanel.Show();
+            this.confirmationCodeTextBox.Select();
         }
 
         private void ShowGameLauncherPanel()
@@ -39,6 +40,7 @@ namespace BNSLauncher
             this.loginPanel.Hide();
             this.comfirmationCodePanel.Hide();
             this.startGamePanel.Show();
+            this.startGameButton.Select();
         }
 
         private async void loginButton_Click(object sender, EventArgs e)
