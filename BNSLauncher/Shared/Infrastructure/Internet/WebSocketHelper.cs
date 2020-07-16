@@ -47,7 +47,7 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
 
         public void Disconnect()
         {
-            this.Disconnect();
+            this.ws.Close();
         }
 
         private Task<bool> Send(string data)
