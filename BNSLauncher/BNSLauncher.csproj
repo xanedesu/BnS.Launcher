@@ -7,7 +7,7 @@
     <ProjectGuid>{2243D597-3CD7-4015-9EE7-4B04AF7B9787}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BNSLauncher</RootNamespace>
-    <AssemblyName>BNSLauncher</AssemblyName>
+    <AssemblyName>bns</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -34,6 +34,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>BNSLauncherKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>4game_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -70,7 +79,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameLauncher.cs" />
+    <Compile Include="Models\Config.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Utils\ConfigLoader.cs" />
+    <Compile Include="Utils\GameLauncher.cs" />
+    <Compile Include="Models\Auth.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Exceptions\NeedConfirmWithCode.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebHelper.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebSocketHelper.cs" />
@@ -129,6 +142,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.manifest" />
+    <None Include="BNSLauncherKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -143,6 +157,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="4game_icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

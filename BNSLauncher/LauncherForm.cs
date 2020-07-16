@@ -1,9 +1,14 @@
-﻿using BNSLauncher.Shared.Infrastructure.Internet;
+﻿using BNSLauncher.Models;
+using BNSLauncher.Shared.Infrastructure.Internet;
 using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
 using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
+using BNSLauncher.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BNSLauncher
@@ -16,7 +21,9 @@ namespace BNSLauncher
 
         private string sessionId;
 
-        private string accessToken;
+        private Dictionary<string, Auth> users;
+
+        private string pathToGameFolder;
 
         public LauncherForm(IComputerNameProvider computerNameProvider, ILauncherIdProvider launcherIdProvider, IHardwareIdProvider hardwareIdProvider)
         {
@@ -24,6 +31,35 @@ namespace BNSLauncher
 
             this.webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
             this.launcher = new GameLauncher(new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider));
+
+            ConfigLoader config = ConfigLoader.LoadConfig();
+
+            this.pathToGameFolder = config.GetPathToGame();
+            this.users = config.GetUsers();
+
+            if (this.users.Count > 0)
+            {
+                foreach (var user in this.users)
+                {
+                    this.accountsListBox.Items.Add(user.Key);
+                }
+
+                this.ShowGameLauncherPanel();
+            }
+
+            this.accountsListBox.SelectedItem = config.GetPrefferedAccount();
+        }
+
+        private void ShowLoginPanel()
+        {
+            this.loginPanel.Show();
+            this.comfirmationCodePanel.Hide();
+            this.startGamePanel.Hide();
+
+            this.usernameTextBox.Select();
+
+            this.usernameTextBox.Text = "";
+            this.passwordTextBox.Text = "";
         }
 
         private void ShowConfirmationCodePanel(string message)
@@ -40,6 +76,7 @@ namespace BNSLauncher
             this.loginPanel.Hide();
             this.comfirmationCodePanel.Hide();
             this.startGamePanel.Show();
+
             this.startGameButton.Select();
         }
 
@@ -48,7 +85,7 @@ namespace BNSLauncher
             try
             {
                 AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                this.accessToken = authData.AccessToken;
+                this.AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
 
                 this.ShowGameLauncherPanel();
             }
@@ -76,26 +113,114 @@ namespace BNSLauncher
                 await this.webHelper.SendVerificationCode(this.sessionId, confirmationCodeTextBox.Text);
 
                 AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                this.accessToken = authData.AccessToken;
+                this.AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
 
                 this.ShowGameLauncherPanel();
             }
         }
 
+        private void addAnotherAccountButton_Click(object sender, EventArgs e)
+        {
+            this.ShowLoginPanel();
+        }
+
+        private void updatePathToGameButton_Click(object sender, EventArgs e)
+        {
+            this.pathToGameFolder = this.SelectGameFolder();
+            ConfigLoader.SavePathToGame(this.pathToGameFolder);
+        }
+
         private async void startGameButton_Click(object sender, EventArgs e)
         {
-            string gameAuthString = await launcher.GetGameAuthString(this.accessToken);
+            string selectedUser = (string)this.accountsListBox.SelectedItem;
+            if (string.IsNullOrEmpty(selectedUser))
+            {
+                MessageBox.Show("Select account.");
+                return;
+            }
+
+            this.users.TryGetValue(selectedUser, out Auth user);
+
+            long validTo = new JwtSecurityToken(user.AccessToken).ValidTo.Ticks;
+            if (DateTime.Now.Ticks > validTo)
+            {
+                this.users.Remove(selectedUser);
+
+                AuthData authData = await this.webHelper.RefreshTokens(user.RefreshToken);
+                this.AddAccount(selectedUser, authData.AccessToken, authData.RefreshToken);
+            }
+
+            string gameAuthString = await launcher.GetGameAuthString(user.AccessToken);
 
             if (x32ClientRadioButton.Checked)
             {
-                Process.Start("C:\\Blade and Soul\\bin\\Client.exe", gameAuthString);
+                this.RunGame("bin", gameAuthString);
                 return;
             }
 
             if (x64ClientRadioButton.Checked)
             {
-                Process.Start("C:\\Blade and Soul\\bin64\\Client.exe", gameAuthString);
+                this.RunGame("bin64", gameAuthString);
             }
+        }
+
+        private void accountsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ConfigLoader.SavePrefferedAccount((string)this.accountsListBox.SelectedItem);
+        }
+
+        private void RunGame(string clientVersion, string gameAuthString)
+        {
+            if (string.IsNullOrEmpty(this.pathToGameFolder))
+            {
+                this.pathToGameFolder = this.SelectGameFolder();
+                ConfigLoader.SavePathToGame(pathToGameFolder);
+            }
+
+            string pathToClientExe = Path.Combine(this.pathToGameFolder, clientVersion, "Client.exe");
+            if (File.Exists(pathToClientExe))
+            {
+                Process.Start(pathToClientExe, gameAuthString);
+
+                if (this.autoCloseLauncherCheckbox.Checked)
+                {
+                    Application.Exit();
+                }
+
+                return;
+            }
+
+            MessageBox.Show("Invalid path to game.");
+        }
+        
+        private string SelectGameFolder()
+        {
+            using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog())
+            {
+                DialogResult dialogResult = folderBrowser.ShowDialog();
+
+                if (dialogResult == DialogResult.OK && !string.IsNullOrEmpty(folderBrowser.SelectedPath))
+                {
+                    return folderBrowser.SelectedPath;
+                }
+
+                throw new Exception("Invalid path to game game.");
+            }
+        }
+    
+        private void AddAccount(string username, string accessToken, string refreshToken)
+        {
+            this.accountsListBox.Items.Add(username);
+            this.accountsListBox.SelectedItem = username;
+
+            Auth user = new Auth()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
+            ConfigLoader.SaveAccount(username, user);
+            this.users.Add(username, user);
         }
     }
 }

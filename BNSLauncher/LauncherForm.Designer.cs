@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.loginButton = new System.Windows.Forms.Button();
@@ -36,10 +37,14 @@
             this.textLabel = new System.Windows.Forms.Label();
             this.confirmationCodeTextBox = new System.Windows.Forms.TextBox();
             this.startGamePanel = new System.Windows.Forms.Panel();
+            this.addAnotherAccountButton = new System.Windows.Forms.Button();
+            this.accountsListBox = new System.Windows.Forms.ComboBox();
             this.startGameButton = new System.Windows.Forms.Button();
             this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
             this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
+            this.updatePathToGameButton = new System.Windows.Forms.Button();
+            this.autoCloseLauncherCheckbox = new System.Windows.Forms.CheckBox();
             this.loginPanel.SuspendLayout();
             this.comfirmationCodePanel.SuspendLayout();
             this.startGamePanel.SuspendLayout();
@@ -112,6 +117,10 @@
             // 
             // startGamePanel
             // 
+            this.startGamePanel.Controls.Add(this.autoCloseLauncherCheckbox);
+            this.startGamePanel.Controls.Add(this.updatePathToGameButton);
+            this.startGamePanel.Controls.Add(this.addAnotherAccountButton);
+            this.startGamePanel.Controls.Add(this.accountsListBox);
             this.startGamePanel.Controls.Add(this.startGameButton);
             this.startGamePanel.Controls.Add(this.clientVersionSelectorPanel);
             this.startGamePanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -121,6 +130,26 @@
             this.startGamePanel.Size = new System.Drawing.Size(240, 99);
             this.startGamePanel.TabIndex = 2;
             this.startGamePanel.Visible = false;
+            // 
+            // addAnotherAccountButton
+            // 
+            this.addAnotherAccountButton.Location = new System.Drawing.Point(194, 6);
+            this.addAnotherAccountButton.Name = "addAnotherAccountButton";
+            this.addAnotherAccountButton.Size = new System.Drawing.Size(34, 23);
+            this.addAnotherAccountButton.TabIndex = 4;
+            this.addAnotherAccountButton.Text = "Add";
+            this.addAnotherAccountButton.UseVisualStyleBackColor = true;
+            this.addAnotherAccountButton.Click += new System.EventHandler(this.addAnotherAccountButton_Click);
+            // 
+            // accountsListBox
+            // 
+            this.accountsListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.accountsListBox.FormattingEnabled = true;
+            this.accountsListBox.Location = new System.Drawing.Point(9, 7);
+            this.accountsListBox.Name = "accountsListBox";
+            this.accountsListBox.Size = new System.Drawing.Size(179, 21);
+            this.accountsListBox.TabIndex = 3;
+            this.accountsListBox.SelectedIndexChanged += new System.EventHandler(this.accountsListBox_SelectedIndexChanged);
             // 
             // startGameButton
             // 
@@ -164,6 +193,26 @@
             this.x32ClientRadioButton.Text = "x32";
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             // 
+            // updatePathToGameButton
+            // 
+            this.updatePathToGameButton.Location = new System.Drawing.Point(153, 38);
+            this.updatePathToGameButton.Name = "updatePathToGameButton";
+            this.updatePathToGameButton.Size = new System.Drawing.Size(75, 23);
+            this.updatePathToGameButton.TabIndex = 5;
+            this.updatePathToGameButton.Text = "Update path";
+            this.updatePathToGameButton.UseVisualStyleBackColor = true;
+            this.updatePathToGameButton.Click += new System.EventHandler(this.updatePathToGameButton_Click);
+            // 
+            // autoCloseLauncherCheckbox
+            // 
+            this.autoCloseLauncherCheckbox.AutoSize = true;
+            this.autoCloseLauncherCheckbox.Location = new System.Drawing.Point(9, 41);
+            this.autoCloseLauncherCheckbox.Name = "autoCloseLauncherCheckbox";
+            this.autoCloseLauncherCheckbox.Size = new System.Drawing.Size(124, 17);
+            this.autoCloseLauncherCheckbox.TabIndex = 6;
+            this.autoCloseLauncherCheckbox.Text = "Auto close Launcher";
+            this.autoCloseLauncherCheckbox.UseVisualStyleBackColor = true;
+            // 
             // LauncherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -173,6 +222,7 @@
             this.Controls.Add(this.comfirmationCodePanel);
             this.Controls.Add(this.loginPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "LauncherForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -182,6 +232,7 @@
             this.comfirmationCodePanel.ResumeLayout(false);
             this.comfirmationCodePanel.PerformLayout();
             this.startGamePanel.ResumeLayout(false);
+            this.startGamePanel.PerformLayout();
             this.clientVersionSelectorPanel.ResumeLayout(false);
             this.clientVersionSelectorPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -203,6 +254,10 @@
         private System.Windows.Forms.Button startGameButton;
         private System.Windows.Forms.Panel clientVersionSelectorPanel;
         private System.Windows.Forms.RadioButton x32ClientRadioButton;
+        private System.Windows.Forms.ComboBox accountsListBox;
+        private System.Windows.Forms.Button addAnotherAccountButton;
+        private System.Windows.Forms.Button updatePathToGameButton;
+        private System.Windows.Forms.CheckBox autoCloseLauncherCheckbox;
     }
 }
 
