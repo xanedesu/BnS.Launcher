@@ -53,7 +53,7 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                     request.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
 
                     request.Content = new StringContent(init.Data);
-                    request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(init.ContentType); // "application/json;charset=UTF-8"
+                    request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(init.ContentType);
 
                     HttpResponseMessage response = await httpClient.SendAsync(request);
 

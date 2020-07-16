@@ -204,7 +204,7 @@ namespace BNSLauncher
                     return folderBrowser.SelectedPath;
                 }
 
-                throw new Exception("Invalid path to game game.");
+                throw new Exception("Invalid path to game.");
             }
         }
     
