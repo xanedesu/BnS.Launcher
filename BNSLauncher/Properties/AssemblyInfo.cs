@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанных со сборкой.
-[assembly: AssemblyTitle("BNSLauncher")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Blade & Soul Launcher")]
+[assembly: AssemblyDescription("A simple BnS launcher that tries to be like an Innova launcher.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Unlakki")]
 [assembly: AssemblyProduct("BNSLauncher")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
