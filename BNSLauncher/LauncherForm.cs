@@ -1,9 +1,9 @@
-﻿using BNSLauncher.Models;
+﻿using BNSLauncher.Core.Models;
+using BNSLauncher.Core.Utils;
 using BNSLauncher.Shared.Infrastructure.Internet;
 using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
 using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
-using BNSLauncher.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -126,8 +126,12 @@ namespace BNSLauncher
 
         private void updatePathToGameButton_Click(object sender, EventArgs e)
         {
-            this.pathToGameFolder = this.SelectGameFolder();
-            ConfigLoader.SavePathToGame(this.pathToGameFolder);
+            try
+            {
+                this.pathToGameFolder = this.SelectGameFolder();
+                ConfigLoader.SavePathToGame(this.pathToGameFolder);
+            }
+            catch { }
         }
 
         private async void startGameButton_Click(object sender, EventArgs e)
@@ -177,20 +181,27 @@ namespace BNSLauncher
                 ConfigLoader.SavePathToGame(pathToGameFolder);
             }
 
-            string pathToClientExe = Path.Combine(this.pathToGameFolder, clientVersion, "Client.exe");
-            if (File.Exists(pathToClientExe))
+            string cliArgs = "";
+
+            string pathToParams = Path.Combine(Directory.GetCurrentDirectory(), "params");
+            if (File.Exists(pathToParams))
             {
-                Process.Start(pathToClientExe, gameAuthString);
+                cliArgs = File.ReadAllText(pathToParams);
+            }
 
-                if (this.autoCloseLauncherCheckbox.Checked)
-                {
-                    Application.Exit();
-                }
-
+            string pathToClientExe = Path.Combine(this.pathToGameFolder, clientVersion, "Client.exe");
+            if (!File.Exists(pathToClientExe))
+            {
+                MessageBox.Show("Invalid path to game.");
                 return;
             }
 
-            MessageBox.Show("Invalid path to game.");
+            Process.Start(pathToClientExe, $"{gameAuthString} {cliArgs}");
+
+            if (this.autoCloseLauncherCheckbox.Checked)
+            {
+                Application.Exit();
+            }   
         }
         
         private string SelectGameFolder()

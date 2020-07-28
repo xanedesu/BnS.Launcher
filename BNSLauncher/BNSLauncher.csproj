@@ -79,11 +79,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Config.cs" />
-    <Compile Include="Models\Account.cs" />
-    <Compile Include="Utils\ConfigLoader.cs" />
-    <Compile Include="Utils\GameLauncher.cs" />
-    <Compile Include="Models\Auth.cs" />
+    <Compile Include="Core\Interfaces\IGameLauncher.cs" />
+    <Compile Include="Core\Models\Config.cs" />
+    <Compile Include="Core\Models\Account.cs" />
+    <Compile Include="Core\Utils\ConfigLoader.cs" />
+    <Compile Include="Core\Utils\GameLauncher.cs" />
+    <Compile Include="Core\Models\Auth.cs" />
+    <Compile Include="Shared\Infrastructure\Internet\Exceptions\FetchException.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Exceptions\NeedConfirmWithCode.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebHelper.cs" />
     <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebSocketHelper.cs" />
@@ -98,7 +100,7 @@
     <Compile Include="Shared\Models\GetGameAccountMessage.cs" />
     <Compile Include="Shared\Models\WebSocketMessage.cs" />
     <Compile Include="Shared\Models\WebSocketResponse.cs" />
-    <Compile Include="Shared\Utils\Base64.cs" />
+    <Compile Include="Core\Utils\Base64.cs" />
     <Compile Include="Shared\Exceptions\BadRegistryPathPart.cs" />
     <Compile Include="Shared\Extensions\StringExtensions.cs" />
     <Compile Include="LauncherForm.cs">
@@ -160,5 +162,6 @@
   <ItemGroup>
     <Content Include="4game_icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

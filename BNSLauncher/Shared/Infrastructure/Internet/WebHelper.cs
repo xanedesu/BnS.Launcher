@@ -1,8 +1,8 @@
-﻿using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
+using BNSLauncher.Core.Utils;
+using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
 using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
-using BNSLauncher.Shared.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

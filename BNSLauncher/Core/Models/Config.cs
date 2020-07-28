@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace BNSLauncher.Models
+namespace BNSLauncher.Core.Models
 {
     class Config
     {

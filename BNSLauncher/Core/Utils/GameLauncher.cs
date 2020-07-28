@@ -1,10 +1,11 @@
 ﻿using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using BNSLauncher.Core.Interfaces;
 
-namespace BNSLauncher.Utils
+namespace BNSLauncher.Core.Utils
 {
-    class GameLauncher
+    class GameLauncher : IGameLauncher
     {
         private IWebSocketHelper socketHelper;
 
@@ -17,14 +18,14 @@ namespace BNSLauncher.Utils
         {
             string masterId = new JwtSecurityToken(accessToken).Subject;
 
-            this.socketHelper.Connect(accessToken);
+            socketHelper.Connect(accessToken);
 
-            var login = (await this.socketHelper.GetGameAccount(masterId)).Login;
-            var password = (await this.socketHelper.CreateGameTokenCode(accessToken, masterId, login)).Password;
+            string username = (await socketHelper.GetGameAccount(masterId)).Login;
+            string password = (await socketHelper.CreateGameTokenCode(accessToken, masterId, username)).Password;
 
-            this.socketHelper.Disconnect();
+            socketHelper.Disconnect();
 
-            return $"/username:{login} /password:{password}";
+            return $"/username:{username} /password:{password}";
         }
     }
 }
