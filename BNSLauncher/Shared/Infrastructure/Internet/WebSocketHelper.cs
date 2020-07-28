@@ -1,8 +1,8 @@
-﻿using BNSLauncher.Shared.Extensions;
+﻿using BNSLauncher.Core.Utils;
+using BNSLauncher.Shared.Extensions;
 using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
 using BNSLauncher.Shared.Providers.Interfaces;
-using BNSLauncher.Shared.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ using WebSocketSharp;
 
 namespace BNSLauncher.Shared.Infrastructure.Internet
 {
-    class WebSocketHelper: IWebSocketHelper
+    class WebSocketHelper: IWebSocketHelper, IDisposable
     {
         private static readonly string WS_URL = "wss://launcherbff.ru.4game.com/";
 
@@ -41,20 +41,34 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 .AddOrUpdateParameterToUrl("launcher-id", launcherId)
                 .AddOrUpdateParameterToUrl("hardware-id", hardwareId);
 
-            this.ws = new WebSocket(url);
-            this.ws.Connect();
+            ws = new WebSocket(url);
+            ws.Connect();
         }
 
         public void Disconnect()
         {
-            this.ws.Close();
+            ws.Close();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ws.Close();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         private Task<bool> Send(string data)
         {
             TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
 
-            this.ws.SendAsync(data, (bool completed) => source.TrySetResult(completed));
+            ws.SendAsync(data, (bool completed) => source.TrySetResult(completed));
 
             return source.Task;
         }
@@ -63,7 +77,7 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
         {
             TaskCompletionSource<Func<T>> source = new TaskCompletionSource<Func<T>>();
 
-            this.ws.OnMessage += (object sender, MessageEventArgs e) =>
+            ws.OnMessage += (object sender, MessageEventArgs e) =>
             {
                 source.TrySetResult(() => JsonConvert.DeserializeObject<T>(e.Data));
             };
@@ -83,9 +97,9 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 Id = Guid.NewGuid().ToString()
             };
 
-            await this.Send(JsonConvert.SerializeObject(message));
+            await Send(JsonConvert.SerializeObject(message));
 
-            Func<WebSocketResponse<GameAccount[]>> reciever = await this.GetReciever<WebSocketResponse<GameAccount[]>>();
+            Func<WebSocketResponse<GameAccount[]>> reciever = await GetReciever<WebSocketResponse<GameAccount[]>>();
             WebSocketResponse<GameAccount[]> account = reciever();
 
             return account.Result[0];
@@ -106,9 +120,9 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 Id = Guid.NewGuid().ToString()
             };
 
-            await this.Send(JsonConvert.SerializeObject(message));
+            await Send(JsonConvert.SerializeObject(message));
 
-            Func<WebSocketResponse<GameToken>> reciever = await this.GetReciever<WebSocketResponse<GameToken>>();
+            Func<WebSocketResponse<GameToken>> reciever = await GetReciever<WebSocketResponse<GameToken>>();
             WebSocketResponse<GameToken> token = reciever();
 
             return token.Result;
