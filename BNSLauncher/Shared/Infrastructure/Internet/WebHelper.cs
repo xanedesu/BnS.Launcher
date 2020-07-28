@@ -1,4 +1,4 @@
-using BNSLauncher.Core.Utils;
+﻿using BNSLauncher.Core.Utils;
 using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
 using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
@@ -57,14 +57,24 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
 
                     HttpResponseMessage response = await httpClient.SendAsync(request);
 
-                    string responseText = await response.Content.ReadAsStringAsync();
+                    string responseMessage = await response.Content.ReadAsStringAsync();
 
                     if (response.IsSuccessStatusCode)
                     {
-                        return JsonConvert.DeserializeObject<T>(responseText);
+                        return JsonConvert.DeserializeObject<T>(responseMessage);
                     }
 
-                    throw new Exception(responseText);
+                    try
+                    {
+                        JObject json = JObject.Parse(responseMessage);
+                        JObject error = (JObject)json["error"];
+
+                        throw new FetchException((string)error["description"], error);
+                    }
+                    catch (JsonReaderException)
+                    {
+                        throw new Exception("Can't parse json input.");
+                    }
                 }
             }
         }
@@ -80,22 +90,13 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
 
             try
             {
-                return await this.Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
+                return await Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
             }
-            catch (Exception ex)
+            catch (FetchException ex)
             {
-                JObject json = JObject.Parse(ex.Message);
-
-                if (json.ContainsKey("error"))
+                if (ex.Json.ContainsKey("data"))
                 {
-                    string errorDescription = (string)json["error"]["description"];
-
-                    if (json.Value<JObject>("error").ContainsKey("data"))
-                    {
-                        throw new NeedConfirmWithCode(errorDescription, (string)json["error"]["data"]["sessionId"]);
-                    }
-
-                    throw new Exception(errorDescription);
+                    throw new NeedConfirmWithCode(ex.Message, (string)ex.Json["data"]["sessionId"]);
                 }
 
                 throw ex;
@@ -111,7 +112,7 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 Data = $"grant_type=refresh_token&refresh_token={refreshToken}"
             };
 
-            return await this.Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
+            return await Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
         }
 
         public async Task<bool> SendVerificationCode(string sessionId, string code)
@@ -129,7 +130,7 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 Data = JsonConvert.SerializeObject(payload)
             };
 
-            await this.Fetch<JToken>("https://launcherbff.ru.4game.com/api/guard/accesscodes/activate", init);
+            await Fetch<JToken>("https://launcherbff.ru.4game.com/api/guard/accesscodes/activate", init);
             return true;
         }
     }
