@@ -20,8 +20,8 @@ namespace BNSLauncher.Shared.Utils
         private static readonly RegistryKey _defaultRootKey = Registry.LocalMachine;
         private static readonly char[] _quotes = new char[2]
         {
-      '\'',
-      '"'
+            '\'',
+            '"'
         };
         private static readonly string _uninstallBaseFolder = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
 
@@ -58,7 +58,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -104,7 +104,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -142,7 +142,7 @@ namespace BNSLauncher.Shared.Utils
                 string uninstallRegistryFolder = RegistryHelper.GetUninstallRegistryFolder(appKey);
                 RegistryHelper._defaultRootKey.DeleteSubKeyTree(uninstallRegistryFolder, false);
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
             }
         }
@@ -155,7 +155,7 @@ namespace BNSLauncher.Shared.Utils
                 using (RegistryKey registryKey = RegistryHelper._defaultRootKey.OpenSubKey(uninstallRegistryFolder))
                     return registryKey != null;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -193,7 +193,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -206,7 +206,7 @@ namespace BNSLauncher.Shared.Utils
                 string schemeRegistryFolder = RegistryHelper.GetUrlSchemeRegistryFolder(schemeName);
                 RegistryHelper._defaultRootKey.DeleteSubKeyTree(schemeRegistryFolder, false);
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
             }
         }
@@ -299,7 +299,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -322,7 +322,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -348,7 +348,7 @@ namespace BNSLauncher.Shared.Utils
                 }
                 return true;
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }
@@ -377,7 +377,7 @@ namespace BNSLauncher.Shared.Utils
                     };
                 }
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return (RegisterGameSoftwareInfo)null;
             }
@@ -390,7 +390,7 @@ namespace BNSLauncher.Shared.Utils
                 string gameRegistryFolder = RegistryHelper.GetSoftwareGameRegistryFolder(softwareInfo.Publisher, softwareInfo.LauncherKey, softwareInfo.GameName);
                 RegistryHelper._defaultRootKey.DeleteSubKeyTree(gameRegistryFolder, false);
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
             }
         }
@@ -422,7 +422,7 @@ namespace BNSLauncher.Shared.Utils
                     return true;
                 }
             }
-            catch (BadRegistryPathPart ex)
+            catch (BadRegistryPathPart)
             {
                 return false;
             }

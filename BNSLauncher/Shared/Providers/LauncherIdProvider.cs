@@ -48,7 +48,7 @@ namespace BNSLauncher.Shared.Providers
                 }
                 return launcherId;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
             }

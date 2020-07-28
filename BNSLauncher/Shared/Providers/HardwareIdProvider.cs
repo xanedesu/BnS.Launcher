@@ -46,7 +46,7 @@ namespace BNSLauncher.Shared.Providers
             {
                 return new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard").Get().OfType<ManagementObject>().Select<ManagementObject, string>((Func<ManagementObject, string>)(v => v["SerialNumber"]?.ToString())).FirstOrDefault<string>((Func<string, bool>)(v => v != null));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
             }
@@ -60,7 +60,7 @@ namespace BNSLauncher.Shared.Providers
                 managementObject.Get();
                 return managementObject["VolumeSerialNumber"].ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
             }
@@ -72,7 +72,7 @@ namespace BNSLauncher.Shared.Providers
             {
                 return new ManagementObjectSearcher("Select * From Win32_processor").Get().OfType<ManagementObject>().Select<ManagementObject, string>((Func<ManagementObject, string>)(v => v["ProcessorId"]?.ToString())).FirstOrDefault<string>((Func<string, bool>)(v => v != null));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
             }

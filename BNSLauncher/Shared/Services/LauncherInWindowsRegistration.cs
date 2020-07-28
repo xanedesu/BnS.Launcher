@@ -32,7 +32,7 @@ namespace BNSLauncher.Shared.Services
                 //ShortcutHelper.DeleteStartMenuShortcut("Innova Co. SARL", unregistrationData.Name);
                 RegistryHelper.DeleteUrlScheme(unregistrationData.UrlSchemeName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -97,7 +97,7 @@ namespace BNSLauncher.Shared.Services
                 //ShortcutHelper.CreateOrReplaceDesktopShortcut(registrationData.Name, registrationData.IconPath, registrationData.IconTarget, (string)null);
                 //ShortcutHelper.CreateOrReplaceStartMenuShortcut("Innova Co. SARL", registrationData.Name, registrationData.IconPath, registrationData.IconTarget);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

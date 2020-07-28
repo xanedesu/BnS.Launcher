@@ -13,7 +13,7 @@ namespace BNSLauncher.Shared.Providers
             try {
                 return Environment.MachineName;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
             }
