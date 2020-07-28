@@ -2,6 +2,7 @@
 
 namespace BNSLauncher.Shared.Exceptions
 {
+    [Serializable]
     public class BadRegistryPathPart : Exception
     {
         public BadRegistryPathPart(string part)

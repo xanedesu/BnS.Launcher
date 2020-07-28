@@ -2,6 +2,7 @@
 
 namespace BNSLauncher.Shared.Infrastructure.Internet.Exceptions
 {
+    [Serializable]
     class NeedConfirmWithCode : Exception
     {
         public NeedConfirmWithCode(string message, string sessionId): base(message)
