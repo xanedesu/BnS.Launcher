@@ -11,6 +11,6 @@ namespace BNSLauncher.Shared.Infrastructure.Internet.Interfaces
 
         Task<GameAccount> GetGameAccount(string masterId);
 
-        Task<GameToken> CreateGameTokenCode(string accessToken, string masterId, string login);
+        Task<GameLoginCredentials> GetGameLoginCredentials(string accessToken, string masterId, string login);
     }
 }

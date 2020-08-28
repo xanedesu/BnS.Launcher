@@ -16,11 +16,11 @@ namespace BNSLauncher.Shared.Services
 
         public void Register(LauncherRegistrationData registrationData, bool createShortcut)
         {
-            this.RegisterInRegistry(registrationData);
-            this.AddLauncherUrlScheme(registrationData);
+            RegisterInRegistry(registrationData);
+            AddLauncherUrlScheme(registrationData);
             if (!createShortcut)
                 return;
-            this.CreateShortcuts(registrationData);
+            CreateShortcuts(registrationData);
         }
 
         public void Unregister(LauncherRegistrationData unregistrationData)
@@ -62,7 +62,7 @@ namespace BNSLauncher.Shared.Services
             {
                 throw new InvalidOperationException("Can't update launcher uninstall info  " + updateData.Key + " in uninstall registry");
             }
-            this.UpdateSoftwareInfo(new RegisterLauncherSoftwareInfo()
+            UpdateSoftwareInfo(new RegisterLauncherSoftwareInfo()
             {
                 Publisher = "Innova Co. SARL",
                 LauncherKey = updateData.Key,
@@ -105,7 +105,7 @@ namespace BNSLauncher.Shared.Services
 
         private void RegisterInRegistry(LauncherRegistrationData registrationData)
         {
-            bool flag = !this.IsRegistered(registrationData.Key);
+            bool flag = !IsRegistered(registrationData.Key);
             if (!RegistryHelper.TryRegisterUninstallInfo(registrationData.Key, new RegistryUninstallInfo()
             {
                 Version = registrationData.Version,

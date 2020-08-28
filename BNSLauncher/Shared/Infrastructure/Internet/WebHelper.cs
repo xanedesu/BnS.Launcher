@@ -2,10 +2,11 @@
 using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
 using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Providers.Interfaces;
+using BNSLauncher.Shared.Services.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.ComponentModel.Composition;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,33 +14,36 @@ using System.Threading.Tasks;
 
 namespace BNSLauncher.Shared.Infrastructure.Internet
 {
-    class WebHelper: IWebHelper
+    [Export(typeof(IWebHelper))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    class WebHelper : IWebHelper
     {
-        private IComputerNameProvider computerNameProvider;
+        private IComputerNameProvider _computerNameProvider;
 
-        private ILauncherIdProvider launcherIdProvider;
+        private ILauncherIdProvider _launcherIdProvider;
 
-        private IHardwareIdProvider hardwareIdProvider;
+        private IHardwareIdProvider _hardwareIdProvider;
 
-        public WebHelper(IComputerNameProvider computerNameProvider, ILauncherIdProvider launcherIdProvider, IHardwareIdProvider hardwareIdProvider)
+        public WebHelper(
+            IComputerNameProvider computerNameProvider,
+            ILauncherIdProvider launcherIdProvider,
+            IHardwareIdProvider hardwareIdProvider)
         {
-            this.computerNameProvider = computerNameProvider;
-            this.launcherIdProvider = launcherIdProvider;
-            this.hardwareIdProvider = hardwareIdProvider;
+            _computerNameProvider = computerNameProvider;
+            _launcherIdProvider = launcherIdProvider;
+            _hardwareIdProvider = hardwareIdProvider;
         }
 
-        private async Task<T> Fetch<T>(string uri, FetchInit init)
+        private async Task<T> Request<T>(string uri, RequestInit init)
         {
-            string computerName = Base64.Encode(this.computerNameProvider.Get());
-            string launcherId = this.launcherIdProvider.Get();
-            string hardwareId = Base64.Encode(this.hardwareIdProvider.Get());
+            string computerName = Base64.Encode(_computerNameProvider.Get());
+            string launcherId = _launcherIdProvider.Get();
+            string hardwareId = Base64.Encode(_hardwareIdProvider.Get());
 
-            HttpClientHandler handler = new HttpClientHandler()
+            using (HttpClient httpClient = new HttpClient(new HttpClientHandler()
             {
                 AutomaticDecompression = ~DecompressionMethods.None
-            };
-
-            using (HttpClient httpClient = new HttpClient(handler))
+            }))
             {
                 using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(init.Method), uri))
                 {
@@ -55,21 +59,18 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                     request.Content = new StringContent(init.Data);
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(init.ContentType);
 
-                    HttpResponseMessage response = await httpClient.SendAsync(request);
+                    HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+                    string responseString = await responseMessage.Content.ReadAsStringAsync();
 
-                    string responseMessage = await response.Content.ReadAsStringAsync();
-
-                    if (response.IsSuccessStatusCode)
+                    if (responseMessage.IsSuccessStatusCode)
                     {
-                        return JsonConvert.DeserializeObject<T>(responseMessage);
+                        return JsonConvert.DeserializeObject<T>(responseString);
                     }
 
                     try
                     {
-                        JObject json = JObject.Parse(responseMessage);
-                        JObject error = (JObject)json["error"];
-
-                        throw new FetchException((string)error["description"], error);
+                        JObject error = JObject.Parse(responseString).Value<JObject>("error");
+                        throw new RequestError(error.Value<string>("description"), error);
                     }
                     catch (JsonReaderException)
                     {
@@ -79,9 +80,9 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
             }
         }
 
-        public async Task<AuthData> Authorize(string username, string password)
+        public async Task<ForgameAccountTokens> Authorize(string username, string password)
         {
-            FetchInit init = new FetchInit()
+            RequestInit init = new RequestInit()
             {
                 Method = "POST",
                 ContentType = "application/x-www-form-urlencoded",
@@ -90,47 +91,47 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
 
             try
             {
-                return await Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
+                return await Request<ForgameAccountTokens>("https://launcherbff.ru.4game.com/connect/token", init);
             }
-            catch (FetchException ex)
+            catch (RequestError ex)
             {
                 if (ex.Json.ContainsKey("data"))
                 {
-                    throw new NeedConfirmWithCode(ex.Message, (string)ex.Json["data"]["sessionId"]);
+                    throw new NeedToConfirmWithCode(ex.Message, (string)ex.Json["data"]["sessionId"]);
                 }
 
                 throw ex;
             }
         }
 
-        public async Task<AuthData> RefreshTokens(string refreshToken)
+        public async Task<ForgameAccountTokens> RefreshTokens(string refreshToken)
         {
-            FetchInit init = new FetchInit()
+            RequestInit init = new RequestInit()
             {
                 Method = "POST",
                 ContentType = "application/x-www-form-urlencoded",
                 Data = $"grant_type=refresh_token&refresh_token={refreshToken}"
             };
 
-            return await Fetch<AuthData>("https://launcherbff.ru.4game.com/connect/token", init);
+            return await Request<ForgameAccountTokens>("https://launcherbff.ru.4game.com/connect/token", init);
         }
 
         public async Task<bool> SendVerificationCode(string sessionId, string code)
         {
-            ConfirmCodePayload payload = new ConfirmCodePayload()
+            ActivationCodePayload payload = new ActivationCodePayload()
             {
                 Code = code,
                 SessionId = sessionId
             };
 
-            FetchInit init = new FetchInit()
+            RequestInit init = new RequestInit()
             {
                 Method = "POST",
                 ContentType = "application/json;charset=UTF-8",
                 Data = JsonConvert.SerializeObject(payload)
             };
 
-            await Fetch<JToken>("https://launcherbff.ru.4game.com/api/guard/accesscodes/activate", init);
+            await Request<object>("https://launcherbff.ru.4game.com/api/guard/accesscodes/activate", init);
             return true;
         }
     }

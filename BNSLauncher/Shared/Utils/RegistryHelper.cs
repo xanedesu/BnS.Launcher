@@ -1,5 +1,4 @@
-﻿
-using BNSLauncher.Shared.Exceptions;
+﻿using BNSLauncher.Shared.Exceptions;
 using BNSLauncher.Shared.Extensions;
 using BNSLauncher.Shared.Services.Interfaces;
 using Microsoft.Win32;
@@ -18,11 +17,13 @@ namespace BNSLauncher.Shared.Utils
     public static class RegistryHelper
     {
         private static readonly RegistryKey _defaultRootKey = Registry.LocalMachine;
+
         private static readonly char[] _quotes = new char[2]
         {
             '\'',
             '"'
         };
+
         private static readonly string _uninstallBaseFolder = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
 
         public static bool TryRegisterUninstallInfo(string appKey, RegistryUninstallInfo info)
@@ -34,15 +35,15 @@ namespace BNSLauncher.Shared.Utils
                 {
                     if (registryKey1 == null)
                         return false;
-                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayName, (object)(info.Name ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.ApplicationVersion, (object)(info.Version ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.Publisher, (object)info.Publisher);
-                    registryKey1.SetValue(RegistryConstants.Uninstall.ShortcutName, (object)(info.Name ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.InstallLocation, (object)(info.InstallationPath ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayIcon, (object)(info.IconPath ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.UninstallString, (object)(info.UninstallCommand ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayVersion, (object)(info.Version ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Uninstall.InstallationDate, (object)info.InstallationDate.ToString(RegistryConstants.Uninstall.RegistryDateFormat));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayName, (info.Name ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.ApplicationVersion, (info.Version ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.Publisher, info.Publisher);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.ShortcutName, (info.Name ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.InstallLocation, (info.InstallationPath ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayIcon, (info.IconPath ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.UninstallString, (info.UninstallCommand ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.DisplayVersion, (info.Version ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Uninstall.InstallationDate, info.InstallationDate.ToString(RegistryConstants.Uninstall.RegistryDateFormat));
                     long? sizeBytes = info.SizeBytes;
                     if (sizeBytes.HasValue)
                     {
@@ -50,11 +51,11 @@ namespace BNSLauncher.Shared.Utils
                         string estimatedSize = RegistryConstants.Uninstall.EstimatedSize;
                         sizeBytes = info.SizeBytes;
                         long num = 1024;
-                        ValueType local = (ValueType)(int)(sizeBytes.HasValue ? new long?(sizeBytes.GetValueOrDefault() / num) : new long?()).Value;
-                        registryKey2.SetValue(estimatedSize, (object)local, RegistryValueKind.DWord);
+                        ValueType local = (int)(sizeBytes.HasValue ? new long?(sizeBytes.GetValueOrDefault() / num) : new long?()).Value;
+                        registryKey2.SetValue(estimatedSize, local, RegistryValueKind.DWord);
                     }
-                    registryKey1.SetValue(RegistryConstants.Uninstall.NoModify, (object)1, RegistryValueKind.DWord);
-                    registryKey1.SetValue(RegistryConstants.Uninstall.NoRepair, (object)1, RegistryValueKind.DWord);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.NoModify, 1, RegistryValueKind.DWord);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.NoRepair, 1, RegistryValueKind.DWord);
                 }
                 return true;
             }
@@ -75,32 +76,32 @@ namespace BNSLauncher.Shared.Utils
                         return false;
                     if (!string.IsNullOrWhiteSpace(info.Name))
                     {
-                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayName, (object)(info.Name ?? string.Empty));
-                        registryKey1.SetValue(RegistryConstants.Uninstall.ShortcutName, (object)(info.Name ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayName, info.Name ?? string.Empty);
+                        registryKey1.SetValue(RegistryConstants.Uninstall.ShortcutName, info.Name ?? string.Empty);
                     }
                     if (!string.IsNullOrWhiteSpace(info.Version))
                     {
-                        registryKey1.SetValue(RegistryConstants.Uninstall.ApplicationVersion, (object)(info.Version ?? string.Empty));
-                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayVersion, (object)(info.Version ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Uninstall.ApplicationVersion, (info.Version ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayVersion, (info.Version ?? string.Empty));
                     }
                     if (!string.IsNullOrWhiteSpace(info.Publisher))
-                        registryKey1.SetValue(RegistryConstants.Uninstall.Publisher, (object)info.Publisher);
+                        registryKey1.SetValue(RegistryConstants.Uninstall.Publisher, info.Publisher);
                     if (!string.IsNullOrWhiteSpace(info.IconPath))
-                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayIcon, (object)info.IconPath);
+                        registryKey1.SetValue(RegistryConstants.Uninstall.DisplayIcon, info.IconPath);
                     if (!string.IsNullOrWhiteSpace(info.UninstallCommand))
-                        registryKey1.SetValue(RegistryConstants.Uninstall.UninstallString, (object)info.UninstallCommand);
-                    registryKey1.SetValue(RegistryConstants.Uninstall.LastUpdateDate, (object)info.InstallationDate.ToString(RegistryConstants.Uninstall.RegistryDateFormat));
+                        registryKey1.SetValue(RegistryConstants.Uninstall.UninstallString, info.UninstallCommand);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.LastUpdateDate, info.InstallationDate.ToString(RegistryConstants.Uninstall.RegistryDateFormat));
                     if (info.SizeBytes.HasValue)
                     {
                         RegistryKey registryKey2 = registryKey1;
                         string estimatedSize = RegistryConstants.Uninstall.EstimatedSize;
                         long? sizeBytes = info.SizeBytes;
                         long num = 1024;
-                        ValueType local = (ValueType)(int)(sizeBytes.HasValue ? new long?(sizeBytes.GetValueOrDefault() / num) : new long?()).Value;
-                        registryKey2.SetValue(estimatedSize, (object)local, RegistryValueKind.DWord);
+                        ValueType local = (int)(sizeBytes.HasValue ? new long?(sizeBytes.GetValueOrDefault() / num) : new long?()).Value;
+                        registryKey2.SetValue(estimatedSize, local, RegistryValueKind.DWord);
                     }
-                    registryKey1.SetValue(RegistryConstants.Uninstall.NoModify, (object)1, RegistryValueKind.DWord);
-                    registryKey1.SetValue(RegistryConstants.Uninstall.NoRepair, (object)1, RegistryValueKind.DWord);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.NoModify, 1, RegistryValueKind.DWord);
+                    registryKey1.SetValue(RegistryConstants.Uninstall.NoRepair, 1, RegistryValueKind.DWord);
                 }
                 return true;
             }
@@ -118,7 +119,7 @@ namespace BNSLauncher.Shared.Utils
                 if (registryKey == null)
                     throw new InvalidOperationException("Can't get uninstall info node " + uninstallRegistryFolder);
                 DateTime result1;
-                DateTime.TryParseExact(registryKey.GetValue(RegistryConstants.Uninstall.InstallationDate)?.ToString(), RegistryConstants.Uninstall.RegistryDateFormat, (IFormatProvider)CultureInfo.InvariantCulture, DateTimeStyles.None, out result1);
+                DateTime.TryParseExact(registryKey.GetValue(RegistryConstants.Uninstall.InstallationDate)?.ToString(), RegistryConstants.Uninstall.RegistryDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out result1);
                 int result2;
                 int.TryParse(registryKey.GetValue(RegistryConstants.Uninstall.EstimatedSize)?.ToString() ?? "0", out result2);
                 return new RegistryUninstallInfo()
@@ -130,7 +131,7 @@ namespace BNSLauncher.Shared.Utils
                     InstallationDate = result1,
                     UninstallCommand = registryKey.GetValue(RegistryConstants.Uninstall.UninstallString)?.ToString(),
                     Publisher = registryKey.GetValue(RegistryConstants.Uninstall.Publisher)?.ToString(),
-                    SizeBytes = new long?((long)(result2 * 1024))
+                    SizeBytes = new long?((result2 * 1024))
                 };
             }
         }
@@ -164,7 +165,7 @@ namespace BNSLauncher.Shared.Utils
         public static List<string> GetUninstallInfoKeys(string prefix)
         {
             using (RegistryKey registryKey = RegistryHelper._defaultRootKey.OpenSubKey(RegistryHelper._uninstallBaseFolder))
-                return registryKey == null ? new List<string>() : ((IEnumerable<string>)registryKey.GetSubKeyNames()).Where<string>((Func<string, bool>)(e => e.StartsWith(prefix))).ToList<string>();
+                return registryKey == null ? new List<string>() : ((IEnumerable<string>)registryKey.GetSubKeyNames()).Where((e => e.StartsWith(prefix))).ToList();
         }
 
         public static bool TryRegisterUrlScheme(string schemeName, string schemeExePath)
@@ -176,19 +177,19 @@ namespace BNSLauncher.Shared.Utils
                 {
                     if (registryKey == null)
                         return false;
-                    registryKey.SetValue(string.Empty, (object)("URL:" + schemeName));
-                    registryKey.SetValue(RegistryConstants.UrlScheme.UrlProtocolKey, (object)string.Empty);
+                    registryKey.SetValue(string.Empty, ("URL:" + schemeName));
+                    registryKey.SetValue(RegistryConstants.UrlScheme.UrlProtocolKey, string.Empty);
                     using (RegistryKey subKey = registryKey.CreateSubKey(RegistryConstants.UrlScheme.DefaultIconKey))
                     {
                         if (subKey == null)
                             return false;
-                        subKey.SetValue(string.Empty, (object)(Path.GetFileName(schemeExePath) + ",1"));
+                        subKey.SetValue(string.Empty, (Path.GetFileName(schemeExePath) + ",1"));
                     }
                     using (RegistryKey subKey = registryKey.CreateSubKey("shell\\open\\command"))
                     {
                         if (subKey == null)
                             return false;
-                        subKey.SetValue(string.Empty, (object)("\"" + schemeExePath + "\" %1"));
+                        subKey.SetValue(string.Empty, ("\"" + schemeExePath + "\" %1"));
                     }
                 }
                 return true;
@@ -255,7 +256,7 @@ namespace BNSLauncher.Shared.Utils
                     if (registryKey1 == null)
                         return false;
                     if (!string.IsNullOrWhiteSpace(softwareInfo.Version))
-                        registryKey1.SetValue(RegistryConstants.Software.Version, (object)(softwareInfo.Version ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Software.Version, (softwareInfo.Version ?? string.Empty));
                     DateTime? nullable;
                     if (softwareInfo.InstallationDate.HasValue)
                     {
@@ -263,8 +264,8 @@ namespace BNSLauncher.Shared.Utils
                         string installationDate = RegistryConstants.Software.InstallationDate;
                         nullable = softwareInfo.InstallationDate;
                         ref DateTime? local = ref nullable;
-                        string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : (string)null) ?? string.Empty;
-                        registryKey2.SetValue(installationDate, (object)str);
+                        string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : null) ?? string.Empty;
+                        registryKey2.SetValue(installationDate, str);
                     }
                     if (softwareInfo.OldGamesTaken.HasValue)
                     {
@@ -272,11 +273,11 @@ namespace BNSLauncher.Shared.Utils
                         string oldGamesTaken1 = RegistryConstants.Software.OldGamesTaken;
                         bool? oldGamesTaken2 = softwareInfo.OldGamesTaken;
                         bool flag = true;
-                        ValueType local = (ValueType)(oldGamesTaken2.GetValueOrDefault() == flag & oldGamesTaken2.HasValue ? 1 : 0);
-                        registryKey2.SetValue(oldGamesTaken1, (object)local);
+                        ValueType local = (oldGamesTaken2.GetValueOrDefault() == flag & oldGamesTaken2.HasValue ? 1 : 0);
+                        registryKey2.SetValue(oldGamesTaken1, local);
                     }
                     if (!string.IsNullOrWhiteSpace(softwareInfo.InstallationPath))
-                        registryKey1.SetValue(RegistryConstants.Software.Path, (object)(softwareInfo.InstallationPath ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Software.Path, (softwareInfo.InstallationPath ?? string.Empty));
                     nullable = softwareInfo.LastUpdateDate;
                     if (nullable.HasValue)
                     {
@@ -284,18 +285,18 @@ namespace BNSLauncher.Shared.Utils
                         string lastUpdateDate = RegistryConstants.Software.LastUpdateDate;
                         nullable = softwareInfo.LastUpdateDate;
                         ref DateTime? local = ref nullable;
-                        string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : (string)null) ?? string.Empty;
-                        registryKey2.SetValue(lastUpdateDate, (object)str);
+                        string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : null) ?? string.Empty;
+                        registryKey2.SetValue(lastUpdateDate, str);
                     }
                     if (registryKey1.GetValue(RegistryConstants.Software.LauncherId) == null && !string.IsNullOrWhiteSpace(softwareInfo.LauncherId))
                     {
                         string launcherId = softwareInfo.LauncherId;
-                        registryKey1.SetValue(RegistryConstants.Software.LauncherId, (object)launcherId);
+                        registryKey1.SetValue(RegistryConstants.Software.LauncherId, launcherId);
                     }
                     if (!string.IsNullOrWhiteSpace(softwareInfo.LastGamesInstallDirectory))
-                        registryKey1.SetValue(RegistryConstants.Software.LastGamesInstallDirectory, (object)(softwareInfo.LastGamesInstallDirectory ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Software.LastGamesInstallDirectory, (softwareInfo.LastGamesInstallDirectory ?? string.Empty));
                     if (!string.IsNullOrWhiteSpace(softwareInfo.LauncherRegion))
-                        registryKey1.SetValue(RegistryConstants.Software.LauncherRegion, (object)(softwareInfo.LauncherRegion ?? string.Empty));
+                        registryKey1.SetValue(RegistryConstants.Software.LauncherRegion, softwareInfo.LauncherRegion ?? string.Empty);
                 }
                 return true;
             }
@@ -318,7 +319,7 @@ namespace BNSLauncher.Shared.Utils
                     if (registryKey == null)
                         return false;
                     if (string.IsNullOrWhiteSpace(registryKey.GetValue(RegistryConstants.Software.LauncherId)?.ToString()))
-                        registryKey.SetValue(RegistryConstants.Software.LauncherId, (object)launcherId);
+                        registryKey.SetValue(RegistryConstants.Software.LauncherId, launcherId);
                 }
                 return true;
             }
@@ -337,14 +338,14 @@ namespace BNSLauncher.Shared.Utils
                 {
                     if (registryKey1 == null)
                         return false;
-                    registryKey1.SetValue(RegistryConstants.Software.Path, (object)(softwareInfo.InstallationPath ?? string.Empty));
-                    registryKey1.SetValue(RegistryConstants.Software.Version, (object)(softwareInfo.Version ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Software.Path, (softwareInfo.InstallationPath ?? string.Empty));
+                    registryKey1.SetValue(RegistryConstants.Software.Version, (softwareInfo.Version ?? string.Empty));
                     RegistryKey registryKey2 = registryKey1;
                     string installationDate1 = RegistryConstants.Software.InstallationDate;
                     DateTime? installationDate2 = softwareInfo.InstallationDate;
                     ref DateTime? local = ref installationDate2;
-                    string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : (string)null) ?? string.Empty;
-                    registryKey2.SetValue(installationDate1, (object)str);
+                    string str = (local.HasValue ? local.GetValueOrDefault().ToString(RegistryConstants.Format.DateFormat) : null) ?? string.Empty;
+                    registryKey2.SetValue(installationDate1, str);
                 }
                 return true;
             }
@@ -365,7 +366,7 @@ namespace BNSLauncher.Shared.Utils
                 using (RegistryKey registryKey = RegistryHelper._defaultRootKey.OpenSubKey(gameRegistryFolder, true))
                 {
                     if (registryKey == null)
-                        return (RegisterGameSoftwareInfo)null;
+                        return null;
                     string str = registryKey.GetValue(RegistryConstants.Software.InstallationDate)?.ToString();
                     return new RegisterGameSoftwareInfo()
                     {
@@ -379,7 +380,7 @@ namespace BNSLauncher.Shared.Utils
             }
             catch (BadRegistryPathPart)
             {
-                return (RegisterGameSoftwareInfo)null;
+                return null;
             }
         }
 
@@ -418,7 +419,7 @@ namespace BNSLauncher.Shared.Utils
                 {
                     if (registryKey == null)
                         return false;
-                    registryKey.SetValue(RegistryConstants.Software.LastErrorCheckDate, (object)dateTime.ToString(RegistryConstants.Format.DateTimeFormat));
+                    registryKey.SetValue(RegistryConstants.Software.LastErrorCheckDate, dateTime.ToString(RegistryConstants.Format.DateTimeFormat));
                     return true;
                 }
             }
@@ -436,7 +437,7 @@ namespace BNSLauncher.Shared.Utils
             using (RegistryKey registryKey = rootKey.OpenSubKey(schemeRegistryFolder, true))
             {
                 if (registryKey == null)
-                    return (UrlSchemeInfo)null;
+                    return null;
                 UrlSchemeInfo urlSchemeInfo = new UrlSchemeInfo()
                 {
                     SchemeName = schemeName,
@@ -445,7 +446,7 @@ namespace BNSLauncher.Shared.Utils
                 using (RegistryKey subKey = registryKey.CreateSubKey(RegistryConstants.UrlScheme.DefaultIconKey))
                 {
                     if (subKey == null)
-                        return (UrlSchemeInfo)null;
+                        return null;
                     string str = subKey.GetValue(string.Empty).ToString().Split(',')[0].RemoveLeadingSymbols(RegistryHelper._quotes);
                     urlSchemeInfo.ExePath = str;
                     if (File.Exists(str))
@@ -505,7 +506,7 @@ namespace BNSLauncher.Shared.Utils
             if (string.IsNullOrWhiteSpace(value))
                 return new DateTime?();
             DateTime result;
-            return !DateTime.TryParseExact(value, format, (IFormatProvider)CultureInfo.InvariantCulture, DateTimeStyles.None, out result) ? new DateTime?() : new DateTime?(result);
+            return !DateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result) ? new DateTime?() : new DateTime?(result);
         }
     }
 }

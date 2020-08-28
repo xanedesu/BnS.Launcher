@@ -1,39 +1,46 @@
 ﻿using BNSLauncher.Core.Utils;
 using BNSLauncher.Shared.Extensions;
 using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
+using BNSLauncher.Shared.Infrastructure.Internet.Utils;
 using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Providers.Interfaces;
+using BNSLauncher.Shared.Services.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
 namespace BNSLauncher.Shared.Infrastructure.Internet
 {
-    class WebSocketHelper: IWebSocketHelper, IDisposable
+    [Export(typeof(IWebSocketHelper))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    class WebSocketHelper : IWebSocketHelper, IDisposable
     {
         private static readonly string WS_URL = "wss://launcherbff.ru.4game.com/";
 
-        private IComputerNameProvider computerNameProvider;
+        private IComputerNameProvider _computerNameProvider;
 
-        private ILauncherIdProvider launcherIdProvider;
+        private ILauncherIdProvider _launcherIdProvider;
 
-        private IHardwareIdProvider hardwareIdProvider;
+        private IHardwareIdProvider _hardwareIdProvider;
 
-        private WebSocket ws;
+        private WebSocket _ws;
 
-        public WebSocketHelper(IComputerNameProvider computerNameProvider, ILauncherIdProvider launcherIdProvider, IHardwareIdProvider hardwareIdProvider)
+        public WebSocketHelper(
+            IComputerNameProvider computerNameProvider,
+            ILauncherIdProvider launcherIdProvider,
+            IHardwareIdProvider hardwareIdProvider)
         {
-            this.computerNameProvider = computerNameProvider;
-            this.launcherIdProvider = launcherIdProvider;
-            this.hardwareIdProvider = hardwareIdProvider;
+            _computerNameProvider = computerNameProvider;
+            _launcherIdProvider = launcherIdProvider;
+            _hardwareIdProvider = hardwareIdProvider;
         }
 
         public void Connect(string accessToken)
         {
-            string computerName = Base64.Encode(computerNameProvider.Get());
-            string launcherId = launcherIdProvider.Get();
-            string hardwareId = Base64.Encode(hardwareIdProvider.Get());
+            string computerName = Base64.Encode(_computerNameProvider.Get());
+            string launcherId = _launcherIdProvider.Get();
+            string hardwareId = Base64.Encode(_hardwareIdProvider.Get());
 
             string url = WS_URL
                 .AddOrUpdateParameterToUrl("token", accessToken)
@@ -41,45 +48,31 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 .AddOrUpdateParameterToUrl("launcher-id", launcherId)
                 .AddOrUpdateParameterToUrl("hardware-id", hardwareId);
 
-            ws = new WebSocket(url);
-            ws.Connect();
+            _ws = new WebSocket(url);
+            _ws.Connect();
         }
 
         public void Disconnect()
         {
-            ws.Close();
+            _ws.Close();
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                ws.Close();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private Task<bool> Send(string data)
+        private Task<bool> Send(WebSocketRequestMessage message)
         {
             TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
 
-            ws.SendAsync(data, (bool completed) => source.TrySetResult(completed));
+            _ws.SendAsync(JsonConvert.SerializeObject(message), (bool completed) => source.TrySetResult(completed));
 
             return source.Task;
         }
 
-        private Task<Func<T>> GetReciever<T>()
+        private Task<WebSocketResponse<T>> GetResponse<T>()
         {
-            TaskCompletionSource<Func<T>> source = new TaskCompletionSource<Func<T>>();
+            TaskCompletionSource<WebSocketResponse<T>> source = new TaskCompletionSource<WebSocketResponse<T>>();
 
-            ws.OnMessage += (object sender, MessageEventArgs e) =>
+            _ws.OnMessage += (object sender, MessageEventArgs e) =>
             {
-                source.TrySetResult(() => JsonConvert.DeserializeObject<T>(e.Data));
+                source.TrySetResult(new WebSocketResponse<T>(e.Data));
             };
 
             return source.Task;
@@ -87,30 +80,28 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
 
         public async Task<GameAccount> GetGameAccount(string masterId)
         {
-            WebSocketMessage message = new WebSocketMessage()
+            WebSocketRequestMessage message = new WebSocketRequestMessage()
             {
                 Method = "getGameAccount",
-                Params = new GetGameAccountMessage()
+                Params = new GameAccountPayload()
                 {
                     MasterId = masterId,
                 },
                 Id = Guid.NewGuid().ToString()
             };
 
-            await Send(JsonConvert.SerializeObject(message));
+            await Send(message);
 
-            Func<WebSocketResponse<GameAccount[]>> reciever = await GetReciever<WebSocketResponse<GameAccount[]>>();
-            WebSocketResponse<GameAccount[]> account = reciever();
-
-            return account.Result[0];
+            var response = await GetResponse<GameAccount[]>();
+            return response.Data.Result[0];
         }
 
-        public async Task<GameToken> CreateGameTokenCode(string accessToken, string masterId, string login)
+        public async Task<GameLoginCredentials> GetGameLoginCredentials(string accessToken, string masterId, string login)
         {
-            WebSocketMessage message = new WebSocketMessage()
+            WebSocketRequestMessage message = new WebSocketRequestMessage()
             {
                 Method = "createGameTokenCode",
-                Params = new CreateGameTokenCodeMessage()
+                Params = new GameLoginCredentialsPayload()
                 {
                     AccessToken = accessToken,
                     IgnoreLicenseAcceptance = false,
@@ -120,12 +111,15 @@ namespace BNSLauncher.Shared.Infrastructure.Internet
                 Id = Guid.NewGuid().ToString()
             };
 
-            await Send(JsonConvert.SerializeObject(message));
+            await Send(message);
 
-            Func<WebSocketResponse<GameToken>> reciever = await GetReciever<WebSocketResponse<GameToken>>();
-            WebSocketResponse<GameToken> token = reciever();
+            var response = await GetResponse<GameLoginCredentials>();
+            return response.Data.Result;
+        }
 
-            return token.Result;
+        public void Dispose()
+        {
+            _ws.Close();
         }
     }
 }

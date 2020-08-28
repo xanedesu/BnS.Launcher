@@ -37,14 +37,13 @@
             this.textLabel = new System.Windows.Forms.Label();
             this.confirmationCodeTextBox = new System.Windows.Forms.TextBox();
             this.startGamePanel = new System.Windows.Forms.Panel();
+            this.autoCloseLauncherCheckbox = new System.Windows.Forms.CheckBox();
             this.addAnotherAccountButton = new System.Windows.Forms.Button();
             this.accountsListBox = new System.Windows.Forms.ComboBox();
             this.startGameButton = new System.Windows.Forms.Button();
             this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
             this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.updatePathToGameButton = new System.Windows.Forms.Button();
-            this.autoCloseLauncherCheckbox = new System.Windows.Forms.CheckBox();
             this.loginPanel.SuspendLayout();
             this.comfirmationCodePanel.SuspendLayout();
             this.startGamePanel.SuspendLayout();
@@ -118,7 +117,6 @@
             // startGamePanel
             // 
             this.startGamePanel.Controls.Add(this.autoCloseLauncherCheckbox);
-            this.startGamePanel.Controls.Add(this.updatePathToGameButton);
             this.startGamePanel.Controls.Add(this.addAnotherAccountButton);
             this.startGamePanel.Controls.Add(this.accountsListBox);
             this.startGamePanel.Controls.Add(this.startGameButton);
@@ -130,6 +128,16 @@
             this.startGamePanel.Size = new System.Drawing.Size(240, 99);
             this.startGamePanel.TabIndex = 2;
             this.startGamePanel.Visible = false;
+            // 
+            // autoCloseLauncherCheckbox
+            // 
+            this.autoCloseLauncherCheckbox.AutoSize = true;
+            this.autoCloseLauncherCheckbox.Location = new System.Drawing.Point(9, 41);
+            this.autoCloseLauncherCheckbox.Name = "autoCloseLauncherCheckbox";
+            this.autoCloseLauncherCheckbox.Size = new System.Drawing.Size(186, 17);
+            this.autoCloseLauncherCheckbox.TabIndex = 6;
+            this.autoCloseLauncherCheckbox.Text = "Close launcher after starting game";
+            this.autoCloseLauncherCheckbox.UseVisualStyleBackColor = true;
             // 
             // addAnotherAccountButton
             // 
@@ -193,26 +201,6 @@
             this.x32ClientRadioButton.Text = "x32";
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             // 
-            // updatePathToGameButton
-            // 
-            this.updatePathToGameButton.Location = new System.Drawing.Point(153, 38);
-            this.updatePathToGameButton.Name = "updatePathToGameButton";
-            this.updatePathToGameButton.Size = new System.Drawing.Size(75, 23);
-            this.updatePathToGameButton.TabIndex = 5;
-            this.updatePathToGameButton.Text = "Update path";
-            this.updatePathToGameButton.UseVisualStyleBackColor = true;
-            this.updatePathToGameButton.Click += new System.EventHandler(this.updatePathToGameButton_Click);
-            // 
-            // autoCloseLauncherCheckbox
-            // 
-            this.autoCloseLauncherCheckbox.AutoSize = true;
-            this.autoCloseLauncherCheckbox.Location = new System.Drawing.Point(9, 41);
-            this.autoCloseLauncherCheckbox.Name = "autoCloseLauncherCheckbox";
-            this.autoCloseLauncherCheckbox.Size = new System.Drawing.Size(124, 17);
-            this.autoCloseLauncherCheckbox.TabIndex = 6;
-            this.autoCloseLauncherCheckbox.Text = "Auto close Launcher";
-            this.autoCloseLauncherCheckbox.UseVisualStyleBackColor = true;
-            // 
             // LauncherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,7 +244,6 @@
         private System.Windows.Forms.RadioButton x32ClientRadioButton;
         private System.Windows.Forms.ComboBox accountsListBox;
         private System.Windows.Forms.Button addAnotherAccountButton;
-        private System.Windows.Forms.Button updatePathToGameButton;
         private System.Windows.Forms.CheckBox autoCloseLauncherCheckbox;
     }
 }

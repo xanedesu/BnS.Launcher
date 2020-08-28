@@ -1,108 +1,110 @@
-﻿using BNSLauncher.Core.Models;
+﻿using BNSLauncher.Core.Enums;
+using BNSLauncher.Core.Models;
+using BNSLauncher.Core.Services;
 using BNSLauncher.Core.Utils;
 using BNSLauncher.Shared.Infrastructure.Internet;
 using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
+using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
 using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Providers.Interfaces;
+using BNSLauncher.Shared.Services;
+using BNSLauncher.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BNSLauncher
 {
     public partial class LauncherForm : Form
     {
-        private WebHelper webHelper;
+        private IWebHelper _webHelper;
 
-        private GameLauncher launcher;
+        private IWebSocketHelper _socketHelper;
 
-        private string sessionId;
+        private GameManager _gameManager;
 
-        private Dictionary<string, Auth> users;
+        private string _sessionId;
 
-        private string pathToGameFolder;
+        private Dictionary<string, UserData> _users;
 
-        public LauncherForm(IComputerNameProvider computerNameProvider, ILauncherIdProvider launcherIdProvider, IHardwareIdProvider hardwareIdProvider)
+        public LauncherForm(
+            IComputerNameProvider computerNameProvider,
+            ILauncherIdProvider launcherIdProvider,
+            IHardwareIdProvider hardwareIdProvider)
         {
             InitializeComponent();
 
-            this.webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
-            this.launcher = new GameLauncher(new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider));
+            IGameInSystemRegistrator gameInSystemRegistrator = new GameInWindowsRegistrator();
+            IGamesConfigProvider gamesConfigProvider = new GamesConfigProvider();
+
+            _webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            _socketHelper = new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            _gameManager = new GameManager(gameInSystemRegistrator, gamesConfigProvider);
 
             ConfigLoader config = ConfigLoader.LoadConfig();
 
-            this.pathToGameFolder = config.GetPathToGame();
-            this.users = config.GetUsers();
+            _users = config.GetUsers();
 
-            if (this.users.Count > 0)
+            if (_users.Count > 0)
             {
-                foreach (var user in this.users)
+                foreach (var user in _users)
                 {
-                    this.accountsListBox.Items.Add(user.Key);
+                    accountsListBox.Items.Add(user.Key);
                 }
 
-                this.ShowGameLauncherPanel();
+                ShowGameLauncherPanel();
             }
 
-            this.accountsListBox.SelectedItem = config.GetPrefferedAccount();
+            accountsListBox.SelectedItem = config.GetPrefferedAccount();
         }
 
         private void ShowLoginPanel()
         {
-            this.loginPanel.Show();
-            this.comfirmationCodePanel.Hide();
-            this.startGamePanel.Hide();
+            loginPanel.Show();
+            comfirmationCodePanel.Hide();
+            startGamePanel.Hide();
 
-            this.usernameTextBox.Select();
+            usernameTextBox.Select();
 
-            this.usernameTextBox.Text = "";
-            this.passwordTextBox.Text = "";
+            usernameTextBox.Text = "";
+            passwordTextBox.Text = "";
         }
 
         private void ShowConfirmationCodePanel(string message)
         {
-            this.textLabel.Text = message;
+            textLabel.Text = message;
 
-            this.loginPanel.Hide();
-            this.comfirmationCodePanel.Show();
-            this.confirmationCodeTextBox.Select();
+            loginPanel.Hide();
+            comfirmationCodePanel.Show();
+            confirmationCodeTextBox.Select();
         }
 
         private void ShowGameLauncherPanel()
         {
-            this.loginPanel.Hide();
-            this.comfirmationCodePanel.Hide();
-            this.startGamePanel.Show();
+            loginPanel.Hide();
+            comfirmationCodePanel.Hide();
+            startGamePanel.Show();
 
-            this.startGameButton.Select();
+            startGameButton.Select();
         }
 
         private async void loginButton_Click(object sender, EventArgs e)
         {
             try
             {
-                AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                this.AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
+                ForgameAccountTokens authData = await _webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
+                AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
 
-                this.ShowGameLauncherPanel();
+                ShowGameLauncherPanel();
+            }
+            catch (NeedToConfirmWithCode ex)
+            {
+                _sessionId = ex.SessionId;
+                ShowConfirmationCodePanel(ex.Message);
             }
             catch (Exception ex)
             {
-                if (ex is NeedConfirmWithCode)
-                {
-                    NeedConfirmWithCode needConfirmWithCodeEx = (NeedConfirmWithCode)ex;
-
-                    this.sessionId = needConfirmWithCodeEx.SessionId;
-                    this.ShowConfirmationCodePanel(needConfirmWithCodeEx.Message);
-
-                    return;
-                }
-
                 MessageBox.Show(ex.Message);
-                return;
             }
         }
 
@@ -110,128 +112,93 @@ namespace BNSLauncher
         {
             if (confirmationCodeTextBox.TextLength == 6)
             {
-                await this.webHelper.SendVerificationCode(this.sessionId, confirmationCodeTextBox.Text);
+                await _webHelper.SendVerificationCode(_sessionId, confirmationCodeTextBox.Text);
 
-                AuthData authData = await this.webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                this.AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
+                ForgameAccountTokens authData = await _webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
+                AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
 
-                this.ShowGameLauncherPanel();
+                ShowGameLauncherPanel();
             }
         }
 
         private void addAnotherAccountButton_Click(object sender, EventArgs e)
         {
-            this.ShowLoginPanel();
-        }
-
-        private void updatePathToGameButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                this.pathToGameFolder = this.SelectGameFolder();
-                ConfigLoader.SavePathToGame(this.pathToGameFolder);
-            }
-            catch { }
+            ShowLoginPanel();
         }
 
         private async void startGameButton_Click(object sender, EventArgs e)
         {
-            string selectedUser = (string)this.accountsListBox.SelectedItem;
+            string selectedUser = (string)accountsListBox.SelectedItem;
             if (string.IsNullOrEmpty(selectedUser))
             {
                 MessageBox.Show("Select account.");
                 return;
             }
 
-            this.users.TryGetValue(selectedUser, out Auth user);
+            UserData userData;
+            _users.TryGetValue(selectedUser, out userData);
 
-            long validTo = new JwtSecurityToken(user.AccessToken).ValidTo.Ticks;
+            JwtSecurityToken token = new JwtSecurityToken(userData.AccessToken);
+
+            long validTo = token.ValidTo.Ticks;
             if (DateTime.Now.Ticks > validTo)
             {
-                this.users.Remove(selectedUser);
+                _users.Remove(selectedUser);
 
-                AuthData authData = await this.webHelper.RefreshTokens(user.RefreshToken);
-                this.AddAccount(selectedUser, authData.AccessToken, authData.RefreshToken);
+                ForgameAccountTokens authData = await _webHelper.RefreshTokens(userData.RefreshToken);
+                AddAccount(selectedUser, authData.AccessToken, authData.RefreshToken);
             }
 
-            string gameAuthString = await launcher.GetGameAuthString(user.AccessToken);
+            string masterId = token.Subject;
+
+            _socketHelper.Connect(userData.AccessToken);
+
+            GameAccount account = await _socketHelper.GetGameAccount(masterId);
+            GameLoginCredentials credentials = await _socketHelper.GetGameLoginCredentials(userData.AccessToken, masterId, account.Login);
+
+            _socketHelper.Disconnect();
+
+            GameLaunchData launchData = new GameLaunchData()
+            {
+                Login = credentials.Login,
+                Password = credentials.Password,
+                Arguments = ""
+            };
 
             if (x32ClientRadioButton.Checked)
             {
-                this.RunGame("bin", gameAuthString);
+                launchData.Version = GameVersion.x32;
+
+                _gameManager.Launch("bns-ru_live", launchData);
                 return;
             }
 
             if (x64ClientRadioButton.Checked)
             {
-                this.RunGame("bin64", gameAuthString);
+                launchData.Version = GameVersion.x64;
+
+                _gameManager.Launch("bns-ru_live", launchData);
             }
         }
 
         private void accountsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ConfigLoader.SavePrefferedAccount((string)this.accountsListBox.SelectedItem);
+            ConfigLoader.SavePrefferedAccount((string)accountsListBox.SelectedItem);
         }
 
-        private void RunGame(string clientVersion, string gameAuthString)
-        {
-            if (string.IsNullOrEmpty(this.pathToGameFolder))
-            {
-                this.pathToGameFolder = this.SelectGameFolder();
-                ConfigLoader.SavePathToGame(pathToGameFolder);
-            }
-
-            string cliArgs = "";
-
-            string pathToParams = Path.Combine(Directory.GetCurrentDirectory(), "params");
-            if (File.Exists(pathToParams))
-            {
-                cliArgs = File.ReadAllText(pathToParams);
-            }
-
-            string pathToClientExe = Path.Combine(this.pathToGameFolder, clientVersion, "Client.exe");
-            if (!File.Exists(pathToClientExe))
-            {
-                MessageBox.Show("Invalid path to game.");
-                return;
-            }
-
-            Process.Start(pathToClientExe, $"{gameAuthString} {cliArgs}");
-
-            if (this.autoCloseLauncherCheckbox.Checked)
-            {
-                Application.Exit();
-            }   
-        }
-        
-        private string SelectGameFolder()
-        {
-            using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog())
-            {
-                DialogResult dialogResult = folderBrowser.ShowDialog();
-
-                if (dialogResult == DialogResult.OK && !string.IsNullOrEmpty(folderBrowser.SelectedPath))
-                {
-                    return folderBrowser.SelectedPath;
-                }
-
-                throw new Exception("Invalid path to game.");
-            }
-        }
-    
         private void AddAccount(string username, string accessToken, string refreshToken)
         {
-            this.accountsListBox.Items.Add(username);
-            this.accountsListBox.SelectedItem = username;
+            accountsListBox.Items.Add(username);
+            accountsListBox.SelectedItem = username;
 
-            Auth user = new Auth()
+            UserData user = new UserData()
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
 
             ConfigLoader.SaveAccount(username, user);
-            this.users.Add(username, user);
+            _users.Add(username, user);
         }
     }
 }

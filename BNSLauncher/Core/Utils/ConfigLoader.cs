@@ -29,7 +29,6 @@ namespace BNSLauncher.Core.Utils
             {
                 Config newConfig = new Config()
                 {
-                    PathToGame = null,
                     Accounts = new Account[0],
                     PrefferedAccount = null,
                 };
@@ -38,8 +37,9 @@ namespace BNSLauncher.Core.Utils
             }
         }
 
-        public Dictionary<string, Auth> GetUsers() {
-            Dictionary<string, Auth> users = new Dictionary<string, Auth>();
+        public Dictionary<string, UserData> GetUsers()
+        {
+            Dictionary<string, UserData> users = new Dictionary<string, UserData>();
 
             foreach (Account account in config.Accounts)
             {
@@ -49,11 +49,8 @@ namespace BNSLauncher.Core.Utils
             return users;
         }
 
-        public string GetPathToGame() {
-            return config.PathToGame;
-        }
-
-        public string GetPrefferedAccount() {
+        public string GetPrefferedAccount()
+        {
             return config.PrefferedAccount;
         }
 
@@ -64,7 +61,6 @@ namespace BNSLauncher.Core.Utils
                 Config config = loader.config;
                 Config newConfig = new Config()
                 {
-                    PathToGame = pathToGame,
                     Accounts = config.Accounts,
                     PrefferedAccount = config.PrefferedAccount
                 };
@@ -73,7 +69,7 @@ namespace BNSLauncher.Core.Utils
             }
         }
 
-        public static void SaveAccount(string username, Auth auth)
+        public static void SaveAccount(string username, UserData auth)
         {
             using (ConfigLoader loader = LoadConfig())
             {
@@ -102,7 +98,6 @@ namespace BNSLauncher.Core.Utils
 
                 Config newConfig = new Config()
                 {
-                    PathToGame = config.PathToGame,
                     Accounts = accounts,
                     PrefferedAccount = config.PrefferedAccount
                 };
@@ -118,7 +113,6 @@ namespace BNSLauncher.Core.Utils
                 Config config = loader.config;
                 Config newConfig = new Config()
                 {
-                    PathToGame = config.PathToGame,
                     Accounts = config.Accounts,
                     PrefferedAccount = username
                 };

@@ -9,10 +9,10 @@ namespace BNSLauncher.Shared.Extensions
         public static string RemoveLeadingSymbols(this string str, char[] symbols)
         {
             if (str == null)
-                return (string)null;
+                return null;
             foreach (char symbol in symbols)
             {
-                if (str.Length > 0 && (int)str[0] == (int)symbol)
+                if (str.Length > 0 && str[0] == symbol)
                     str = str.Substring(1);
             }
             return str;
@@ -21,10 +21,10 @@ namespace BNSLauncher.Shared.Extensions
         public static string RemoveTrailingSymbols(this string str, char[] symbols)
         {
             if (str == null)
-                return (string)null;
+                return null;
             foreach (char symbol in symbols)
             {
-                if (str.Length > 0 && (int)str[str.Length - 1] == (int)symbol)
+                if (str.Length > 0 && str[str.Length - 1] == symbol)
                     str = str.Substring(0, str.Length - 1);
             }
             return str;
@@ -54,7 +54,7 @@ namespace BNSLauncher.Shared.Extensions
 
         public static string EnsureTrailingChar(this string url, char symbol)
         {
-            return string.IsNullOrEmpty(url) || url.Length > 0 && (int)url[url.Length - 1] == (int)symbol ? url : url + symbol.ToString();
+            return string.IsNullOrEmpty(url) || url.Length > 0 && url[url.Length - 1] == symbol ? url : url + symbol.ToString();
         }
 
         public static string RemoveLast(this string value, int length)
@@ -69,19 +69,19 @@ namespace BNSLauncher.Shared.Extensions
 
         public static string EscapeCmdInQuotesPart(this string part)
         {
-            return part == null ? (string)null : part.Replace("\"", "\\\"").RemoveTrailingSlash();
+            return part == null ? null : part.Replace("\"", "\\\"").RemoveTrailingSlash();
         }
 
         public static string RemoveLeadingChar(this string url, char chr)
         {
-            if (!string.IsNullOrEmpty(url) && (int)url[0] == (int)chr)
+            if (!string.IsNullOrEmpty(url) && url[0] == chr)
                 url = url.Substring(1);
             return url;
         }
 
         public static string RemoveTrailingChar(this string url, char chr)
         {
-            if (!string.IsNullOrEmpty(url) && (int)url[url.Length - 1] == (int)chr)
+            if (!string.IsNullOrEmpty(url) && url[url.Length - 1] == chr)
                 url = url.Substring(0, url.Length - 1);
             return url;
         }
@@ -137,7 +137,7 @@ namespace BNSLauncher.Shared.Extensions
             }
             catch (UriFormatException ex)
             {
-                throw new Exception("StartPage config parameter had bad format", (Exception)ex);
+                throw new Exception("StartPage config parameter had bad format", ex);
             }
         }
     }
