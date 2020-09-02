@@ -1,4 +1,4 @@
-# BnsLauncher
+# RU BnsLauncher
 bns-ru launcher.
 
 Запускатор бнс, минующий frostUpdater.exe.
