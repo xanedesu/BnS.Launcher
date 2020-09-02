@@ -1,4 +1,4 @@
-﻿namespace BNSLauncher.Shared.Services.Interfaces
+﻿namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
     public interface ILauncherIdGenerator
     {

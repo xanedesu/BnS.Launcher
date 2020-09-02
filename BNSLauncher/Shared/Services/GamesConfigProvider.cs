@@ -1,21 +1,52 @@
-﻿using BNSLauncher.Shared.Models.GameConfig;
-using BNSLauncher.Shared.Services.Interfaces;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
+using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
+using System.Threading.Tasks;
 
-namespace BNSLauncher.Shared.Services
+namespace Unlakki.Bns.Launcher.Shared.Services
 {
     [Export(typeof(IGamesConfigProvider))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    class GamesConfigProvider : IGamesConfigProvider
+    public class GamesConfigProvider : IGamesConfigProvider
     {
+        private IGamesConfigDataProvider _dataProvider;
+
+        private IGamesConfigParser _configParser;
+
+        private GamesConfig _sharedConfig;
+
+        public GamesConfigProvider(IGamesConfigDataProvider dataProvider, IGamesConfigParser configParser)
+        {
+            _dataProvider = dataProvider;
+            _configParser = configParser;
+        }
+
+        public async void Init()
+        {
+            if (_sharedConfig != null)
+                return;
+            await LoadConfig();
+        }
+
+        public GamesConfig InitAndGet()
+        {
+            Init();
+            return Get();
+        }
+
         public GamesConfig Get()
         {
-            return new GamesConfig();
+            return _sharedConfig;
         }
 
         public GameConfig Get(string key)
         {
-            return new GamesConfig().GetGameConfig(key);
+            return Get().GetGameConfig(key);
+        }
+
+        private async Task LoadConfig()
+        {
+            _sharedConfig = _configParser.Parse(await _dataProvider.GetData());
         }
     }
 }

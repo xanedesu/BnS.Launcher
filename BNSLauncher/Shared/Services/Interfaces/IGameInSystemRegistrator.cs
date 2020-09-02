@@ -1,7 +1,7 @@
-﻿using BNSLauncher.Shared.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Unlakki.Bns.Launcher.Shared.Models;
 
-namespace BNSLauncher.Shared.Services.Interfaces
+namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
     public interface IGameInSystemRegistrator
     {

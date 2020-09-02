@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Shared.Exceptions
+namespace Unlakki.Bns.Launcher.Shared.Exceptions
 {
     [Serializable]
     public class BadRegistryPathPart : Exception

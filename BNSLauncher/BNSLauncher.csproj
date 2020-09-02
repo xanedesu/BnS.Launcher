@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2243D597-3CD7-4015-9EE7-4B04AF7B9787}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>BNSLauncher</RootNamespace>
+    <RootNamespace>Unlakki.Bns.Launcher</RootNamespace>
     <AssemblyName>bns</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,9 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
@@ -43,6 +42,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>4game_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Unlakki.Bns.Launcher.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.7.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -74,45 +80,74 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivationCodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActivationCodeForm.Designer.cs">
+      <DependentUpon>ActivationCodeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Core\Enums\GameVersion.cs" />
+    <Compile Include="Core\Enums\LaunchType.cs" />
+    <Compile Include="Core\Enums\LaunchTypeExtensions.cs" />
+    <Compile Include="Core\Exceptions\BadRequest.cs" />
     <Compile Include="Core\Exceptions\GameStart\GameStartException.cs" />
-    <Compile Include="Core\Models\Config\Config.cs" />
-    <Compile Include="Core\Models\Config\Account.cs" />
+    <Compile Include="Core\Infrastructure\Crypto\AesStorage.cs" />
+    <Compile Include="Core\Infrastructure\Crypto\CryptoManager.cs" />
+    <Compile Include="Core\Infrastructure\Crypto\Interfaces\IAesStorage.cs" />
+    <Compile Include="Core\Infrastructure\Crypto\Interfaces\ICryptoManager.cs" />
+    <Compile Include="Core\Infrastructure\WebSocket\Interfaces\IWebSocket.cs" />
+    <Compile Include="Core\Infrastructure\WebSocket\Models\WebSocketRequest.cs" />
+    <Compile Include="Core\Infrastructure\WebSocket\Models\WebSocketResponse.cs" />
+    <Compile Include="Core\Infrastructure\WebSocket\WebSocket.cs" />
+    <Compile Include="Core\Models\Account\Account.cs" />
+    <Compile Include="Core\Models\Account\Tokens.cs" />
+    <Compile Include="Core\Models\GameAccount\GameAccount.cs" />
+    <Compile Include="Core\Models\GameAccount\GameTokenCode.cs" />
     <Compile Include="Core\Models\GameLaunchData.cs" />
+    <Compile Include="Core\Models\GetGameAccountParams.cs" />
+    <Compile Include="Core\Models\CreateGameTokenCodeParams.cs" />
+    <Compile Include="Core\Models\LauncherConfig.cs" />
+    <Compile Include="Core\Services\GameAuthProvider.cs" />
+    <Compile Include="Core\Services\Interfaces\IForgameAuthProvider.cs" />
+    <Compile Include="Core\Services\Interfaces\IGameAuthProvider.cs" />
+    <Compile Include="Core\Services\Interfaces\ILauncherConfigDataProvider.cs" />
+    <Compile Include="Core\Services\LauncherConfigJsonParser.cs" />
     <Compile Include="Core\Services\GameManager.cs" />
     <Compile Include="Core\Services\GameRepository.cs" />
     <Compile Include="Core\Services\GameRepositoryFactory.cs" />
     <Compile Include="Core\Services\Interfaces\IGameRepository.cs" />
-    <Compile Include="Core\Utils\ConfigLoader.cs" />
-    <Compile Include="Core\Models\Config\UserData.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Exceptions\RequestError.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Exceptions\NeedToConfirmWithCode.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebHelper.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Interfaces\IWebSocketHelper.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Utils\WebSocketResponse.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\WebSocketHelper.cs" />
-    <Compile Include="Shared\Models\ActivationCodePayload.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\Interfaces\RequestInit.cs" />
-    <Compile Include="Shared\Infrastructure\Internet\WebHelper.cs" />
-    <Compile Include="Shared\Models\ForgameAccountTokens.cs" />
-    <Compile Include="Shared\Models\GameConfig\BnsConfig.cs" />
+    <Compile Include="Core\Services\Interfaces\ILauncherConfigProvider.cs" />
+    <Compile Include="Core\Services\Interfaces\ILauncherConfigParser.cs" />
+    <Compile Include="Core\Services\LauncherConfigProvider.cs" />
+    <Compile Include="Core\Services\LauncherConfigDataProvider.cs" />
+    <Compile Include="Core\Services\ForgameAuthProvider.cs" />
+    <Compile Include="Core\Exceptions\NeedToConfirmWithCode.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\Infrastructure\Internet\HeaderedHttpClient.cs" />
+    <Compile Include="Shared\Models\GameConfig\GameComponentConfig.cs" />
+    <Compile Include="Shared\Models\GameConfig\GameComponents.cs" />
+    <Compile Include="Shared\Models\GameConfig\GameEventConfig.cs" />
+    <Compile Include="Shared\Models\GameConfig\GameEventConfigs.cs" />
+    <Compile Include="Shared\Models\GameConfig\Games.cs" />
+    <Compile Include="Shared\Models\GameConfig\GameUninstallerConfig.cs" />
+    <Compile Include="Shared\Models\GameConfig\Icons.cs" />
+    <Compile Include="Shared\Services\GamesConfigCdnDataProvider.cs" />
+    <Compile Include="Shared\Services\GamesConfigXmlParser.cs" />
+    <Compile Include="Shared\Services\Interfaces\IGamesConfigDataProvider.cs" />
+    <Compile Include="Shared\Services\Interfaces\IGamesConfigParser.cs" />
+    <Compile Include="Shared\Utils\WebHelper.cs" />
     <Compile Include="Shared\Models\GameConfig\GameConfig.cs" />
     <Compile Include="Shared\Models\GameConfig\GamesConfig.cs" />
-    <Compile Include="Shared\Models\GameLoginCredentialsPayload.cs" />
-    <Compile Include="Shared\Models\GameAccount.cs" />
-    <Compile Include="Shared\Models\GameLoginCredentials.cs" />
-    <Compile Include="Shared\Models\GameAccountPayload.cs" />
     <Compile Include="Shared\Models\InstalledGameInfo.cs" />
     <Compile Include="Shared\Services\GamesConfigProvider.cs" />
     <Compile Include="Shared\Services\Interfaces\GameRegistrationData.cs" />
-    <Compile Include="Shared\Models\WebSocketRequestMessage.cs" />
-    <Compile Include="Shared\Models\WebSocketResponseMessage.cs" />
-    <Compile Include="Core\Utils\Base64.cs" />
     <Compile Include="Shared\Exceptions\BadRegistryPathPart.cs" />
     <Compile Include="Shared\Extensions\StringExtensions.cs" />
     <Compile Include="LauncherForm.cs">
@@ -147,8 +182,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Utils\RegistryUninstallInfo.cs" />
     <Compile Include="Shared\Utils\UrlSchemeInfo.cs" />
+    <EmbeddedResource Include="ActivationCodeForm.resx">
+      <DependentUpon>ActivationCodeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LauncherForm.resx">
       <DependentUpon>LauncherForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -158,6 +199,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.manifest" />
     <None Include="BNSLauncherKey.pfx" />

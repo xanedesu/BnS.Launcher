@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Shared.Services.Interfaces
+namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
     public class GameRegistrationData
     {

@@ -1,9 +1,13 @@
-﻿using BNSLauncher.Shared.Models.GameConfig;
+﻿using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 
-namespace BNSLauncher.Shared.Services.Interfaces
+namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-    interface IGamesConfigProvider
+    public interface IGamesConfigProvider
     {
+        void Init();
+
+        GamesConfig InitAndGet();
+
         GamesConfig Get();
 
         GameConfig Get(string key);

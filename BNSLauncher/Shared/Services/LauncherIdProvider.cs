@@ -1,9 +1,9 @@
-﻿using BNSLauncher.Shared.Services.Interfaces;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.Threading;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher.Shared.Providers
+namespace Unlakki.Bns.Launcher.Shared.Services
 {
     [Export(typeof(ILauncherIdProvider))]
     [PartCreationPolicy(CreationPolicy.Shared)]

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BNSLauncher.Shared.Extensions
+namespace Unlakki.Bns.Launcher.Shared.Extensions
 {
     public static class StringExtensions
     {

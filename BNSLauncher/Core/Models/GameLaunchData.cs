@@ -1,8 +1,8 @@
-﻿using BNSLauncher.Core.Enums;
+﻿using Unlakki.Bns.Launcher.Core.Enums;
 
-namespace BNSLauncher.Core.Models
+namespace Unlakki.Bns.Launcher.Core.Models
 {
-    class GameLaunchData
+    public class GameLaunchData
     {
         public string Login { get; set; }
 

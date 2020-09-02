@@ -1,12 +1,12 @@
-﻿using BNSLauncher.Shared.Services.Interfaces;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher.Shared.Services
+namespace Unlakki.Bns.Launcher.Shared.Services
 {
     [Export(typeof(IComputerNameProvider))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    class ComputerNameProvider : IComputerNameProvider
+    public class ComputerNameProvider : IComputerNameProvider
     {
         public string Get()
         {

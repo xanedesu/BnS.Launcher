@@ -1,204 +1,175 @@
-﻿using BNSLauncher.Core.Enums;
-using BNSLauncher.Core.Models;
-using BNSLauncher.Core.Services;
-using BNSLauncher.Core.Utils;
-using BNSLauncher.Shared.Infrastructure.Internet;
-using BNSLauncher.Shared.Infrastructure.Internet.Exceptions;
-using BNSLauncher.Shared.Infrastructure.Internet.Interfaces;
-using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Services;
-using BNSLauncher.Shared.Services.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Windows.Forms;
+using Unlakki.Bns.Launcher.Core.Enums;
+using Unlakki.Bns.Launcher.Core.Infrastructure.Crypto;
+using Unlakki.Bns.Launcher.Core.Infrastructure.Crypto.Interfaces;
+using Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket;
+using Unlakki.Bns.Launcher.Core.Models;
+using Unlakki.Bns.Launcher.Core.Models.Account;
+using Unlakki.Bns.Launcher.Core.Models.GameAccount;
+using Unlakki.Bns.Launcher.Core.Services;
+using Unlakki.Bns.Launcher.Core.Services.Interfaces;
+using Unlakki.Bns.Launcher.Shared.Services;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher
+namespace Unlakki.Bns.Launcher
 {
     public partial class LauncherForm : Form
     {
-        private IWebHelper _webHelper;
+        private ILauncherConfigProvider _launcherConfigProvider;
 
-        private IWebSocketHelper _socketHelper;
+        private IGamesConfigProvider _gamesConfigProvider;
+
+        private IForgameAuthProvider _forgameAuthProvider;
 
         private GameManager _gameManager;
 
-        private string _sessionId;
+        private IGameAuthProvider _gameAuthProvider;
 
-        private Dictionary<string, UserData> _users;
-
-        public LauncherForm(
-            IComputerNameProvider computerNameProvider,
-            ILauncherIdProvider launcherIdProvider,
-            IHardwareIdProvider hardwareIdProvider)
+        public LauncherForm()
         {
             InitializeComponent();
 
-            IGameInSystemRegistrator gameInSystemRegistrator = new GameInWindowsRegistrator();
-            IGamesConfigProvider gamesConfigProvider = new GamesConfigProvider();
+            LauncherInWindowsRegistrator launcherInWindowsRegistrator = new LauncherInWindowsRegistrator();
+            LauncherIdGenerator launcherIdGenerator = new LauncherIdGenerator();
 
-            _webHelper = new WebHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
-            _socketHelper = new WebSocketHelper(computerNameProvider, launcherIdProvider, hardwareIdProvider);
-            _gameManager = new GameManager(gameInSystemRegistrator, gamesConfigProvider);
+            ComputerNameProvider computerNameProvider = new ComputerNameProvider();
+            LauncherIdProvider launcherIdProvider = new LauncherIdProvider(launcherInWindowsRegistrator, launcherIdGenerator);
+            HardwareIdProvider hardwareIdProvider = new HardwareIdProvider(launcherIdProvider);
 
-            ConfigLoader config = ConfigLoader.LoadConfig();
+            IGamesConfigDataProvider gamesConfigDataProvider = new GamesConfigCdnDataProvider();
+            IGamesConfigParser gamesConfigParser = new GamesConfigXmlParser();
 
-            _users = config.GetUsers();
+            _gamesConfigProvider = new GamesConfigProvider(gamesConfigDataProvider, gamesConfigParser);
+            _gamesConfigProvider.Init();
 
-            if (_users.Count > 0)
-            {
-                foreach (var user in _users)
-                {
-                    accountsListBox.Items.Add(user.Key);
-                }
+            IAesStorage aesStorage = new AesStorage(computerNameProvider);
+            ICryptoManager cryptoManager = new CryptoManager(aesStorage);
+            ILauncherConfigDataProvider launcherConfigProvider = new LauncherConfigDataProvider(cryptoManager);
+            ILauncherConfigParser launcherConfigParser = new LauncherConfigJsonParser();
 
-                ShowGameLauncherPanel();
-            }
+            _launcherConfigProvider = new LauncherConfigProvider(launcherConfigProvider, launcherConfigParser);
+            _launcherConfigProvider.Init();
 
-            accountsListBox.SelectedItem = config.GetPrefferedAccount();
-        }
+            _forgameAuthProvider = new ForgameAuthProvider(computerNameProvider, launcherIdProvider, hardwareIdProvider);
 
-        private void ShowLoginPanel()
-        {
-            loginPanel.Show();
-            comfirmationCodePanel.Hide();
-            startGamePanel.Hide();
+            IGameInSystemRegistrator gameInWindowsRegistrator = new GameInWindowsRegistrator();
+            _gameManager = new GameManager(gameInWindowsRegistrator, _gamesConfigProvider);
 
-            usernameTextBox.Select();
+            WebSocket ws = new WebSocket(computerNameProvider, launcherIdProvider, hardwareIdProvider);
+            _gameAuthProvider = new GameAuthProvider(ws);
 
-            usernameTextBox.Text = "";
-            passwordTextBox.Text = "";
-        }
-
-        private void ShowConfirmationCodePanel(string message)
-        {
-            textLabel.Text = message;
-
-            loginPanel.Hide();
-            comfirmationCodePanel.Show();
-            confirmationCodeTextBox.Select();
-        }
-
-        private void ShowGameLauncherPanel()
-        {
-            loginPanel.Hide();
-            comfirmationCodePanel.Hide();
-            startGamePanel.Show();
-
-            startGameButton.Select();
-        }
-
-        private async void loginButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ForgameAccountTokens authData = await _webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
-
-                ShowGameLauncherPanel();
-            }
-            catch (NeedToConfirmWithCode ex)
-            {
-                _sessionId = ex.SessionId;
-                ShowConfirmationCodePanel(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private async void confirmationCodeTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (confirmationCodeTextBox.TextLength == 6)
-            {
-                await _webHelper.SendVerificationCode(_sessionId, confirmationCodeTextBox.Text);
-
-                ForgameAccountTokens authData = await _webHelper.Authorize(usernameTextBox.Text, passwordTextBox.Text);
-                AddAccount(usernameTextBox.Text, authData.AccessToken, authData.RefreshToken);
-
-                ShowGameLauncherPanel();
-            }
+            UpdateUiFromConfig();  
         }
 
         private void addAnotherAccountButton_Click(object sender, EventArgs e)
         {
-            ShowLoginPanel();
+            Hide();
+            
+            using (LoginForm loginForm = new LoginForm(_forgameAuthProvider, _launcherConfigProvider))
+            {
+                if (loginForm.ShowDialog() == DialogResult.OK)
+                {
+                    UpdateAccountList(true);
+                }
+            }
+
+            Show();
         }
 
         private async void startGameButton_Click(object sender, EventArgs e)
         {
-            string selectedUser = (string)accountsListBox.SelectedItem;
-            if (string.IsNullOrEmpty(selectedUser))
+            string username = (string)accountsListBox.SelectedItem;
+
+            Account account = _launcherConfigProvider.GetAccounts().Find(acc => acc.Username == username);
+            if (account == null)
             {
                 MessageBox.Show("Select account.");
                 return;
             }
 
-            UserData userData;
-            _users.TryGetValue(selectedUser, out userData);
+            JwtSecurityToken jwt = new JwtSecurityToken(account.Tokens.AccessToken);
 
-            JwtSecurityToken token = new JwtSecurityToken(userData.AccessToken);
-
-            long validTo = token.ValidTo.Ticks;
+            long validTo = jwt.ValidTo.Ticks;
             if (DateTime.Now.Ticks > validTo)
             {
-                _users.Remove(selectedUser);
+                Tokens tokens = await _forgameAuthProvider.RefreshTokens(account.Tokens.RefreshToken);
+                _launcherConfigProvider.AddOrUpdateAccount(new Account
+                {
+                    Username = username,
+                    Tokens = tokens
+                });
 
-                ForgameAccountTokens authData = await _webHelper.RefreshTokens(userData.RefreshToken);
-                AddAccount(selectedUser, authData.AccessToken, authData.RefreshToken);
+                account.Tokens = tokens;
             }
 
-            string masterId = token.Subject;
+            GameTokenCode gameTokenCode = await _gameAuthProvider.GetGameTokenCode(account.Tokens.AccessToken);
 
-            _socketHelper.Connect(userData.AccessToken);
-
-            GameAccount account = await _socketHelper.GetGameAccount(masterId);
-            GameLoginCredentials credentials = await _socketHelper.GetGameLoginCredentials(userData.AccessToken, masterId, account.Login);
-
-            _socketHelper.Disconnect();
-
-            GameLaunchData launchData = new GameLaunchData()
+            _gameManager.Launch("bns-ru_live", new GameLaunchData
             {
-                Login = credentials.Login,
-                Password = credentials.Password,
-                Arguments = ""
-            };
+                Login = gameTokenCode.Login,
+                Password = gameTokenCode.Password,
+                Version = _launcherConfigProvider.GetGameVersion(),
+                Arguments = _launcherConfigProvider.GetGameArguments()
+            });
 
-            if (x32ClientRadioButton.Checked)
+            if (_launcherConfigProvider.GetAutoCloseLauncher())
             {
-                launchData.Version = GameVersion.x32;
-
-                _gameManager.Launch("bns-ru_live", launchData);
-                return;
-            }
-
-            if (x64ClientRadioButton.Checked)
-            {
-                launchData.Version = GameVersion.x64;
-
-                _gameManager.Launch("bns-ru_live", launchData);
+                Close();
             }
         }
 
         private void accountsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ConfigLoader.SavePrefferedAccount((string)accountsListBox.SelectedItem);
+            _launcherConfigProvider.UpdateLastUsedAccount((string)accountsListBox.SelectedItem);
         }
 
-        private void AddAccount(string username, string accessToken, string refreshToken)
+        private void x32ClientRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            accountsListBox.Items.Add(username);
-            accountsListBox.SelectedItem = username;
-
-            UserData user = new UserData()
+            if (x32ClientRadioButton.Checked)
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
+                _launcherConfigProvider.UpdateGameVersion(GameVersion.x32);
+            }
+        }
 
-            ConfigLoader.SaveAccount(username, user);
-            _users.Add(username, user);
+        private void x64ClientRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (x64ClientRadioButton.Checked)
+            {
+                _launcherConfigProvider.UpdateGameVersion(GameVersion.x64);
+            }
+        }
+
+        private void autoCloseLauncherCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            _launcherConfigProvider.UpdateAutoCloseLauncher(autoCloseLauncherCheckbox.Checked);
+        }
+    
+        private void UpdateUiFromConfig()
+        {
+            UpdateAccountList();
+            accountsListBox.SelectedItem = _launcherConfigProvider.GetLastUsedAccount();
+
+            GameVersion version = _launcherConfigProvider.GetGameVersion();
+
+            x32ClientRadioButton.Checked = version == GameVersion.x32;
+            x64ClientRadioButton.Checked = version == GameVersion.x64;
+
+            autoCloseLauncherCheckbox.Checked = _launcherConfigProvider.GetAutoCloseLauncher();
+        }
+
+        private void UpdateAccountList(bool mustUpdateItemIndex = false)
+        {
+            accountsListBox.Items.Clear();
+
+            foreach (var account in _launcherConfigProvider.GetAccounts())
+            {
+                accountsListBox.Items.Add(account.Username);
+            }
+
+            if (mustUpdateItemIndex)
+                accountsListBox.SelectedIndex = accountsListBox.Items.Count - 1;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using BNSLauncher.Shared.Exceptions;
-using BNSLauncher.Shared.Extensions;
-using BNSLauncher.Shared.Services.Interfaces;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,8 +6,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Unlakki.Bns.Launcher.Shared.Exceptions;
+using Unlakki.Bns.Launcher.Shared.Extensions;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher.Shared.Utils
+namespace Unlakki.Bns.Launcher.Shared.Utils
 {
     [Export(typeof(ILauncherInSystemRegistrator))]
     [PartCreationPolicy(CreationPolicy.Shared)]

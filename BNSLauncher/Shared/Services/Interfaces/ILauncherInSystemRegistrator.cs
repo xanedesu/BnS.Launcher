@@ -1,6 +1,6 @@
-﻿using BNSLauncher.Shared.Utils;
+﻿using Unlakki.Bns.Launcher.Shared.Utils;
 
-namespace BNSLauncher.Shared.Services.Interfaces
+namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
     public interface ILauncherInSystemRegistrator
     {

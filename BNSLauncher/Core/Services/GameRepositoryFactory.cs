@@ -1,8 +1,8 @@
-﻿using BNSLauncher.Core.Services.Interfaces;
-using BNSLauncher.Shared.Services.Interfaces;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
+using Unlakki.Bns.Launcher.Core.Services.Interfaces;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher.Core.Services
+namespace Unlakki.Bns.Launcher.Core.Services
 {
     [Export(typeof(GameRepositoryFactory))]
     [PartCreationPolicy(CreationPolicy.Shared)]

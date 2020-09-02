@@ -1,16 +1,16 @@
-﻿using BNSLauncher.Core.Enums;
-using BNSLauncher.Core.Exceptions.GameStart;
-using BNSLauncher.Core.Models;
-using BNSLauncher.Core.Services.Interfaces;
-using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Services.Interfaces;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Unlakki.Bns.Launcher.Core.Enums;
+using Unlakki.Bns.Launcher.Core.Exceptions.GameStart;
+using Unlakki.Bns.Launcher.Core.Models;
+using Unlakki.Bns.Launcher.Core.Services.Interfaces;
+using Unlakki.Bns.Launcher.Shared.Models;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
-namespace BNSLauncher.Core.Services
+namespace Unlakki.Bns.Launcher.Core.Services
 {
-    class GameManager
+    public class GameManager
     {
         private IGameRepository _gameRepository;
 

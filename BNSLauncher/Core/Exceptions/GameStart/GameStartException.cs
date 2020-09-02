@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Core.Exceptions.GameStart
+namespace Unlakki.Bns.Launcher.Core.Exceptions.GameStart
 {
     public class GameStartException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Shared.Utils
+namespace Unlakki.Bns.Launcher.Shared.Utils
 {
     public class RegistryUninstallInfo
     {

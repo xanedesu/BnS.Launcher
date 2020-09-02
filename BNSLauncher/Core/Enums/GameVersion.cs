@@ -1,6 +1,6 @@
-﻿namespace BNSLauncher.Core.Enums
+﻿namespace Unlakki.Bns.Launcher.Core.Enums
 {
-    enum GameVersion
+    public enum GameVersion
     {
         x32,
         x64,

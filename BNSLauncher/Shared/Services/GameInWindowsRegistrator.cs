@@ -1,13 +1,13 @@
-﻿using BNSLauncher.Shared.Models;
-using BNSLauncher.Shared.Services.Interfaces;
-using BNSLauncher.Shared.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using Unlakki.Bns.Launcher.Shared.Models;
+using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
+using Unlakki.Bns.Launcher.Shared.Utils;
 
-namespace BNSLauncher.Shared.Services
+namespace Unlakki.Bns.Launcher.Shared.Services
 {
     [Export(typeof(IGameInSystemRegistrator))]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -17,18 +17,18 @@ namespace BNSLauncher.Shared.Services
 
         public void Register(GameRegistrationData registrationData)
         {
-            string iconPath = this.GetIconPath(registrationData.InstallationPath);
+            string iconPath = GetIconPath(registrationData.InstallationPath);
             registrationData.IconPath = iconPath;
-            bool gameWasInstalled = this.IsRegistered(registrationData.LauncherKey, registrationData.Key);
-            this.RegisterInRegistry(registrationData);
-            this.CreateDesktopShortcut(registrationData, gameWasInstalled);
+            bool gameWasInstalled = IsRegistered(registrationData.LauncherKey, registrationData.Key);
+            RegisterInRegistry(registrationData);
+            CreateDesktopShortcut(registrationData, gameWasInstalled);
         }
 
         public void Unregister(GameUnregistrationData unregistrationData)
         {
             try
             {
-                RegistryHelper.DeleteUninstallInfo(this.GetUninstallGameRegistryKey(unregistrationData.LauncherKey, unregistrationData.Key));
+                RegistryHelper.DeleteUninstallInfo(GetUninstallGameRegistryKey(unregistrationData.LauncherKey, unregistrationData.Key));
                 RegistryHelper.DeleteGameSoftwareData(new DeleteGameSoftwareInfo()
                 {
                     Publisher = "Innova Co. SARL",
@@ -38,7 +38,7 @@ namespace BNSLauncher.Shared.Services
                 //FileSystemHelper.DeleteFileIfExists(this.GetIconPath(unregistrationData.InstallationPath));
                 //ShortcutHelper.DeleteDesktopShortcut(unregistrationData.Name);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -46,7 +46,7 @@ namespace BNSLauncher.Shared.Services
 
         public bool IsRegistered(string launcherKey, string gameRegistrationKey)
         {
-            return RegistryHelper.UninstallInfoExists(this.GetUninstallGameRegistryKey(launcherKey, gameRegistrationKey));
+            return RegistryHelper.UninstallInfoExists(GetUninstallGameRegistryKey(launcherKey, gameRegistrationKey));
         }
 
         public List<InstalledGameInfo> GetInstalledGames(string launcherKey)
@@ -55,7 +55,7 @@ namespace BNSLauncher.Shared.Services
             return RegistryHelper.GetUninstallInfoKeys(gameKeysPrefix).Select(k =>
             {
                 RegistryUninstallInfo uninstallInfo = RegistryHelper.GetUninstallInfo(k);
-                RegisterGameSoftwareInfo gameSoftwareInfo = uninstallInfo != null ? RegistryHelper.GetGameSoftwareData("Innova Co. SARL", launcherKey, uninstallInfo.Name) : (RegisterGameSoftwareInfo)null;
+                RegisterGameSoftwareInfo gameSoftwareInfo = uninstallInfo != null ? RegistryHelper.GetGameSoftwareData("Innova Co. SARL", launcherKey, uninstallInfo.Name) : null;
                 return new
                 {
                     Key = k,
@@ -70,7 +70,7 @@ namespace BNSLauncher.Shared.Services
                 Version = info.Info.Version,
                 InstallationDate = new DateTime?(info.Info.InstallationDate),
                 IconPath = info.Info.IconPath
-            }).ToList<InstalledGameInfo>();
+            }).ToList();
         }
 
         private void CreateDesktopShortcut(GameRegistrationData registrationData, bool gameWasInstalled)
@@ -82,7 +82,7 @@ namespace BNSLauncher.Shared.Services
                     return;
                 //ShortcutHelper.CreateOrReplaceDesktopShortcut(registrationData.Name, registrationData.IconPath, registrationData.RunnerPath, registrationData.RunnerArgs);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -90,7 +90,7 @@ namespace BNSLauncher.Shared.Services
 
         private void RegisterInRegistry(GameRegistrationData registrationData)
         {
-            string uninstallGameRegistryKey = this.GetUninstallGameRegistryKey(registrationData.LauncherKey, registrationData.Key);
+            string uninstallGameRegistryKey = GetUninstallGameRegistryKey(registrationData.LauncherKey, registrationData.Key);
             long? nullable = new long?();
             long result;
             if (long.TryParse(registrationData.Size, out result))

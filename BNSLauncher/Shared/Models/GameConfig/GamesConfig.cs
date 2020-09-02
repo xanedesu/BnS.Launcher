@@ -1,19 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
-namespace BNSLauncher.Shared.Models.GameConfig
+namespace Unlakki.Bns.Launcher.Shared.Models.GameConfig
 {
-    class GamesConfig
+    [XmlRoot("config")]
+    public class GamesConfig
     {
-        private List<GameConfig> _games = new List<GameConfig>();
+        [XmlElement("icons", IsNullable = false)]
+        public Icons Icons { get; set; }
 
-        public GamesConfig()
+        [XmlArray("games", IsNullable = false)]
+        [XmlArrayItem("game")]
+        public Games Games { get; set; }
+
+        public string GetGameIconUrl(string gameKey)
         {
-            _games.Add(new BnsConfig());
+            return Path.Combine(Icons.IconsUrl, gameKey + ".ico");
         }
 
-        public GameConfig GetGameConfig(string key)
+        public string GetGameLogoUrl(string gameKey)
         {
-            return _games.Find((GameConfig config) => config.GameKey == key);
+            return Path.Combine(Icons.LogosUrl, gameKey + ".png");
+        }
+
+        public string GetGameCoverUrl(string gameKey)
+        {
+            return Path.Combine(Icons.CoversUrl, gameKey + ".png");
+        }
+
+        public GameConfig GetGameConfig(string gameKey)
+        {
+            return Games.FirstOrDefault(a => a.EnvKey == gameKey);
         }
     }
 }

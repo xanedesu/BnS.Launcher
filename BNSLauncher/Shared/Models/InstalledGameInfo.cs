@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BNSLauncher.Shared.Models
+namespace Unlakki.Bns.Launcher.Shared.Models
 {
     public class InstalledGameInfo
     {
