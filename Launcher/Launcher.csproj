@@ -38,7 +38,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>BnsLauncherKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>LauncherKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>4game_icon.ico</ApplicationIcon>
@@ -202,7 +202,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.manifest" />
-    <None Include="BnsLauncherKey.pfx" />
+    <None Include="LauncherKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
