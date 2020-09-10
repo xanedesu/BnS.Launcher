@@ -37,18 +37,14 @@
             this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
             this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.settingsPanel = new System.Windows.Forms.Panel();
-            this.saveSettingButton = new System.Windows.Forms.Button();
-            this.backBotton = new System.Windows.Forms.Button();
-            this.argsLabel = new System.Windows.Forms.Label();
-            this.argsTextBox = new System.Windows.Forms.TextBox();
+            this.openSettingsFormButton = new System.Windows.Forms.Button();
             this.startGamePanel.SuspendLayout();
             this.clientVersionSelectorPanel.SuspendLayout();
-            this.settingsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // startGamePanel
             // 
+            this.startGamePanel.Controls.Add(this.openSettingsFormButton);
             this.startGamePanel.Controls.Add(this.autoCloseLauncherCheckbox);
             this.startGamePanel.Controls.Add(this.addAnotherAccountButton);
             this.startGamePanel.Controls.Add(this.accountsListBox);
@@ -74,9 +70,10 @@
             // 
             // addAnotherAccountButton
             // 
-            this.addAnotherAccountButton.Location = new System.Drawing.Point(194, 6);
+            this.addAnotherAccountButton.AutoSize = true;
+            this.addAnotherAccountButton.Location = new System.Drawing.Point(192, 6);
             this.addAnotherAccountButton.Name = "addAnotherAccountButton";
-            this.addAnotherAccountButton.Size = new System.Drawing.Size(34, 23);
+            this.addAnotherAccountButton.Size = new System.Drawing.Size(36, 23);
             this.addAnotherAccountButton.TabIndex = 4;
             this.addAnotherAccountButton.Text = "Add";
             this.addAnotherAccountButton.UseVisualStyleBackColor = true;
@@ -88,15 +85,16 @@
             this.accountsListBox.FormattingEnabled = true;
             this.accountsListBox.Location = new System.Drawing.Point(9, 7);
             this.accountsListBox.Name = "accountsListBox";
-            this.accountsListBox.Size = new System.Drawing.Size(179, 21);
+            this.accountsListBox.Size = new System.Drawing.Size(177, 21);
             this.accountsListBox.TabIndex = 3;
             this.accountsListBox.SelectedIndexChanged += new System.EventHandler(this.accountsListBox_SelectedIndexChanged);
             // 
             // startGameButton
             // 
-            this.startGameButton.Location = new System.Drawing.Point(153, 67);
+            this.startGameButton.AutoSize = true;
+            this.startGameButton.Location = new System.Drawing.Point(133, 67);
             this.startGameButton.Name = "startGameButton";
-            this.startGameButton.Size = new System.Drawing.Size(75, 23);
+            this.startGameButton.Size = new System.Drawing.Size(37, 23);
             this.startGameButton.TabIndex = 2;
             this.startGameButton.Text = "Play";
             this.startGameButton.UseVisualStyleBackColor = true;
@@ -136,51 +134,16 @@
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             this.x32ClientRadioButton.CheckedChanged += new System.EventHandler(this.x32ClientRadioButton_CheckedChanged);
             // 
-            // settingsPanel
+            // openSettingsFormButton
             // 
-            this.settingsPanel.Controls.Add(this.argsTextBox);
-            this.settingsPanel.Controls.Add(this.argsLabel);
-            this.settingsPanel.Controls.Add(this.backBotton);
-            this.settingsPanel.Controls.Add(this.saveSettingButton);
-            this.settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPanel.Location = new System.Drawing.Point(0, 0);
-            this.settingsPanel.Name = "settingsPanel";
-            this.settingsPanel.Size = new System.Drawing.Size(240, 99);
-            this.settingsPanel.TabIndex = 3;
-            // 
-            // saveSettingButton
-            // 
-            this.saveSettingButton.Location = new System.Drawing.Point(153, 67);
-            this.saveSettingButton.Name = "saveSettingButton";
-            this.saveSettingButton.Size = new System.Drawing.Size(75, 23);
-            this.saveSettingButton.TabIndex = 0;
-            this.saveSettingButton.Text = "Save";
-            this.saveSettingButton.UseVisualStyleBackColor = true;
-            // 
-            // backBotton
-            // 
-            this.backBotton.Location = new System.Drawing.Point(9, 67);
-            this.backBotton.Name = "backBotton";
-            this.backBotton.Size = new System.Drawing.Size(75, 23);
-            this.backBotton.TabIndex = 1;
-            this.backBotton.Text = "Back";
-            this.backBotton.UseVisualStyleBackColor = true;
-            // 
-            // argsLabel
-            // 
-            this.argsLabel.AutoSize = true;
-            this.argsLabel.Location = new System.Drawing.Point(6, 11);
-            this.argsLabel.Name = "argsLabel";
-            this.argsLabel.Size = new System.Drawing.Size(67, 13);
-            this.argsLabel.TabIndex = 2;
-            this.argsLabel.Text = "Launch Args";
-            // 
-            // argsTextBox
-            // 
-            this.argsTextBox.Location = new System.Drawing.Point(79, 7);
-            this.argsTextBox.Name = "argsTextBox";
-            this.argsTextBox.Size = new System.Drawing.Size(149, 20);
-            this.argsTextBox.TabIndex = 3;
+            this.openSettingsFormButton.AutoSize = true;
+            this.openSettingsFormButton.Location = new System.Drawing.Point(176, 67);
+            this.openSettingsFormButton.Name = "openSettingsFormButton";
+            this.openSettingsFormButton.Size = new System.Drawing.Size(55, 23);
+            this.openSettingsFormButton.TabIndex = 7;
+            this.openSettingsFormButton.Text = "Settings";
+            this.openSettingsFormButton.UseVisualStyleBackColor = true;
+            this.openSettingsFormButton.Click += new System.EventHandler(this.openSettingsFormButton_Click);
             // 
             // LauncherForm
             // 
@@ -188,7 +151,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(240, 99);
             this.Controls.Add(this.startGamePanel);
-            this.Controls.Add(this.settingsPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -199,8 +161,6 @@
             this.startGamePanel.PerformLayout();
             this.clientVersionSelectorPanel.ResumeLayout(false);
             this.clientVersionSelectorPanel.PerformLayout();
-            this.settingsPanel.ResumeLayout(false);
-            this.settingsPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -214,11 +174,7 @@
         private System.Windows.Forms.ComboBox accountsListBox;
         private System.Windows.Forms.Button addAnotherAccountButton;
         private System.Windows.Forms.CheckBox autoCloseLauncherCheckbox;
-        private System.Windows.Forms.Panel settingsPanel;
-        private System.Windows.Forms.TextBox argsTextBox;
-        private System.Windows.Forms.Label argsLabel;
-        private System.Windows.Forms.Button backBotton;
-        private System.Windows.Forms.Button saveSettingButton;
+        private System.Windows.Forms.Button openSettingsFormButton;
     }
 }
 
