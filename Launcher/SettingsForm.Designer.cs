@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.settingsPanel = new System.Windows.Forms.Panel();
             this.argsTextBox = new System.Windows.Forms.TextBox();
-            this.saveSettingButton = new System.Windows.Forms.Button();
-            this.useAllAvailableCoresCheckbox = new System.Windows.Forms.CheckBox();
             this.noTextureStreamingCheckbox = new System.Windows.Forms.CheckBox();
+            this.useAllAvailableCoresCheckbox = new System.Windows.Forms.CheckBox();
+            this.saveSettingButton = new System.Windows.Forms.Button();
             this.settingsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,16 +58,16 @@
             this.argsTextBox.TabIndex = 3;
             this.argsTextBox.TextChanged += new System.EventHandler(this.argsTextBox_TextChanged);
             // 
-            // saveSettingButton
+            // noTextureStreamingCheckbox
             // 
-            this.saveSettingButton.AutoSize = true;
-            this.saveSettingButton.Location = new System.Drawing.Point(189, 50);
-            this.saveSettingButton.Name = "saveSettingButton";
-            this.saveSettingButton.Size = new System.Drawing.Size(42, 23);
-            this.saveSettingButton.TabIndex = 0;
-            this.saveSettingButton.Text = "Save";
-            this.saveSettingButton.UseVisualStyleBackColor = true;
-            this.saveSettingButton.Click += new System.EventHandler(this.saveSettingButton_Click);
+            this.noTextureStreamingCheckbox.AutoSize = true;
+            this.noTextureStreamingCheckbox.Location = new System.Drawing.Point(12, 26);
+            this.noTextureStreamingCheckbox.Name = "noTextureStreamingCheckbox";
+            this.noTextureStreamingCheckbox.Size = new System.Drawing.Size(118, 17);
+            this.noTextureStreamingCheckbox.TabIndex = 6;
+            this.noTextureStreamingCheckbox.Text = "-notexturestreaming";
+            this.noTextureStreamingCheckbox.UseVisualStyleBackColor = true;
+            this.noTextureStreamingCheckbox.CheckedChanged += new System.EventHandler(this.noTextureStreamingCheckbox_CheckedChanged);
             // 
             // useAllAvailableCoresCheckbox
             // 
@@ -80,16 +80,16 @@
             this.useAllAvailableCoresCheckbox.UseVisualStyleBackColor = true;
             this.useAllAvailableCoresCheckbox.CheckedChanged += new System.EventHandler(this.useAllAvailableCoresCheckbox_CheckedChanged);
             // 
-            // noTextureStreamingCheckbox
+            // saveSettingButton
             // 
-            this.noTextureStreamingCheckbox.AutoSize = true;
-            this.noTextureStreamingCheckbox.Location = new System.Drawing.Point(12, 26);
-            this.noTextureStreamingCheckbox.Name = "noTextureStreamingCheckbox";
-            this.noTextureStreamingCheckbox.Size = new System.Drawing.Size(118, 17);
-            this.noTextureStreamingCheckbox.TabIndex = 6;
-            this.noTextureStreamingCheckbox.Text = "-notexturestreaming";
-            this.noTextureStreamingCheckbox.UseVisualStyleBackColor = true;
-            this.noTextureStreamingCheckbox.CheckedChanged += new System.EventHandler(this.noTextureStreamingCheckbox_CheckedChanged);
+            this.saveSettingButton.AutoSize = true;
+            this.saveSettingButton.Location = new System.Drawing.Point(189, 50);
+            this.saveSettingButton.Name = "saveSettingButton";
+            this.saveSettingButton.Size = new System.Drawing.Size(42, 23);
+            this.saveSettingButton.TabIndex = 0;
+            this.saveSettingButton.Text = "Save";
+            this.saveSettingButton.UseVisualStyleBackColor = true;
+            this.saveSettingButton.Click += new System.EventHandler(this.saveSettingButton_Click);
             // 
             // SettingsForm
             // 
@@ -97,6 +97,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(240, 99);
             this.Controls.Add(this.settingsPanel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
