@@ -171,5 +171,17 @@ namespace Unlakki.Bns.Launcher
             if (mustUpdateItemIndex)
                 accountsListBox.SelectedIndex = accountsListBox.Items.Count - 1;
         }
+
+        private void openSettingsFormButton_Click(object sender, EventArgs e)
+        {
+            Hide();
+
+            using (SettingsForm settingsForm = new SettingsForm(_launcherConfigProvider))
+            {
+                if (settingsForm.ShowDialog() == DialogResult.OK) { }
+            }
+
+            Show();
+        }
     }
 }
