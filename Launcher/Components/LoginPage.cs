@@ -41,6 +41,7 @@ namespace Unlakki.Bns.Launcher.Components
                     Username = username,
                     Token = token
                 });
+                _launcherConfigProvider.UpdateLastUsedAccount(username);
 
                 Router.SetLocation("/");
             }
