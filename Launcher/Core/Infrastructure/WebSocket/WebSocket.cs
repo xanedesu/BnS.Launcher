@@ -14,7 +14,7 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
     [Export(typeof(IWebSocket))]
     public class WebSocket : IWebSocket
     {
-        private static readonly string WS_URL = "wss://launcherbff.ru.4game.com/";
+        private string _wsAddress = "wss://launcherbff.ru.4game.com/";
 
         private IComputerNameProvider _computerNameProvider;
 
@@ -43,7 +43,7 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
             string launcherId = _launcherIdProvider.Get();
             string hardwareId = Convert.ToBase64String(Encoding.Default.GetBytes(_hardwareIdProvider.Get()));
 
-            string uriString = WS_URL
+            string uriString = _wsAddress
                 .AddOrUpdateParameterToUrl("token", accessToken)
                 .AddOrUpdateParameterToUrl("computer-name", computerName)
                 .AddOrUpdateParameterToUrl("launcher-id", launcherId)
@@ -69,14 +69,14 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
             {
                 buffer = new ArraySegment<byte>(new byte[1024]);
                 result = await _ws.ReceiveAsync(buffer, CancellationToken.None);
-
-                Array.Resize(ref messageBytes, messageBytes.Length + buffer.Count);
+                
+                Array.Resize(ref messageBytes, messageBytes.Length + result.Count);
                 Array.Copy(
-                    buffer.Array.Take(buffer.Count).ToArray(),
+                    buffer.Array.Take(result.Count).ToArray(),
                     0,
                     messageBytes,
-                    messageBytes.Length - buffer.Count,
-                    buffer.Count);
+                    messageBytes.Length - result.Count,
+                    result.Count);
             } while (!result.EndOfMessage);
 
             return Encoding.UTF8.GetString(messageBytes);
