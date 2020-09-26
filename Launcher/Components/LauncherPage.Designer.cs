@@ -1,13 +1,13 @@
-﻿namespace Unlakki.Bns.Launcher
+﻿namespace Unlakki.Bns.Launcher.Components
 {
-    partial class LauncherForm
+    partial class LauncherPage
     {
-        /// <summary>
+        /// <summary> 
         /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Освободить все используемые ресурсы.
         /// </summary>
         /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
@@ -20,16 +20,16 @@
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
+        #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary>
+        /// <summary> 
         /// Требуемый метод для поддержки конструктора — не изменяйте 
         /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
-            this.startGamePanel = new System.Windows.Forms.Panel();
+            this.launcherPanel = new System.Windows.Forms.Panel();
+            this.openSettingsFormButton = new System.Windows.Forms.Button();
             this.autoCloseLauncherCheckbox = new System.Windows.Forms.CheckBox();
             this.addAnotherAccountButton = new System.Windows.Forms.Button();
             this.accountsListBox = new System.Windows.Forms.ComboBox();
@@ -37,25 +37,35 @@
             this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
             this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
-            this.openSettingsFormButton = new System.Windows.Forms.Button();
-            this.startGamePanel.SuspendLayout();
+            this.launcherPanel.SuspendLayout();
             this.clientVersionSelectorPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // startGamePanel
+            // launcherPanel
             // 
-            this.startGamePanel.Controls.Add(this.openSettingsFormButton);
-            this.startGamePanel.Controls.Add(this.autoCloseLauncherCheckbox);
-            this.startGamePanel.Controls.Add(this.addAnotherAccountButton);
-            this.startGamePanel.Controls.Add(this.accountsListBox);
-            this.startGamePanel.Controls.Add(this.startGameButton);
-            this.startGamePanel.Controls.Add(this.clientVersionSelectorPanel);
-            this.startGamePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startGamePanel.Location = new System.Drawing.Point(0, 0);
-            this.startGamePanel.Margin = new System.Windows.Forms.Padding(0);
-            this.startGamePanel.Name = "startGamePanel";
-            this.startGamePanel.Size = new System.Drawing.Size(240, 99);
-            this.startGamePanel.TabIndex = 2;
+            this.launcherPanel.Controls.Add(this.openSettingsFormButton);
+            this.launcherPanel.Controls.Add(this.autoCloseLauncherCheckbox);
+            this.launcherPanel.Controls.Add(this.addAnotherAccountButton);
+            this.launcherPanel.Controls.Add(this.accountsListBox);
+            this.launcherPanel.Controls.Add(this.startGameButton);
+            this.launcherPanel.Controls.Add(this.clientVersionSelectorPanel);
+            this.launcherPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.launcherPanel.Location = new System.Drawing.Point(0, 0);
+            this.launcherPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.launcherPanel.Name = "launcherPanel";
+            this.launcherPanel.Size = new System.Drawing.Size(240, 99);
+            this.launcherPanel.TabIndex = 3;
+            // 
+            // openSettingsFormButton
+            // 
+            this.openSettingsFormButton.AutoSize = true;
+            this.openSettingsFormButton.Location = new System.Drawing.Point(176, 67);
+            this.openSettingsFormButton.Name = "openSettingsFormButton";
+            this.openSettingsFormButton.Size = new System.Drawing.Size(55, 23);
+            this.openSettingsFormButton.TabIndex = 7;
+            this.openSettingsFormButton.Text = "Settings";
+            this.openSettingsFormButton.UseVisualStyleBackColor = true;
+            this.openSettingsFormButton.Click += new System.EventHandler(this.openSettingsFormButton_Click);
             // 
             // autoCloseLauncherCheckbox
             // 
@@ -66,6 +76,7 @@
             this.autoCloseLauncherCheckbox.TabIndex = 6;
             this.autoCloseLauncherCheckbox.Text = "Close launcher after starting game";
             this.autoCloseLauncherCheckbox.UseVisualStyleBackColor = true;
+            this.autoCloseLauncherCheckbox.Visible = false;
             this.autoCloseLauncherCheckbox.CheckedChanged += new System.EventHandler(this.autoCloseLauncherCheckbox_CheckedChanged);
             // 
             // addAnotherAccountButton
@@ -134,31 +145,15 @@
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             this.x32ClientRadioButton.CheckedChanged += new System.EventHandler(this.x32ClientRadioButton_CheckedChanged);
             // 
-            // openSettingsFormButton
-            // 
-            this.openSettingsFormButton.AutoSize = true;
-            this.openSettingsFormButton.Location = new System.Drawing.Point(176, 67);
-            this.openSettingsFormButton.Name = "openSettingsFormButton";
-            this.openSettingsFormButton.Size = new System.Drawing.Size(55, 23);
-            this.openSettingsFormButton.TabIndex = 7;
-            this.openSettingsFormButton.Text = "Settings";
-            this.openSettingsFormButton.UseVisualStyleBackColor = true;
-            this.openSettingsFormButton.Click += new System.EventHandler(this.openSettingsFormButton_Click);
-            // 
-            // LauncherForm
+            // LauncherPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 99);
-            this.Controls.Add(this.startGamePanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "LauncherForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "bns-ru";
-            this.startGamePanel.ResumeLayout(false);
-            this.startGamePanel.PerformLayout();
+            this.Controls.Add(this.launcherPanel);
+            this.Name = "LauncherPage";
+            this.Size = new System.Drawing.Size(240, 99);
+            this.launcherPanel.ResumeLayout(false);
+            this.launcherPanel.PerformLayout();
             this.clientVersionSelectorPanel.ResumeLayout(false);
             this.clientVersionSelectorPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -166,15 +161,15 @@
         }
 
         #endregion
-        private System.Windows.Forms.Panel startGamePanel;
-        private System.Windows.Forms.RadioButton x64ClientRadioButton;
+
+        private System.Windows.Forms.Panel launcherPanel;
+        private System.Windows.Forms.Button openSettingsFormButton;
+        private System.Windows.Forms.CheckBox autoCloseLauncherCheckbox;
+        private System.Windows.Forms.Button addAnotherAccountButton;
+        private System.Windows.Forms.ComboBox accountsListBox;
         private System.Windows.Forms.Button startGameButton;
         private System.Windows.Forms.Panel clientVersionSelectorPanel;
+        private System.Windows.Forms.RadioButton x64ClientRadioButton;
         private System.Windows.Forms.RadioButton x32ClientRadioButton;
-        private System.Windows.Forms.ComboBox accountsListBox;
-        private System.Windows.Forms.Button addAnotherAccountButton;
-        private System.Windows.Forms.CheckBox autoCloseLauncherCheckbox;
-        private System.Windows.Forms.Button openSettingsFormButton;
     }
 }
-

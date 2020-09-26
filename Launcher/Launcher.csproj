@@ -82,16 +82,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivationCodeForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Components\ActivationCodePage.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ActivationCodeForm.Designer.cs">
-      <DependentUpon>ActivationCodeForm.cs</DependentUpon>
+    <Compile Include="Components\ActivationCodePage.Designer.cs">
+      <DependentUpon>ActivationCodePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\LauncherPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\LauncherPage.Designer.cs">
+      <DependentUpon>LauncherPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\LoginPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\LoginPage.Designer.cs">
+      <DependentUpon>LoginPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Router\RouteData.cs" />
+    <Compile Include="Components\Router\RoutedComponent.cs" />
+    <Compile Include="Components\Router\Router.cs" />
+    <Compile Include="Components\SettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\SettingsPage.Designer.cs">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\Enums\GameVersion.cs" />
     <Compile Include="Core\Enums\LaunchType.cs" />
     <Compile Include="Core\Enums\LaunchTypeExtensions.cs" />
-    <Compile Include="Core\Exceptions\BadRequest.cs" />
     <Compile Include="Core\Exceptions\GameStart\GameStartException.cs" />
     <Compile Include="Core\Infrastructure\Crypto\AesStorage.cs" />
     <Compile Include="Core\Infrastructure\Crypto\CryptoManager.cs" />
@@ -102,7 +122,7 @@
     <Compile Include="Core\Infrastructure\WebSocket\Models\WebSocketResponse.cs" />
     <Compile Include="Core\Infrastructure\WebSocket\WebSocket.cs" />
     <Compile Include="Core\Models\Account\Account.cs" />
-    <Compile Include="Core\Models\Account\Tokens.cs" />
+    <Compile Include="Core\Models\Account\Token.cs" />
     <Compile Include="Core\Models\GameAccount\GameAccount.cs" />
     <Compile Include="Core\Models\GameAccount\GameTokenCode.cs" />
     <Compile Include="Core\Models\GameLaunchData.cs" />
@@ -124,18 +144,6 @@
     <Compile Include="Core\Services\LauncherConfigDataProvider.cs" />
     <Compile Include="Core\Services\ForgameAuthProvider.cs" />
     <Compile Include="Core\Exceptions\NeedToConfirmWithCode.cs" />
-    <Compile Include="LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Shared\Infrastructure\Internet\HeaderedHttpClient.cs" />
     <Compile Include="Shared\Models\GameConfig\GameComponentConfig.cs" />
     <Compile Include="Shared\Models\GameConfig\GameComponents.cs" />
@@ -156,11 +164,11 @@
     <Compile Include="Shared\Services\Interfaces\GameRegistrationData.cs" />
     <Compile Include="Shared\Exceptions\BadRegistryPathPart.cs" />
     <Compile Include="Shared\Extensions\StringExtensions.cs" />
-    <Compile Include="LauncherForm.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LauncherForm.Designer.cs">
-      <DependentUpon>LauncherForm.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Shared\Services\ComputerNameProvider.cs" />
     <Compile Include="Shared\Services\GameInWindowsRegistrator.cs" />
@@ -188,14 +196,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Utils\RegistryUninstallInfo.cs" />
     <Compile Include="Shared\Utils\UrlSchemeInfo.cs" />
-    <EmbeddedResource Include="ActivationCodeForm.resx">
-      <DependentUpon>ActivationCodeForm.cs</DependentUpon>
+    <EmbeddedResource Include="Components\ActivationCodePage.resx">
+      <DependentUpon>ActivationCodePage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LauncherForm.resx">
-      <DependentUpon>LauncherForm.cs</DependentUpon>
+    <EmbeddedResource Include="Components\LauncherPage.resx">
+      <DependentUpon>LauncherPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
+    <EmbeddedResource Include="Components\LoginPage.resx">
+      <DependentUpon>LoginPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SettingsPage.resx">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -207,9 +221,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="LauncherKey.pfx" />
     <None Include="packages.config" />

@@ -1,16 +1,16 @@
-﻿namespace Unlakki.Bns.Launcher
+﻿namespace Unlakki.Bns.Launcher.Components
 {
-    partial class ActivationCodeForm
+    partial class ActivationCodePage
     {
-        /// <summary>
-        /// Required designer variable.
+        /// <summary> 
+        /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
+        /// <summary> 
+        /// Освободить все используемые ресурсы.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,39 +20,38 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// <summary> 
+        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ActivationCodeForm));
             this.comfirmationCodePanel = new System.Windows.Forms.Panel();
-            this.message = new System.Windows.Forms.Label();
+            this.messageContainer = new System.Windows.Forms.Label();
             this.activationCodeTextBox = new System.Windows.Forms.TextBox();
             this.comfirmationCodePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // comfirmationCodePanel
             // 
-            this.comfirmationCodePanel.Controls.Add(this.message);
+            this.comfirmationCodePanel.Controls.Add(this.messageContainer);
             this.comfirmationCodePanel.Controls.Add(this.activationCodeTextBox);
             this.comfirmationCodePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comfirmationCodePanel.Location = new System.Drawing.Point(0, 0);
             this.comfirmationCodePanel.Name = "comfirmationCodePanel";
             this.comfirmationCodePanel.Size = new System.Drawing.Size(240, 99);
-            this.comfirmationCodePanel.TabIndex = 6;
+            this.comfirmationCodePanel.TabIndex = 7;
             // 
-            // message
+            // messageContainer
             // 
-            this.message.Dock = System.Windows.Forms.DockStyle.Top;
-            this.message.Location = new System.Drawing.Point(0, 0);
-            this.message.Name = "message";
-            this.message.Size = new System.Drawing.Size(240, 32);
-            this.message.TabIndex = 1;
-            this.message.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.messageContainer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.messageContainer.Location = new System.Drawing.Point(0, 0);
+            this.messageContainer.Name = "messageContainer";
+            this.messageContainer.Size = new System.Drawing.Size(240, 32);
+            this.messageContainer.TabIndex = 1;
+            this.messageContainer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // activationCodeTextBox
             // 
@@ -62,18 +61,13 @@
             this.activationCodeTextBox.TabIndex = 0;
             this.activationCodeTextBox.TextChanged += new System.EventHandler(this.activationCodeTextBox_TextChanged);
             // 
-            // ActivationCodeForm
+            // ActivationCodePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 99);
             this.Controls.Add(this.comfirmationCodePanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "ActivationCodeForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "bns-ru: Enter activation code";
+            this.Name = "ActivationCodePage";
+            this.Size = new System.Drawing.Size(240, 99);
             this.comfirmationCodePanel.ResumeLayout(false);
             this.comfirmationCodePanel.PerformLayout();
             this.ResumeLayout(false);
@@ -83,7 +77,7 @@
         #endregion
 
         private System.Windows.Forms.Panel comfirmationCodePanel;
-        private System.Windows.Forms.Label message;
+        private System.Windows.Forms.Label messageContainer;
         private System.Windows.Forms.TextBox activationCodeTextBox;
     }
 }

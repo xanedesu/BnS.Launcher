@@ -1,16 +1,16 @@
-﻿namespace Unlakki.Bns.Launcher
+﻿namespace Unlakki.Bns.Launcher.Components
 {
-    partial class SettingsForm
+    partial class SettingsPage
     {
-        /// <summary>
-        /// Required designer variable.
+        /// <summary> 
+        /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
+        /// <summary> 
+        /// Освободить все используемые ресурсы.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,16 +20,16 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// <summary> 
+        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.settingsPanel = new System.Windows.Forms.Panel();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.argsTextBox = new System.Windows.Forms.TextBox();
             this.noTextureStreamingCheckbox = new System.Windows.Forms.CheckBox();
             this.useAllAvailableCoresCheckbox = new System.Windows.Forms.CheckBox();
@@ -39,6 +39,7 @@
             // 
             // settingsPanel
             // 
+            this.settingsPanel.Controls.Add(this.cancelButton);
             this.settingsPanel.Controls.Add(this.argsTextBox);
             this.settingsPanel.Controls.Add(this.noTextureStreamingCheckbox);
             this.settingsPanel.Controls.Add(this.useAllAvailableCoresCheckbox);
@@ -47,7 +48,17 @@
             this.settingsPanel.Location = new System.Drawing.Point(0, 0);
             this.settingsPanel.Name = "settingsPanel";
             this.settingsPanel.Size = new System.Drawing.Size(240, 99);
-            this.settingsPanel.TabIndex = 4;
+            this.settingsPanel.TabIndex = 5;
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Location = new System.Drawing.Point(135, 50);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(48, 23);
+            this.cancelButton.TabIndex = 7;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // argsTextBox
             // 
@@ -91,18 +102,13 @@
             this.saveSettingButton.UseVisualStyleBackColor = true;
             this.saveSettingButton.Click += new System.EventHandler(this.saveSettingButton_Click);
             // 
-            // SettingsForm
+            // SettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 99);
             this.Controls.Add(this.settingsPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "SettingsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "bns-ru: Settings";
+            this.Name = "SettingsPage";
+            this.Size = new System.Drawing.Size(240, 99);
             this.settingsPanel.ResumeLayout(false);
             this.settingsPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -113,8 +119,9 @@
 
         private System.Windows.Forms.Panel settingsPanel;
         private System.Windows.Forms.TextBox argsTextBox;
-        private System.Windows.Forms.Button saveSettingButton;
         private System.Windows.Forms.CheckBox noTextureStreamingCheckbox;
         private System.Windows.Forms.CheckBox useAllAvailableCoresCheckbox;
+        private System.Windows.Forms.Button saveSettingButton;
+        private System.Windows.Forms.Button cancelButton;
     }
 }

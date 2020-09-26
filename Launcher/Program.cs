@@ -13,7 +13,7 @@ namespace Unlakki.Bns.Launcher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LauncherForm());
+            Application.Run(new MainForm());
         }
     }
 }

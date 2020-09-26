@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Windows.Forms;
+using Unlakki.Bns.Launcher.Components.Router;
 using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
-namespace Unlakki.Bns.Launcher
+namespace Unlakki.Bns.Launcher.Components
 {
-    public partial class SettingsForm : Form
+    public partial class SettingsPage : RoutedComponent
     {
-        private readonly ILauncherConfigProvider _launcherConfigProvider;
+        ILauncherConfigProvider _launcherConfigProvider;
 
-        public SettingsForm(ILauncherConfigProvider launcherConfigProvider)
+        public SettingsPage(ILauncherConfigProvider launcherConfigProvider)
         {
-            _launcherConfigProvider = launcherConfigProvider;
-
             InitializeComponent();
+
+            _launcherConfigProvider = launcherConfigProvider;
 
             argsTextBox.Text = _launcherConfigProvider.GetGameArguments();
         }
 
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            Router.SetLocation("/");
+        }
+
         private void saveSettingButton_Click(object sender, EventArgs e)
         {
-            string args = argsTextBox.Text.ToUpper();
-            _launcherConfigProvider.UpdateStartGameArguments(args);
-
-            DialogResult = DialogResult.OK;
+            _launcherConfigProvider.UpdateStartGameArguments(argsTextBox.Text);
+            Router.SetLocation("/");
         }
 
         private void useAllAvailableCoresCheckbox_CheckedChanged(object sender, EventArgs e)

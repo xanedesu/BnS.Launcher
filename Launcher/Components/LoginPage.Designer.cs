@@ -1,16 +1,16 @@
-﻿namespace Unlakki.Bns.Launcher
+﻿namespace Unlakki.Bns.Launcher.Components
 {
-    partial class LoginForm
+    partial class LoginPage
     {
-        /// <summary>
-        /// Required designer variable.
+        /// <summary> 
+        /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
+        /// <summary> 
+        /// Освободить все используемые ресурсы.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,16 +20,16 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// <summary> 
+        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.loginPanel = new System.Windows.Forms.Panel();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.passwordLabel = new System.Windows.Forms.Label();
             this.loginLabel = new System.Windows.Forms.Label();
             this.hidePasswordCheckbox = new System.Windows.Forms.CheckBox();
@@ -41,7 +41,7 @@
             // 
             // loginPanel
             // 
-            this.loginPanel.AutoSize = true;
+            this.loginPanel.Controls.Add(this.cancelButton);
             this.loginPanel.Controls.Add(this.passwordLabel);
             this.loginPanel.Controls.Add(this.loginLabel);
             this.loginPanel.Controls.Add(this.hidePasswordCheckbox);
@@ -52,7 +52,17 @@
             this.loginPanel.Location = new System.Drawing.Point(0, 0);
             this.loginPanel.Name = "loginPanel";
             this.loginPanel.Size = new System.Drawing.Size(240, 99);
-            this.loginPanel.TabIndex = 6;
+            this.loginPanel.TabIndex = 7;
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Location = new System.Drawing.Point(134, 64);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(48, 23);
+            this.cancelButton.TabIndex = 6;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // passwordLabel
             // 
@@ -112,33 +122,28 @@
             this.loginButton.UseVisualStyleBackColor = true;
             this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
             // 
-            // LoginForm
+            // LoginPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 99);
             this.Controls.Add(this.loginPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "LoginForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "bns-ru: Login";
+            this.Name = "LoginPage";
+            this.Size = new System.Drawing.Size(240, 99);
             this.loginPanel.ResumeLayout(false);
             this.loginPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Panel loginPanel;
+        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.Label loginLabel;
+        private System.Windows.Forms.CheckBox hidePasswordCheckbox;
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button loginButton;
-        private System.Windows.Forms.CheckBox hidePasswordCheckbox;
-        private System.Windows.Forms.Label loginLabel;
-        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.Button cancelButton;
     }
 }
