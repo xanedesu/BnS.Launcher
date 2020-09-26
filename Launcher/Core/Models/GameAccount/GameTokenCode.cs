@@ -2,7 +2,7 @@
 
 namespace Unlakki.Bns.Launcher.Core.Models.GameAccount
 {
-    class GameTokenCode
+    public class GameTokenCode
     {
         [JsonProperty("login")]
         public string Login { get; set; }

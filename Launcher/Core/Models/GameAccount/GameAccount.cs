@@ -2,7 +2,7 @@
 
 namespace Unlakki.Bns.Launcher.Core.Models.GameAccount
 {
-    class GameAccount
+    public class GameAccount
     {
         [JsonProperty("masterId")]
         public string MasterId { get; set; }
