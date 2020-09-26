@@ -5,9 +5,9 @@ namespace Unlakki.Bns.Launcher.Core.Services.Interfaces
 {
     public interface IForgameAuthProvider
     {
-        Task<Tokens> Authorize(string username, string password);
+        Task<Token> Authorize(string username, string password);
 
-        Task<Tokens> RefreshTokens(string refreshToken);
+        Task<Token> RefreshTokens(string refreshToken);
 
         Task SendActivationCode(string sessionId, string code);
     }

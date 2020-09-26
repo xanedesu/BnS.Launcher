@@ -7,7 +7,7 @@ namespace Unlakki.Bns.Launcher.Core.Models.Account
         [JsonProperty("username")]
         public string Username { get; set; }
 
-        [JsonProperty("tokens")]
-        public Tokens Tokens { get; set; }
+        [JsonProperty("token")]
+        public Token Token { get; set; }
     }
 }

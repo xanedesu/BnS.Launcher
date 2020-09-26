@@ -2,7 +2,7 @@
 
 namespace Unlakki.Bns.Launcher.Core.Models.Account
 {
-    public class Tokens
+    public class Token
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }
