@@ -15,8 +15,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         {
             using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
             {
-                string responseText = await httpClient.GetStringAsync(_configAddress);
-                return responseText;
+                return await httpClient.GetStringAsync(_configAddress);
             }
         }
     }
