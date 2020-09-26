@@ -6,6 +6,7 @@ using Unlakki.Bns.Launcher.Core.Exceptions.GameStart;
 using Unlakki.Bns.Launcher.Core.Models;
 using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 using Unlakki.Bns.Launcher.Shared.Models;
+using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Core.Services
@@ -28,10 +29,12 @@ namespace Unlakki.Bns.Launcher.Core.Services
         {
             try
             {
-                InstalledGameInfo gameInfo = _gameRepository.GetOrDefault(gameKey);
+                GameConfig gameConfig = _gamesConfigProvider.Get(gameKey);
 
-                string launchString = _gamesConfigProvider.Get(gameKey).LaunchParams.Replace("%LOGIN%", data.Login).Replace("%PASS%", data.Password);
+                string launchString = gameConfig.LaunchParams.Replace("%LOGIN%", data.Login).Replace("%PASS%", data.Password);
                 string launchParams = $"{launchString} {data.Arguments}";
+
+                InstalledGameInfo gameInfo = _gameRepository.GetOrDefault(gameConfig.EnvKey);
 
                 string gameLaunchPath = GetFullGamePath(gameInfo.Path, data.Version);
                 if (!File.Exists(gameLaunchPath))
