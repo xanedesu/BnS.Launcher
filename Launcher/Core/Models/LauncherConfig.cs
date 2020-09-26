@@ -9,16 +9,16 @@ namespace Unlakki.Bns.Launcher.Core.Models
         [JsonProperty("accounts")]
         public List<Unlakki.Bns.Launcher.Core.Models.Account.Account> Accounts { get; set; }
 
-        [JsonProperty("last_used_account")]
+        [JsonProperty("lastUsedAccount")]
         public string LastUsedAccount { get; set; }
 
-        [JsonProperty("version")]
+        [JsonProperty("gameVersion")]
         public GameVersion gameVersion { get; set; }
 
-        [JsonProperty("arguments")]
+        [JsonProperty("gameArguments")]
         public string Arguments { get; set; }
 
-        [JsonProperty("auto_close_launcher")]
+        [JsonProperty("autoCloseLauncher")]
         public bool AutoCloseLauncher { get; set; }
     }
 }
