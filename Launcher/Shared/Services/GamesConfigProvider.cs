@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using System.Threading.Tasks;
 using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
-using System.Threading.Tasks;
 
 namespace Unlakki.Bns.Launcher.Shared.Services
 {
@@ -21,16 +21,16 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             _configParser = configParser;
         }
 
-        public async void Init()
+        public async Task Init()
         {
             if (_sharedConfig != null)
                 return;
             await LoadConfig();
         }
 
-        public GamesConfig InitAndGet()
+        public async Task<GamesConfig> InitAndGet()
         {
-            Init();
+            await Init();
             return Get();
         }
 

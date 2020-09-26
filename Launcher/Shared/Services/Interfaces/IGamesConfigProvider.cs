@@ -1,12 +1,13 @@
-﻿using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
+﻿using System.Threading.Tasks;
+using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 
 namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
     public interface IGamesConfigProvider
     {
-        void Init();
+        Task Init();
 
-        GamesConfig InitAndGet();
+        Task<GamesConfig> InitAndGet();
 
         GamesConfig Get();
 
