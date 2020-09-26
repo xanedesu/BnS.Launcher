@@ -12,15 +12,13 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
             using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
             {
                 HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
-                string body = await httpResponse.Content.ReadAsStringAsync();
+                string content = await httpResponse.Content.ReadAsStringAsync();
                 if (httpResponse.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<T>(body);
-                }
+                    return JsonConvert.DeserializeObject<T>(content);
 
                 throw new HttpRequestException(httpResponse.StatusCode.ToString())
                 {
-                    Data = { { "body", body } }
+                    Data = { { "content", content } }
                 };
             }
         }

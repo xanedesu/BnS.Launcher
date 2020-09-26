@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel.Composition;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Unlakki.Bns.Launcher.Core.Exceptions;
 using Unlakki.Bns.Launcher.Core.Models.Account;
@@ -15,13 +16,16 @@ namespace Unlakki.Bns.Launcher.Core.Services
     [Export(typeof(IForgameAuthProvider))]
     public class ForgameAuthProvider : IForgameAuthProvider
     {
+        private string _apiAddress = "https://launcherbff.ru.4game.com";
+
         private IComputerNameProvider _computerNameProvider;
 
         private ILauncherIdProvider _launcherIdProvider;
 
         private IHardwareIdProvider _hardwareIdProvider;
 
-        public ForgameAuthProvider(IComputerNameProvider computerNameProvider,
+        public ForgameAuthProvider(
+            IComputerNameProvider computerNameProvider,
             ILauncherIdProvider launcherIdProvider,
             IHardwareIdProvider hardwareIdProvider)
         {
@@ -30,73 +34,70 @@ namespace Unlakki.Bns.Launcher.Core.Services
             _hardwareIdProvider = hardwareIdProvider;
         }
 
-        public async Task<Tokens> Authorize(string username, string password)
+        public async Task<Token> Authorize(string username, string password)
         {
-            string computerName = _computerNameProvider.Get();
-            string launcherId = _launcherIdProvider.Get();
-            string hardwareId = _hardwareIdProvider.Get();
-
-            using (HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://launcherbff.ru.4game.com/connect/token"))
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage(
+                HttpMethod.Post,
+                $"{_apiAddress}/connect/token")
             {
-                httpRequest.Headers.TryAddWithoutValidation("Computer-Name", computerName);
-                httpRequest.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
-                httpRequest.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
-
-                httpRequest.Content = new StringContent($"username={username}&password={password}&secure=true&grant_type=password");
-                httpRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+                Content = new StringContent(
+                    $"username={username}&password={password}&secure=true&grant_type=password",
+                    Encoding.UTF8,
+                    "application/x-www-form-urlencoded"),
+            })
+            {
+                AddRequestHeaders(httpRequest);
 
                 try
                 {
-                    return await WebHelper.TryToLoadJsonData<Tokens>(httpRequest);
+                    return await WebHelper.TryToLoadJsonData<Token>(httpRequest);
                 }
                 catch (HttpRequestException ex)
                 {
-                    JObject error = (JObject)JObject.Parse((string)ex.Data["body"])["error"];
+                    JObject error = (JObject)JObject.Parse((string)ex.Data["content"])["error"];
                     if (error.ContainsKey("data"))
-                        throw new NeedToConfirmWithCode((string)error["description"], (string)error["data"]["sessionId"]);
+                    {
+                        throw new NeedToConfirmWithCode(
+                            (string)error["description"],
+                            (string)error["data"]["sessionId"]);
+                    }
                     
-                    throw new BadRequest((string)error["description"]);
+                    throw new Exception((string)error["description"]);
                 }
             }
         }
 
-        public async Task<Tokens> RefreshTokens(string refreshToken)
+        public async Task<Token> RefreshTokens(string refreshToken)
         {
-            string computerName = _computerNameProvider.Get();
-            string launcherId = _launcherIdProvider.Get();
-            string hardwareId = _hardwareIdProvider.Get();
-
-            using (HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://launcherbff.ru.4game.com/connect/token"))
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage(
+                HttpMethod.Post,
+                $"{_apiAddress}/connect/token")
             {
-                httpRequest.Headers.TryAddWithoutValidation("Computer-Name", computerName);
-                httpRequest.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
-                httpRequest.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
+                Content = new StringContent(
+                    $"refresh_token={refreshToken}&grand_Type=refresh_token",
+                    Encoding.UTF8,
+                    "application/x-www-form-urlencoded")
+            })
+            {
+                AddRequestHeaders(httpRequest);
 
-                httpRequest.Content = new StringContent($"grant_type=refresh_token&refresh_token={refreshToken}");
-                httpRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
-
-                return await WebHelper.TryToLoadJsonData<Tokens>(httpRequest);
+                return await WebHelper.TryToLoadJsonData<Token>(httpRequest);
             }
         }
 
         public async Task SendActivationCode(string sessionId, string code)
         {
-            string computerName = _computerNameProvider.Get();
-            string launcherId = _launcherIdProvider.Get();
-            string hardwareId = _hardwareIdProvider.Get();
-
-            using (HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://launcherbff.ru.4game.com/api/guard/accesscodes/activate"))
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage(
+                HttpMethod.Post,
+                $"{_apiAddress}/api/guard/accesscodes/activate")
             {
-                httpRequest.Headers.TryAddWithoutValidation("Computer-Name", computerName);
-                httpRequest.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
-                httpRequest.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
-
-                httpRequest.Content = new StringContent(JsonConvert.SerializeObject(new
-                {
-                    code,
-                    sessionId
-                }));
-                httpRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json;charset=UTF-8");
+                Content = new StringContent(
+                    JsonConvert.SerializeObject(new { code, sessionId }),
+                    Encoding.UTF8,
+                    "application/json")
+            })
+            {
+                AddRequestHeaders(httpRequest);
 
                 try
                 {
@@ -104,9 +105,20 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new BadRequest((string)ex.Data["body"]);
+                    throw new Exception((string)ex.Data["content"]);
                 }
             }
+        }
+    
+        private void AddRequestHeaders(HttpRequestMessage httpRequest)
+        {
+            string computerName = _computerNameProvider.Get();
+            string launcherId = _launcherIdProvider.Get();
+            string hardwareId = _hardwareIdProvider.Get();
+
+            httpRequest.Headers.TryAddWithoutValidation("Computer-Name", computerName);
+            httpRequest.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
+            httpRequest.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
         }
     }
 }
