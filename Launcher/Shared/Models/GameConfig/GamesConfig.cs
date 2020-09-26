@@ -31,7 +31,7 @@ namespace Unlakki.Bns.Launcher.Shared.Models.GameConfig
 
         public GameConfig GetGameConfig(string gameKey)
         {
-            return Games.FirstOrDefault(a => a.EnvKey == gameKey);
+            return Games.FirstOrDefault(a => a.Key == gameKey);
         }
     }
 }
