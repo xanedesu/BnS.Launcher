@@ -126,7 +126,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
 
         private string GetIconPath(string gamePath)
         {
-            return Path.Combine(gamePath, GameInWindowsRegistrator.GameIconName);
+            return Path.Combine(gamePath, GameIconName);
         }
 
         private string GetUninstallGameRegistryKey(string launcherKey, string gameKey)
