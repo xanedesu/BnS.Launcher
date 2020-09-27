@@ -34,25 +34,26 @@
             this.noTextureStreamingCheckbox = new System.Windows.Forms.CheckBox();
             this.useAllAvailableCoresCheckbox = new System.Windows.Forms.CheckBox();
             this.saveSettingButton = new System.Windows.Forms.Button();
+            this.optsPanel = new System.Windows.Forms.Panel();
             this.settingsPanel.SuspendLayout();
+            this.optsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // settingsPanel
             // 
-            this.settingsPanel.Controls.Add(this.cancelButton);
+            this.settingsPanel.Controls.Add(this.optsPanel);
             this.settingsPanel.Controls.Add(this.argsTextBox);
-            this.settingsPanel.Controls.Add(this.noTextureStreamingCheckbox);
-            this.settingsPanel.Controls.Add(this.useAllAvailableCoresCheckbox);
-            this.settingsPanel.Controls.Add(this.saveSettingButton);
             this.settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsPanel.Location = new System.Drawing.Point(0, 0);
+            this.settingsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.settingsPanel.Name = "settingsPanel";
             this.settingsPanel.Size = new System.Drawing.Size(240, 99);
             this.settingsPanel.TabIndex = 5;
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(135, 50);
+            this.cancelButton.Location = new System.Drawing.Point(134, 50);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(0);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(48, 23);
             this.cancelButton.TabIndex = 7;
@@ -64,6 +65,7 @@
             // 
             this.argsTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.argsTextBox.Location = new System.Drawing.Point(0, 79);
+            this.argsTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.argsTextBox.Name = "argsTextBox";
             this.argsTextBox.Size = new System.Drawing.Size(240, 20);
             this.argsTextBox.TabIndex = 3;
@@ -72,7 +74,8 @@
             // noTextureStreamingCheckbox
             // 
             this.noTextureStreamingCheckbox.AutoSize = true;
-            this.noTextureStreamingCheckbox.Location = new System.Drawing.Point(12, 26);
+            this.noTextureStreamingCheckbox.Location = new System.Drawing.Point(12, 6);
+            this.noTextureStreamingCheckbox.Margin = new System.Windows.Forms.Padding(0);
             this.noTextureStreamingCheckbox.Name = "noTextureStreamingCheckbox";
             this.noTextureStreamingCheckbox.Size = new System.Drawing.Size(118, 17);
             this.noTextureStreamingCheckbox.TabIndex = 6;
@@ -83,7 +86,8 @@
             // useAllAvailableCoresCheckbox
             // 
             this.useAllAvailableCoresCheckbox.AutoSize = true;
-            this.useAllAvailableCoresCheckbox.Location = new System.Drawing.Point(12, 3);
+            this.useAllAvailableCoresCheckbox.Location = new System.Drawing.Point(12, 26);
+            this.useAllAvailableCoresCheckbox.Margin = new System.Windows.Forms.Padding(0);
             this.useAllAvailableCoresCheckbox.Name = "useAllAvailableCoresCheckbox";
             this.useAllAvailableCoresCheckbox.Size = new System.Drawing.Size(124, 17);
             this.useAllAvailableCoresCheckbox.TabIndex = 5;
@@ -94,13 +98,28 @@
             // saveSettingButton
             // 
             this.saveSettingButton.AutoSize = true;
-            this.saveSettingButton.Location = new System.Drawing.Point(189, 50);
+            this.saveSettingButton.Location = new System.Drawing.Point(186, 50);
+            this.saveSettingButton.Margin = new System.Windows.Forms.Padding(0);
             this.saveSettingButton.Name = "saveSettingButton";
             this.saveSettingButton.Size = new System.Drawing.Size(42, 23);
             this.saveSettingButton.TabIndex = 0;
             this.saveSettingButton.Text = "Save";
             this.saveSettingButton.UseVisualStyleBackColor = true;
             this.saveSettingButton.Click += new System.EventHandler(this.saveSettingButton_Click);
+            // 
+            // optsPanel
+            // 
+            this.optsPanel.Controls.Add(this.saveSettingButton);
+            this.optsPanel.Controls.Add(this.useAllAvailableCoresCheckbox);
+            this.optsPanel.Controls.Add(this.noTextureStreamingCheckbox);
+            this.optsPanel.Controls.Add(this.cancelButton);
+            this.optsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.optsPanel.Location = new System.Drawing.Point(0, 0);
+            this.optsPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.optsPanel.Name = "optsPanel";
+            this.optsPanel.Padding = new System.Windows.Forms.Padding(12, 6, 12, 6);
+            this.optsPanel.Size = new System.Drawing.Size(240, 79);
+            this.optsPanel.TabIndex = 8;
             // 
             // SettingsPage
             // 
@@ -111,6 +130,8 @@
             this.Size = new System.Drawing.Size(240, 99);
             this.settingsPanel.ResumeLayout(false);
             this.settingsPanel.PerformLayout();
+            this.optsPanel.ResumeLayout(false);
+            this.optsPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -123,5 +144,6 @@
         private System.Windows.Forms.CheckBox useAllAvailableCoresCheckbox;
         private System.Windows.Forms.Button saveSettingButton;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Panel optsPanel;
     }
 }

@@ -50,13 +50,15 @@
             this.loginPanel.Controls.Add(this.loginButton);
             this.loginPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loginPanel.Location = new System.Drawing.Point(0, 0);
+            this.loginPanel.Margin = new System.Windows.Forms.Padding(0);
             this.loginPanel.Name = "loginPanel";
+            this.loginPanel.Padding = new System.Windows.Forms.Padding(12, 6, 12, 12);
             this.loginPanel.Size = new System.Drawing.Size(240, 99);
             this.loginPanel.TabIndex = 7;
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(134, 64);
+            this.cancelButton.Location = new System.Drawing.Point(128, 61);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(48, 23);
             this.cancelButton.TabIndex = 6;
@@ -67,7 +69,7 @@
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(9, 41);
+            this.passwordLabel.Location = new System.Drawing.Point(15, 37);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(53, 13);
             this.passwordLabel.TabIndex = 5;
@@ -77,7 +79,7 @@
             // 
             this.loginLabel.AutoSize = true;
             this.loginLabel.BackColor = System.Drawing.Color.Transparent;
-            this.loginLabel.Location = new System.Drawing.Point(9, 15);
+            this.loginLabel.Location = new System.Drawing.Point(15, 12);
             this.loginLabel.Name = "loginLabel";
             this.loginLabel.Size = new System.Drawing.Size(73, 13);
             this.loginLabel.TabIndex = 4;
@@ -88,7 +90,7 @@
             this.hidePasswordCheckbox.AutoSize = true;
             this.hidePasswordCheckbox.Checked = true;
             this.hidePasswordCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.hidePasswordCheckbox.Location = new System.Drawing.Point(12, 70);
+            this.hidePasswordCheckbox.Location = new System.Drawing.Point(15, 67);
             this.hidePasswordCheckbox.Name = "hidePasswordCheckbox";
             this.hidePasswordCheckbox.Size = new System.Drawing.Size(96, 17);
             this.hidePasswordCheckbox.TabIndex = 3;
@@ -98,23 +100,23 @@
             // 
             // usernameTextBox
             // 
-            this.usernameTextBox.Location = new System.Drawing.Point(84, 12);
+            this.usernameTextBox.Location = new System.Drawing.Point(88, 9);
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(147, 20);
+            this.usernameTextBox.Size = new System.Drawing.Size(137, 20);
             this.usernameTextBox.TabIndex = 0;
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.Location = new System.Drawing.Point(84, 38);
+            this.passwordTextBox.Location = new System.Drawing.Point(88, 34);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(147, 20);
+            this.passwordTextBox.Size = new System.Drawing.Size(137, 20);
             this.passwordTextBox.TabIndex = 1;
             // 
             // loginButton
             // 
             this.loginButton.AutoSize = true;
-            this.loginButton.Location = new System.Drawing.Point(188, 64);
+            this.loginButton.Location = new System.Drawing.Point(182, 61);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(43, 23);
             this.loginButton.TabIndex = 2;
