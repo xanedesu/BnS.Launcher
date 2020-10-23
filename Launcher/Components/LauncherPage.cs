@@ -109,14 +109,22 @@ namespace Unlakki.Bns.Launcher.Components
             long validTo = jwt.ValidTo.Ticks;
             if (DateTime.Now.Ticks > validTo)
             {
-                Token token = await _forgameAuthProvider.RefreshTokens(account.Token.RefreshToken);
-                _launcherConfigProvider.AddOrUpdateAccount(new Account
+                try
                 {
-                    Username = username,
-                    Token = token
-                });
+                    Token token = await _forgameAuthProvider.Refresh(account.Token.RefreshToken);
+                    _launcherConfigProvider.AddOrUpdateAccount(new Account
+                    {
+                        Username = username,
+                        Token = token
+                    });
 
-                account.Token = token;
+                    account.Token = token;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
 
             GameTokenCode gameTokenCode = await _gameAuthProvider.GetGameTokenCode(account.Token.AccessToken);

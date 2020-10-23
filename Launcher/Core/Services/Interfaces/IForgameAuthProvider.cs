@@ -7,7 +7,7 @@ namespace Unlakki.Bns.Launcher.Core.Services.Interfaces
     {
         Task<Token> Authorize(string username, string password);
 
-        Task<Token> RefreshTokens(string refreshToken);
+        Task<Token> Refresh(string refreshToken);
 
         Task SendActivationCode(string sessionId, string code);
     }

@@ -41,7 +41,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 $"{_apiAddress}/connect/token")
             {
                 Content = new StringContent(
-                    $"username={username}&password={password}&secure=true&grant_type=password",
+                    $"grant_type=password&username={username}&password={password}&secure=true",
                     Encoding.UTF8,
                     "application/x-www-form-urlencoded"),
             })
@@ -67,21 +67,28 @@ namespace Unlakki.Bns.Launcher.Core.Services
             }
         }
 
-        public async Task<Token> RefreshTokens(string refreshToken)
+        public async Task<Token> Refresh(string refreshToken)
         {
             using (HttpRequestMessage httpRequest = new HttpRequestMessage(
                 HttpMethod.Post,
                 $"{_apiAddress}/connect/token")
             {
                 Content = new StringContent(
-                    $"refresh_token={refreshToken}&grand_Type=refresh_token",
+                    $"grant_type=refresh_token&refresh_token={refreshToken}",
                     Encoding.UTF8,
                     "application/x-www-form-urlencoded")
             })
             {
                 AddRequestHeaders(httpRequest);
 
-                return await WebHelper.TryToLoadJsonData<Token>(httpRequest);
+                try
+                {
+                    return await WebHelper.TryToLoadJsonData<Token>(httpRequest);
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw new Exception((string)ex.Data["content"]);
+                }
             }
         }
 
