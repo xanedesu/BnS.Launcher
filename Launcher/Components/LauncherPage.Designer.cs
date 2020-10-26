@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.launcherPanel = new System.Windows.Forms.Panel();
+            this.accountsListBox = new System.Windows.Forms.ComboBox();
+            this.addAnotherAccountButton = new System.Windows.Forms.Button();
             this.openSettingsFormButton = new System.Windows.Forms.Button();
             this.autoCloseLauncherCheckbox = new System.Windows.Forms.CheckBox();
-            this.addAnotherAccountButton = new System.Windows.Forms.Button();
-            this.accountsListBox = new System.Windows.Forms.ComboBox();
             this.startGameButton = new System.Windows.Forms.Button();
             this.clientVersionSelectorPanel = new System.Windows.Forms.Panel();
-            this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.x32ClientRadioButton = new System.Windows.Forms.RadioButton();
+            this.x64ClientRadioButton = new System.Windows.Forms.RadioButton();
             this.launcherPanel.SuspendLayout();
             this.clientVersionSelectorPanel.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +56,28 @@
             this.launcherPanel.Padding = new System.Windows.Forms.Padding(12, 6, 12, 12);
             this.launcherPanel.Size = new System.Drawing.Size(240, 99);
             this.launcherPanel.TabIndex = 3;
+            // 
+            // accountsListBox
+            // 
+            this.accountsListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.accountsListBox.FormattingEnabled = true;
+            this.accountsListBox.Location = new System.Drawing.Point(12, 7);
+            this.accountsListBox.Margin = new System.Windows.Forms.Padding(0);
+            this.accountsListBox.Name = "accountsListBox";
+            this.accountsListBox.Size = new System.Drawing.Size(180, 21);
+            this.accountsListBox.TabIndex = 3;
+            this.accountsListBox.SelectedIndexChanged += new System.EventHandler(this.accountsListBox_SelectedIndexChanged);
+            // 
+            // addAnotherAccountButton
+            // 
+            this.addAnotherAccountButton.Location = new System.Drawing.Point(192, 6);
+            this.addAnotherAccountButton.Margin = new System.Windows.Forms.Padding(0);
+            this.addAnotherAccountButton.Name = "addAnotherAccountButton";
+            this.addAnotherAccountButton.Size = new System.Drawing.Size(36, 23);
+            this.addAnotherAccountButton.TabIndex = 4;
+            this.addAnotherAccountButton.Text = "Add";
+            this.addAnotherAccountButton.UseVisualStyleBackColor = true;
+            this.addAnotherAccountButton.Click += new System.EventHandler(this.addAnotherAccountButton_Click);
             // 
             // openSettingsFormButton
             // 
@@ -78,30 +100,7 @@
             this.autoCloseLauncherCheckbox.TabIndex = 6;
             this.autoCloseLauncherCheckbox.Text = "Close launcher after starting game";
             this.autoCloseLauncherCheckbox.UseVisualStyleBackColor = true;
-            this.autoCloseLauncherCheckbox.Visible = false;
             this.autoCloseLauncherCheckbox.CheckedChanged += new System.EventHandler(this.autoCloseLauncherCheckbox_CheckedChanged);
-            // 
-            // addAnotherAccountButton
-            // 
-            this.addAnotherAccountButton.Location = new System.Drawing.Point(192, 6);
-            this.addAnotherAccountButton.Margin = new System.Windows.Forms.Padding(0);
-            this.addAnotherAccountButton.Name = "addAnotherAccountButton";
-            this.addAnotherAccountButton.Size = new System.Drawing.Size(36, 23);
-            this.addAnotherAccountButton.TabIndex = 4;
-            this.addAnotherAccountButton.Text = "Add";
-            this.addAnotherAccountButton.UseVisualStyleBackColor = true;
-            this.addAnotherAccountButton.Click += new System.EventHandler(this.addAnotherAccountButton_Click);
-            // 
-            // accountsListBox
-            // 
-            this.accountsListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.accountsListBox.FormattingEnabled = true;
-            this.accountsListBox.Location = new System.Drawing.Point(12, 7);
-            this.accountsListBox.Margin = new System.Windows.Forms.Padding(0);
-            this.accountsListBox.Name = "accountsListBox";
-            this.accountsListBox.Size = new System.Drawing.Size(180, 21);
-            this.accountsListBox.TabIndex = 3;
-            this.accountsListBox.SelectedIndexChanged += new System.EventHandler(this.accountsListBox_SelectedIndexChanged);
             // 
             // startGameButton
             // 
@@ -125,18 +124,6 @@
             this.clientVersionSelectorPanel.Size = new System.Drawing.Size(105, 23);
             this.clientVersionSelectorPanel.TabIndex = 0;
             // 
-            // x64ClientRadioButton
-            // 
-            this.x64ClientRadioButton.AutoSize = true;
-            this.x64ClientRadioButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.x64ClientRadioButton.Location = new System.Drawing.Point(63, 0);
-            this.x64ClientRadioButton.Name = "x64ClientRadioButton";
-            this.x64ClientRadioButton.Size = new System.Drawing.Size(42, 23);
-            this.x64ClientRadioButton.TabIndex = 2;
-            this.x64ClientRadioButton.Text = "x64";
-            this.x64ClientRadioButton.UseVisualStyleBackColor = true;
-            this.x64ClientRadioButton.CheckedChanged += new System.EventHandler(this.x64ClientRadioButton_CheckedChanged);
-            // 
             // x32ClientRadioButton
             // 
             this.x32ClientRadioButton.AutoSize = true;
@@ -151,6 +138,18 @@
             this.x32ClientRadioButton.Text = "x32";
             this.x32ClientRadioButton.UseVisualStyleBackColor = true;
             this.x32ClientRadioButton.CheckedChanged += new System.EventHandler(this.x32ClientRadioButton_CheckedChanged);
+            // 
+            // x64ClientRadioButton
+            // 
+            this.x64ClientRadioButton.AutoSize = true;
+            this.x64ClientRadioButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.x64ClientRadioButton.Location = new System.Drawing.Point(63, 0);
+            this.x64ClientRadioButton.Name = "x64ClientRadioButton";
+            this.x64ClientRadioButton.Size = new System.Drawing.Size(42, 23);
+            this.x64ClientRadioButton.TabIndex = 2;
+            this.x64ClientRadioButton.Text = "x64";
+            this.x64ClientRadioButton.UseVisualStyleBackColor = true;
+            this.x64ClientRadioButton.CheckedChanged += new System.EventHandler(this.x64ClientRadioButton_CheckedChanged);
             // 
             // LauncherPage
             // 

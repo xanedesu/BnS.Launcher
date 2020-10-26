@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -7,7 +7,6 @@ using Unlakki.Bns.Launcher.Core.Enums;
 using Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket;
 using Unlakki.Bns.Launcher.Core.Models;
 using Unlakki.Bns.Launcher.Core.Models.Account;
-using Unlakki.Bns.Launcher.Core.Models.GameAccount;
 using Unlakki.Bns.Launcher.Core.Services;
 using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 using Unlakki.Bns.Launcher.Shared.Services;
@@ -120,12 +119,6 @@ namespace Unlakki.Bns.Launcher.Components
 
                     account.Token = token;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return;
-                }
-            }
 
                 var gameTokenCode = await _gameAuthProvider.GetGameTokenCode(account.Token.AccessToken);
 
@@ -137,8 +130,11 @@ namespace Unlakki.Bns.Launcher.Components
                     Arguments = _launcherConfigProvider.GetGameArguments()
                 });
 
-            if (_launcherConfigProvider.GetAutoCloseLauncher())
-            {
+                if (_launcherConfigProvider.GetAutoCloseLauncher())
+                {
+                    var mainForm = (MainForm)Parent;
+                    mainForm.Close();
+                }
 
             }
             catch (Exception ex)
