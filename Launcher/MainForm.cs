@@ -40,22 +40,22 @@ namespace Unlakki.Bns.Launcher
                     hardwareIdProvider,
                     launcherConfigProvider,
                     forgameAuthProvider),
-                "bns-ru");
+                new RouteData { Title = "bns-ru" });
 
             _router.AddRoute(
                 "/auth",
                 () => new LoginPage(launcherConfigProvider, forgameAuthProvider),
-                "bns-ru: Login");
+                new RouteData { Title = "bns-ru: Login" });
 
             _router.AddRoute(
-                "/auth/activation",
+                "/auth/activate/:sessionId",
                 () => new ActivationCodePage(launcherConfigProvider, forgameAuthProvider),
-                "bns-ru: Activation");
+                new RouteData { Title = "bns-ru: Activate" });
 
             _router.AddRoute(
                 "/settings",
                 () => new SettingsPage(launcherConfigProvider),
-                "bns-ru: Settings");
+                new RouteData { Title = "bns-ru: Settings" });
         }
     }
 }

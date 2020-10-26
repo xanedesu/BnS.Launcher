@@ -5,7 +5,7 @@ using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Components
 {
-    public partial class SettingsPage : RoutedComponent
+    public partial class SettingsPage : RoutableComponent
     {
         ILauncherConfigProvider _launcherConfigProvider;
 

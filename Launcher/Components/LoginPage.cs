@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Windows.Forms;
 using Unlakki.Bns.Launcher.Components.Router;
 using Unlakki.Bns.Launcher.Core.Exceptions;
@@ -7,7 +8,7 @@ using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Components
 {
-    public partial class LoginPage : RoutedComponent
+    public partial class LoginPage : RoutableComponent
     {
         ILauncherConfigProvider _launcherConfigProvider;
 
@@ -47,12 +48,14 @@ namespace Unlakki.Bns.Launcher.Components
             }
             catch (NeedToConfirmWithCode ex)
             {
-                Router.SetLocation(string.Format(
-                    "/auth/activation?message={0}&sessionId={1}&username={2}&password={3}",
-                    ex.Message,
-                    ex.SessionId,
-                    Uri.EscapeDataString(username),
-                    Uri.EscapeDataString(password)));
+                var collection = HttpUtility.ParseQueryString(string.Empty);
+                collection.Add("message", ex.Message);
+                collection.Add("username", username);
+                collection.Add("password", password);
+                
+                string path = $"/auth/activate/{ex.SessionId}?{collection}";
+
+                Router.SetLocation(path);
             }
             catch (Exception ex)
             {

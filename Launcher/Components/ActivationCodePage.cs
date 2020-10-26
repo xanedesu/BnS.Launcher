@@ -6,7 +6,7 @@ using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Components
 {
-    public partial class ActivationCodePage : RoutedComponent
+    public partial class ActivationCodePage : RoutableComponent
     {
         private ILauncherConfigProvider _launcherConfigProvider;
 
@@ -26,11 +26,7 @@ namespace Unlakki.Bns.Launcher.Components
 
         private void ActivationCodePage_Load(object sender, EventArgs e)
         {
-            string message;
-            if (Router.QueryParams.TryGetValue("message", out message))
-            {
-                messageContainer.Text = message;
-            }
+            messageContainer.Text = Router.Query["message"];
         }
 
         private async void activationCodeTextBox_TextChanged(object sender, EventArgs e)
@@ -40,18 +36,17 @@ namespace Unlakki.Bns.Launcher.Components
                 return;
             }
 
-            string sessionId;
-            if (!Router.QueryParams.TryGetValue("sessionId", out sessionId))
-            {
-                return;
-            }
+            string sessionId = Router.Params["sessionId"];
 
             try
             {
-                string username = Uri.UnescapeDataString(Router.QueryParams["username"]);
-                string password = Uri.UnescapeDataString(Router.QueryParams["password"]);
+                await _forgameAuthProvider.SendActivationCode(
+                    sessionId,
+                    activationCodeTextBox.Text);
 
-                await _forgameAuthProvider.SendActivationCode(sessionId, activationCodeTextBox.Text);
+                string username = Router.Query["username"];
+                string password = Router.Query["password"];
+
                 Token token = await _forgameAuthProvider.Authorize(username, password);
                 _launcherConfigProvider.AddOrUpdateAccount(new Account
                 {

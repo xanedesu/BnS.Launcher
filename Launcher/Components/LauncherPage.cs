@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +15,7 @@ using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Components
 {
-    public partial class LauncherPage : RoutedComponent
+    public partial class LauncherPage : RoutableComponent
     {
         IForgameAuthProvider _forgameAuthProvider;
 
