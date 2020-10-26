@@ -104,12 +104,12 @@ namespace Unlakki.Bns.Launcher.Components
                 return;
             }
 
-            JwtSecurityToken jwt = new JwtSecurityToken(account.Token.AccessToken);
+            var jwt = new JwtSecurityToken(account.Token.AccessToken);
 
-            long validTo = jwt.ValidTo.Ticks;
-            if (DateTime.Now.Ticks > validTo)
+            try
             {
-                try
+                long validTo = jwt.ValidTo.Ticks;
+                if (DateTime.Now.Ticks > validTo)
                 {
                     Token token = await _forgameAuthProvider.Refresh(account.Token.RefreshToken);
                     _launcherConfigProvider.AddOrUpdateAccount(new Account
@@ -127,19 +127,23 @@ namespace Unlakki.Bns.Launcher.Components
                 }
             }
 
-            GameTokenCode gameTokenCode = await _gameAuthProvider.GetGameTokenCode(account.Token.AccessToken);
+                var gameTokenCode = await _gameAuthProvider.GetGameTokenCode(account.Token.AccessToken);
 
-            _gameManager.Launch("bns-ru", new GameLaunchData
-            {
-                Login = gameTokenCode.Login,
-                Password = gameTokenCode.Password,
-                Version = _launcherConfigProvider.GetGameVersion(),
-                Arguments = _launcherConfigProvider.GetGameArguments()
-            });
+                _gameManager.Launch("bns-ru", new GameLaunchData
+                {
+                    Login = gameTokenCode.Login,
+                    Password = gameTokenCode.Password,
+                    Version = _launcherConfigProvider.GetGameVersion(),
+                    Arguments = _launcherConfigProvider.GetGameArguments()
+                });
 
             if (_launcherConfigProvider.GetAutoCloseLauncher())
             {
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -166,7 +170,9 @@ namespace Unlakki.Bns.Launcher.Components
             }
 
             if (mustUpdateItemIndex)
+            {
                 accountsListBox.SelectedIndex = accountsListBox.Items.Count - 1;
+            }
         }
     }
 }
