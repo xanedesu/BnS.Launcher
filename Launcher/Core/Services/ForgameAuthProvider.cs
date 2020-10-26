@@ -54,15 +54,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 }
                 catch (HttpRequestException ex)
                 {
-                    JObject error = (JObject)JObject.Parse((string)ex.Data["content"])["error"];
-                    if (error.ContainsKey("data"))
-                    {
-                        throw new NeedToConfirmWithCode(
-                            (string)error["description"],
-                            (string)error["data"]["sessionId"]);
-                    }
-                    
-                    throw new Exception((string)error["description"]);
+                    throw CreateException(ex);
                 }
             }
         }
@@ -87,7 +79,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new Exception((string)ex.Data["content"]);
+                    throw CreateException(ex);
                 }
             }
         }
@@ -108,11 +100,11 @@ namespace Unlakki.Bns.Launcher.Core.Services
 
                 try
                 {
-                    await WebHelper.TryToLoadJsonData<object>(httpRequest);
+                    await WebHelper.TryToLoadJsonData<JObject>(httpRequest);
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new Exception((string)ex.Data["content"]);
+                    throw CreateException(ex);
                 }
             }
         }
@@ -126,6 +118,25 @@ namespace Unlakki.Bns.Launcher.Core.Services
             httpRequest.Headers.TryAddWithoutValidation("Computer-Name", computerName);
             httpRequest.Headers.TryAddWithoutValidation("Hardware-Id", hardwareId);
             httpRequest.Headers.TryAddWithoutValidation("Launcher-Id", launcherId);
+        }
+    
+        private Exception CreateException(HttpRequestException requestException)
+        {
+            var content = requestException.Data["content"]?.ToString();
+            if (content == null)
+            {
+                return requestException;
+            }
+
+            JObject error = JObject.Parse(content).Value<JObject>("error");
+            if (error.ContainsKey("data"))
+            {
+                return new NeedToConfirmWithCode(
+                    error.Value<string>("description"),
+                    error.Value<JObject>("data").Value<string>("sessionId"));
+            }
+
+            return new Exception(error.Value<string>("description"));
         }
     }
 }
