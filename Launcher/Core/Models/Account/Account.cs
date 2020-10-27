@@ -2,12 +2,12 @@
 
 namespace Unlakki.Bns.Launcher.Core.Models.Account
 {
-    public class Account
-    {
-        [JsonProperty("username")]
-        public string Username { get; set; }
+  public class Account
+  {
+    [JsonProperty("username")]
+    public string Username { get; set; }
 
-        [JsonProperty("token")]
-        public Token Token { get; set; }
-    }
+    [JsonProperty("token")]
+    public Token Token { get; set; }
+  }
 }

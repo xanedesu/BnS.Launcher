@@ -1,7 +1,7 @@
 ﻿namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-    public interface IHardwareIdProvider
-    {
-        string Get();
-    }
+  public interface IHardwareIdProvider
+  {
+    string Get();
+  }
 }

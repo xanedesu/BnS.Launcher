@@ -2,7 +2,7 @@
 
 namespace Unlakki.Bns.Launcher.Shared.Models.GameConfig
 {
-    public class GameEventConfigs : List<GameEventConfig>
-    {
-    }
+  public class GameEventConfigs : List<GameEventConfig>
+  {
+  }
 }

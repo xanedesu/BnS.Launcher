@@ -5,18 +5,18 @@ using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Shared.Services
 {
-    [Export(typeof(IGamesConfigDataProvider))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    public class GamesConfigCdnDataProvider : IGamesConfigDataProvider
-    {
-        private string _configAddress = "https://cdn.inn.ru/4game/config-live.xml";
+  [Export(typeof(IGamesConfigDataProvider))]
+  [PartCreationPolicy(CreationPolicy.Shared)]
+  public class GamesConfigCdnDataProvider : IGamesConfigDataProvider
+  {
+    private string _configAddress = "https://cdn.inn.ru/4game/config-live.xml";
 
-        public async Task<string> GetData()
-        {
-            using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
-            {
-                return await httpClient.GetStringAsync(_configAddress);
-            }
-        }
+    public async Task<string> GetData()
+    {
+      using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
+      {
+        return await httpClient.GetStringAsync(_configAddress);
+      }
     }
+  }
 }

@@ -2,8 +2,8 @@
 
 namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-    public interface IGamesConfigDataProvider
-    {
-        Task<string> GetData();
-    }
+  public interface IGamesConfigDataProvider
+  {
+    Task<string> GetData();
+  }
 }

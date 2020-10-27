@@ -3,14 +3,14 @@ using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 
 namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-    public interface IGamesConfigProvider
-    {
-        Task Init();
+  public interface IGamesConfigProvider
+  {
+    Task Init();
 
-        Task<GamesConfig> InitAndGet();
+    Task<GamesConfig> InitAndGet();
 
-        GamesConfig Get();
+    GamesConfig Get();
 
-        GameConfig Get(string key);
-    }
+    GameConfig Get(string key);
+  }
 }

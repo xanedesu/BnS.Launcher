@@ -1,7 +1,7 @@
 ﻿namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-    public interface ILauncherIdGenerator
-    {
-        string GenegateNewId();
-    }
+  public interface ILauncherIdGenerator
+  {
+    string GenegateNewId();
+  }
 }

@@ -5,21 +5,22 @@ using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Core.Services
 {
-    [Export(typeof(IGameRepository))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    public class GameRepository : IGameRepository
+  [Export(typeof(IGameRepository))]
+  [PartCreationPolicy(CreationPolicy.Shared)]
+  public class GameRepository : IGameRepository
+  {
+    private readonly IGameInSystemRegistrator _gameInSystemRegistrator;
+
+    [ImportingConstructor]
+    public GameRepository(IGameInSystemRegistrator gameInSystemRegistrator)
     {
-        private readonly IGameInSystemRegistrator _gameInSystemRegistrator;
-
-        [ImportingConstructor]
-        public GameRepository(IGameInSystemRegistrator gameInSystemRegistrator)
-        {
-            _gameInSystemRegistrator = gameInSystemRegistrator;
-        }
-
-        public InstalledGameInfo GetOrDefault(string gameKey)
-        {
-            return _gameInSystemRegistrator.GetInstalledGames("4game2.0").Find((InstalledGameInfo gameInfo) => gameInfo.GameKey == gameKey);
-        }
+      _gameInSystemRegistrator = gameInSystemRegistrator;
     }
+
+    public InstalledGameInfo GetOrDefault(string gameKey)
+    {
+      return _gameInSystemRegistrator
+        .GetInstalledGames("4game2.0").Find((gameInfo) => gameInfo.GameKey == gameKey);
+    }
+  }
 }
