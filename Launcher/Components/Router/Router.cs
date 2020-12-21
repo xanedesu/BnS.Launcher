@@ -1,110 +1,85 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 
 namespace Unlakki.Bns.Launcher.Components.Router
 {
-  public class Router
-  {
-    private readonly ContainerControl _rootContainer;
-
-    private readonly Dictionary<Regex, Route> _routes;
-
-    private string _location;
-
-    public NameValueCollection Query = new NameValueCollection();
-
-    public NameValueCollection Params = new NameValueCollection();
-
-    public Router(ContainerControl rootContainer, string initLocation = "/")
+    public class Router
     {
-      _rootContainer = rootContainer;
-      _routes = new Dictionary<Regex, Route>();
+        private static readonly Uri BaseUri = new Uri("app://bnslauncher");
 
-      SetLocation(initLocation);
-    }
+        private readonly ContainerControl _rootComponent;
 
-    public void AddRoute(string path, Func<RoutableComponent> component, RouteData data = null)
-    {
-      _routes.Add(CompileRoutePathToRegex(path), new Route(component, data));
-      OnLocationChangedOrNewRouteAdded();
-    }
+        private readonly Dictionary<UriTemplate, Route> _routes;
 
-    public void SetLocation(string location)
-    {
-      var locationAndQuery = location.Split('?');
+        public NameValueCollection Query { get; private set; }
 
-      _location = locationAndQuery[0];
-      SetQuery(locationAndQuery.ElementAtOrDefault(1));
+        public NameValueCollection Params { get; private set; }
 
-      OnLocationChangedOrNewRouteAdded();
-    }
+        private string _location;
 
-    private void OnLocationChangedOrNewRouteAdded()
-    {
-      var route = GetCurrentRoute();
-      if (route != null)
-      {
-        if (route.Data?.Title != null)
+        public Router(ContainerControl rootComponent, string initLocation = "/")
         {
-          _rootContainer.Text = route.Data.Title;
+            _rootComponent = rootComponent;
+            _routes = new Dictionary<UriTemplate, Route>();
+
+            Query = new NameValueCollection();
+            Params = new NameValueCollection();
+
+            SetLocation(initLocation);
         }
 
-        var component = route.Component();
-        component.Connect(this);
+        public void AddRoute(string path, Func<RoutableComponent> component, RouteData data = null)
+        {
+            _routes.Add(new UriTemplate(path), new Route(component, data));
+            OnLocationChangedOrNewRouteAdded();
+        }
 
-        _rootContainer.Controls.Clear();
-        _rootContainer.Controls.Add(component);
-      }
+        public void SetLocation(string location)
+        {
+            _location = location;
+            OnLocationChangedOrNewRouteAdded();
+        }
+
+        private void OnLocationChangedOrNewRouteAdded()
+        {
+            var route = GetCurrentRoute();
+            if (route != null)
+            {
+                if (route.Data?.Title != null)
+                {
+                    _rootComponent.Text = route.Data.Title;
+                }
+
+                var component = route.Component();
+                component.Connect(this);
+
+                _rootComponent.Controls.Clear();
+                _rootComponent.Controls.Add(component);
+            }
+        }
+
+        private Route GetCurrentRoute()
+        {
+            var currentLocation = new Uri(BaseUri, _location);
+
+            foreach (var route in _routes)
+            {
+                var matches = route.Key.Match(BaseUri, currentLocation);
+                if (matches != null)
+                {
+                    Query.Clear();
+                    Query.Add(matches.QueryParameters);
+
+                    Params.Clear();
+                    Params.Add(matches.BoundVariables);
+
+                    return route.Value;
+                }
+            }
+
+            return null;
+        }
     }
-
-    private Route GetCurrentRoute()
-    {
-      try
-      {
-        var route = _routes.Single((routeData) => routeData.Key.IsMatch(_location));
-
-        SetParams(route.Key.Match(_location).Groups.Cast<Group>().Select(
-                (group) => new KeyValuePair<string, string>(group.Name, group.Value)));
-
-        return route.Value;
-      }
-      catch (Exception)
-      {
-        return null;
-      }
-    }
-
-    private void SetQuery(string query)
-    {
-      Query.Clear();
-
-      if (query != null)
-      {
-        Query.Add(HttpUtility.ParseQueryString(query));
-      }
-    }
-
-    private void SetParams(IEnumerable<KeyValuePair<string, string>> paramsCollection)
-    {
-      Params.Clear();
-
-      foreach (var keyValue in paramsCollection)
-      {
-        Params.Add(keyValue.Key, keyValue.Value);
-      }
-    }
-
-    private Regex CompileRoutePathToRegex(string path)
-    {
-      var r1 = Regex.Replace(path, "/?\\*", "/.*");
-      var r2 = Regex.Replace(r1, ":([a-z]+)", "(?<$1>[^/]+)", RegexOptions.IgnoreCase);
-
-      return new Regex(string.Format("^{0}$", r2));
-    }
-  }
 }
