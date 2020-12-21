@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using Unlakki.Bns.Launcher.Components.Router;
 using Unlakki.Bns.Launcher.Core.Services.Interfaces;
@@ -53,7 +53,9 @@ namespace Unlakki.Bns.Launcher.Components
             if (checkBox.Checked)
             {
                 if (args.Contains(argName))
+                {
                     return;
+                }
 
                 argsTextBox.Text = args.Length == 0 ? argName : string.Concat("", args, argName);
                 return;

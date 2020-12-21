@@ -26,11 +26,11 @@ namespace Unlakki.Bns.Launcher.Components
         GameManager _gameManager;
 
         public LauncherPage(
-          IComputerNameProvider computerNameProvider,
-          ILauncherIdProvider launcherIdProvider,
-          IHardwareIdProvider hardwareIdProvider,
-          ILauncherConfigProvider launcherConfigProvider,
-          IForgameAuthProvider forgameAuthProvider)
+            IComputerNameProvider computerNameProvider,
+            ILauncherIdProvider launcherIdProvider,
+            IHardwareIdProvider hardwareIdProvider,
+            ILauncherConfigProvider launcherConfigProvider,
+            IForgameAuthProvider forgameAuthProvider)
         {
             InitializeComponent();
 
@@ -99,6 +99,7 @@ namespace Unlakki.Bns.Launcher.Components
 
             Account account = _launcherConfigProvider.GetAccounts().Find(
                 acc => acc.Username == username);
+
             if (account == null)
             {
                 MessageBox.Show("Select account.");
@@ -110,6 +111,7 @@ namespace Unlakki.Bns.Launcher.Components
             try
             {
                 long validTo = jwt.ValidTo.Ticks;
+
                 if (DateTime.Now.Ticks > validTo)
                 {
                     Token token = await _forgameAuthProvider.Refresh(account.Token.RefreshToken);
@@ -122,6 +124,7 @@ namespace Unlakki.Bns.Launcher.Components
                 }
 
                 GameTokenCode gameTokenCode;
+
                 try
                 {
                     gameTokenCode = await _gameAuthProvider.GetGameTokenCode(

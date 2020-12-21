@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 
 namespace Unlakki.Bns.Launcher.Shared.Infrastructure.Internet
@@ -13,7 +13,7 @@ namespace Unlakki.Bns.Launcher.Shared.Infrastructure.Internet
 
         private readonly string _acceptLanguage = "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7";
 
-        public HeaderedHttpClient() : base(new HttpClientHandler() {
+        public HeaderedHttpClient() : base(new HttpClientHandler {
             AutomaticDecompression = ~DecompressionMethods.None
         })
         {

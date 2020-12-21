@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Unlakki.Bns.Launcher.Core.Enums;
 
 namespace Unlakki.Bns.Launcher.Shared.Extensions
@@ -8,8 +8,8 @@ namespace Unlakki.Bns.Launcher.Shared.Extensions
         public static LaunchType ToLaunchType(this string launchTypeStr)
         {
             int result;
-            return !int.TryParse(launchTypeStr, out result)
-              || !Enum.IsDefined(typeof(LaunchType), result) ? LaunchType.Unknown : (LaunchType)result;
+            return !int.TryParse(launchTypeStr, out result) || !Enum.IsDefined(
+                typeof(LaunchType), result) ? LaunchType.Unknown : (LaunchType)result;
         }
     }
 }

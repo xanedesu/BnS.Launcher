@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
@@ -12,7 +12,8 @@ namespace Unlakki.Bns.Launcher.Core.Services
     {
         private readonly int _blockSize = 1024;
 
-        private readonly string _configPath = Path.Combine(Directory.GetCurrentDirectory(), ".config");
+        private readonly string _configPath = Path.Combine(
+            Directory.GetCurrentDirectory(), ".config");
 
         private readonly ICryptoManager _cryptoManager;
 
@@ -25,7 +26,9 @@ namespace Unlakki.Bns.Launcher.Core.Services
         public string Read()
         {
             if (!File.Exists(_configPath))
+            {
                 throw new FileNotFoundException("File not found", _configPath);
+            }
 
             using (FileStream fileStream = File.OpenRead(_configPath))
             {
@@ -49,7 +52,9 @@ namespace Unlakki.Bns.Launcher.Core.Services
         public void Write(string configString)
         {
             if (File.Exists(_configPath))
+            {
                 File.Delete(_configPath);
+            }
 
             string textContent = _cryptoManager.Encrypt(configString);
             UTF8Encoding utf8Encoding = new UTF8Encoding(true);

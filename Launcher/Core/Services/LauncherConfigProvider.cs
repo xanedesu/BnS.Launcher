@@ -20,8 +20,8 @@ namespace Unlakki.Bns.Launcher.Core.Services
 
         [ImportingConstructor]
         public LauncherConfigProvider(
-          ILauncherConfigDataProvider configDataProvider,
-          ILauncherConfigParser configParser)
+            ILauncherConfigDataProvider configDataProvider,
+            ILauncherConfigParser configParser)
         {
             _configDataProvider = configDataProvider;
             _configParser = configParser;

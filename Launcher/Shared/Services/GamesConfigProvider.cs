@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using Unlakki.Bns.Launcher.Shared.Models.GameConfig;
 using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
@@ -16,8 +16,8 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         private GamesConfig _sharedConfig;
 
         public GamesConfigProvider(
-          IGamesConfigDataProvider dataProvider,
-          IGamesConfigParser configParser)
+            IGamesConfigDataProvider dataProvider,
+            IGamesConfigParser configParser)
         {
             _dataProvider = dataProvider;
             _configParser = configParser;
@@ -26,7 +26,10 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         public async Task Init()
         {
             if (_sharedConfig != null)
+            {
                 return;
+            }
+
             await LoadConfig();
         }
 

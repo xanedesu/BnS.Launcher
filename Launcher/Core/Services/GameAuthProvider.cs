@@ -35,9 +35,10 @@ namespace Unlakki.Bns.Launcher.Core.Services
                     MasterId = jwt.Subject,
                 }
             }));
-            string gameAccountsString = await _ws.RecieveAsync();
+
+            string responseString1 = await _ws.RecieveAsync();
             GameAccount gameAccount = JsonConvert
-              .DeserializeObject<WebSocketResponse<GameAccount[]>>(gameAccountsString).Result[0];
+              .DeserializeObject<WebSocketResponse<GameAccount[]>>(responseString1).Result[0];
 
             await _ws.SendAsync(JsonConvert.SerializeObject(new WebSocketRequest {
                 Id = Guid.NewGuid().ToString(),
@@ -49,9 +50,10 @@ namespace Unlakki.Bns.Launcher.Core.Services
                     MasterId = jwt.Subject 
                 }
             }));
-            string responseString = await _ws.RecieveAsync();
+
+            string responseString2 = await _ws.RecieveAsync();
             WebSocketResponse<GameTokenCode> response = JsonConvert
-                .DeserializeObject<WebSocketResponse<GameTokenCode>>(responseString);
+                .DeserializeObject<WebSocketResponse<GameTokenCode>>(responseString2);
 
             await _ws.DisconnectAsync();
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 using Unlakki.Bns.Launcher.Shared.Utils;
@@ -18,8 +18,12 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         {
             RegisterInRegistry(registrationData);
             AddLauncherUrlScheme(registrationData);
+
             if (!createShortcut)
+            {
                 return;
+            }
+
             CreateShortcuts(registrationData);
         }
 
@@ -50,7 +54,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
 
         public void Update(LauncherRegistrationDataUpdate updateData)
         {
-            if (!RegistryHelper.TryUpdateUninstallInfo(updateData.Key, new RegistryUninstallInfo() {
+            if (!RegistryHelper.TryUpdateUninstallInfo(updateData.Key, new RegistryUninstallInfo {
                 Version = updateData.Version,
                 SizeBytes = new long?(updateData.SizeBytes),
                 Name = updateData.Name,
@@ -60,9 +64,10 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             }))
             {
                 throw new InvalidOperationException(
-                  "Can't update launcher uninstall info  " + updateData.Key + " in uninstall registry");
+                    $"Can't update launcher uninstall info {updateData.Key} in uninstall registry");
             }
-            UpdateSoftwareInfo(new RegisterLauncherSoftwareInfo() {
+
+            UpdateSoftwareInfo(new RegisterLauncherSoftwareInfo {
                 Publisher = "Innova Co. SARL",
                 LauncherKey = updateData.Key,
                 Version = updateData.Version,
@@ -75,8 +80,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             return RegistryHelper.GetUninstallInfo(launcherKey).InstallationPath;
         }
 
-        public RegisterLauncherSoftwareInfo GetLauncherSoftwareInfo(
-          string launcherKey)
+        public RegisterLauncherSoftwareInfo GetLauncherSoftwareInfo(string launcherKey)
         {
             return RegistryHelper.GetRegisterLauncherSoftwareData("Innova Co. SARL", launcherKey);
         }
@@ -86,7 +90,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             if (!RegistryHelper.TryRegisterLauncherSoftwareData(updateData))
             {
                 throw new InvalidOperationException(
-                  "Can't update launcher info " + updateData.LauncherKey + " in software registry");
+                    $"Can't update launcher info {updateData.LauncherKey} in software registry");
             }
         }
 
@@ -106,21 +110,24 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         private void RegisterInRegistry(LauncherRegistrationData registrationData)
         {
             bool flag = !IsRegistered(registrationData.Key);
-            if (!RegistryHelper.TryRegisterUninstallInfo(registrationData.Key, new RegistryUninstallInfo() {
-                Version = registrationData.Version,
-                SizeBytes = new long?(registrationData.SizeBytes),
-                InstallationPath = registrationData.InstallationPath,
-                IconPath = registrationData.IconPath,
-                Name = registrationData.Name,
-                InstallationDate = registrationData.InstallationDate,
-                UninstallCommand = registrationData.UninstallCommand,
-                Publisher = "Innova Co. SARL"
+
+            if (!RegistryHelper.TryRegisterUninstallInfo(registrationData.Key,
+                new RegistryUninstallInfo() {
+                    Version = registrationData.Version,
+                    SizeBytes = new long?(registrationData.SizeBytes),
+                    InstallationPath = registrationData.InstallationPath,
+                    IconPath = registrationData.IconPath,
+                    Name = registrationData.Name,
+                    InstallationDate = registrationData.InstallationDate,
+                    UninstallCommand = registrationData.UninstallCommand,
+                    Publisher = "Innova Co. SARL"
             }))
             {
                 throw new InvalidOperationException(
-                  "Can't register launcher " + registrationData.Key + " in unninstall registry");
+                    $"Can't register launcher {registrationData.Key} in unninstall registry");
             }
-            if (!RegistryHelper.TryRegisterLauncherSoftwareData(new RegisterLauncherSoftwareInfo() {
+
+            if (!RegistryHelper.TryRegisterLauncherSoftwareData(new RegisterLauncherSoftwareInfo {
                 Publisher = "Innova Co. SARL",
                 LauncherKey = registrationData.Key,
                 Version = registrationData.Version,
@@ -132,14 +139,16 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             }))
             {
                 RegistryHelper.DeleteUninstallInfo(registrationData.Key);
+
                 throw new InvalidOperationException(
-                  "Can't register launcher " + registrationData.Key + " in software registry");
+                    $"Can't register launcher {registrationData.Key} in software registry");
             }
         }
 
         private void AddLauncherUrlScheme(LauncherRegistrationData registrationData)
         {
-            if (!RegistryHelper.TryRegisterUrlScheme(registrationData.UrlSchemeName, registrationData.RunnerPath))
+            if (!RegistryHelper.TryRegisterUrlScheme(
+                registrationData.UrlSchemeName, registrationData.RunnerPath))
             {
                 throw new InvalidOperationException("Can't register launcher urlScheme");
             }

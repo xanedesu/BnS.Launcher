@@ -32,30 +32,35 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 GameConfig gameConfig = _gamesConfigProvider.Get(gameKey);
 
                 string launchString = gameConfig.LaunchParams
-                  .Replace("%LOGIN%", data.Login).Replace("%PASS%", data.Password);
+                    .Replace("%LOGIN%", data.Login).Replace("%PASS%", data.Password);
                 string launchParams = string.Join(" ", launchString, data.Arguments);
 
                 InstalledGameInfo gameInfo = _gameRepository.GetOrDefault(gameConfig.EnvKey);
 
                 string gameLaunchPath = GetFullGamePath(gameInfo.Path, data.Version);
+                
                 if (!File.Exists(gameLaunchPath))
                 {
                     throw new GameStartException(
-                      gameKey, "game_exe_not_found", $"Not found game exe by path {gameLaunchPath}");
+                        gameKey,
+                        "game_exe_not_found",
+                        $"Not found game exe by path {gameLaunchPath}");
                 }
+
                 string directoryName = Path.GetDirectoryName(gameLaunchPath);
 
-                ProcessStartInfo startInfo = new ProcessStartInfo() {
+                ProcessStartInfo startInfo = new ProcessStartInfo {
                     FileName = gameLaunchPath,
                     WorkingDirectory = directoryName,
                     Arguments = launchParams
                 };
 
                 Process process = Process.Start(startInfo);
+                
                 if (process == null || process.HasExited)
                 {
                     throw new GameStartException(
-                      gameKey, "game_exe_not_found", $"Not started game exe {gameLaunchPath}");
+                        gameKey, "game_exe_not_found", $"Not started game exe {gameLaunchPath}");
                 }
             }
             catch (Exception)

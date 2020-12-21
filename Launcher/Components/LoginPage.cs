@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Windows.Forms;
 using Unlakki.Bns.Launcher.Components.Router;
@@ -37,7 +37,7 @@ namespace Unlakki.Bns.Launcher.Components
             try
             {
                 Token token = await _forgameAuthProvider.Authorize(username, password);
-                _launcherConfigProvider.AddOrUpdateAccount(new Account() {
+                _launcherConfigProvider.AddOrUpdateAccount(new Account {
                     Username = username,
                     Token = token
                 });
@@ -47,12 +47,12 @@ namespace Unlakki.Bns.Launcher.Components
             }
             catch (NeedToConfirmWithCode ex)
             {
-                var collection = HttpUtility.ParseQueryString(string.Empty);
-                collection.Add("message", ex.Message);
-                collection.Add("username", username);
-                collection.Add("password", password);
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+                queryString.Add("message", ex.Message);
+                queryString.Add("username", username);
+                queryString.Add("password", password);
 
-                string path = $"/auth/activate/{ex.SessionId}?{collection}";
+                string path = $"/auth/activate/{ex.SessionId}?{queryString}";
 
                 Router.SetLocation(path);
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.WebSockets;
@@ -14,7 +14,7 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
     [Export(typeof(IWebSocket))]
     public class WebSocket : IWebSocket
     {
-        private string _wsAddress = "wss://launcherbff.ru.4game.com/";
+        private string _wsAddress = "wss://launcherbff.ru.4game.com";
 
         private IComputerNameProvider _computerNameProvider;
 
@@ -40,10 +40,10 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
             _ws = new ClientWebSocket();
 
             string computerName = Convert.ToBase64String(
-              Encoding.Default.GetBytes(_computerNameProvider.Get()));
+                Encoding.Default.GetBytes(_computerNameProvider.Get()));
             string launcherId = _launcherIdProvider.Get();
             string hardwareId = Convert.ToBase64String(
-              Encoding.Default.GetBytes(_hardwareIdProvider.Get()));
+                Encoding.Default.GetBytes(_hardwareIdProvider.Get()));
 
             string uriString = _wsAddress
                 .AddOrUpdateParameterToUrl("token", accessToken)
@@ -87,7 +87,7 @@ namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket
         public async Task DisconnectAsync()
         {
             await _ws.CloseAsync(
-              WebSocketCloseStatus.NormalClosure, "Disconnect", CancellationToken.None);
+                WebSocketCloseStatus.NormalClosure, "Disconnect", CancellationToken.None);
         }
     }
 }

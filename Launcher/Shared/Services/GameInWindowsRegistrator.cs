@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -28,8 +28,8 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         {
             try
             {
-                RegistryHelper.DeleteUninstallInfo(
-                  GetUninstallGameRegistryKey(unregistrationData.LauncherKey, unregistrationData.Key));
+                RegistryHelper.DeleteUninstallInfo(GetUninstallGameRegistryKey(
+                    unregistrationData.LauncherKey, unregistrationData.Key));
                 RegistryHelper.DeleteGameSoftwareData(new DeleteGameSoftwareInfo() {
                     Publisher = "Innova Co. SARL",
                     LauncherKey = unregistrationData.LauncherKey,
@@ -47,7 +47,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         public bool IsRegistered(string launcherKey, string gameRegistrationKey)
         {
             return RegistryHelper.UninstallInfoExists(
-              GetUninstallGameRegistryKey(launcherKey, gameRegistrationKey));
+                GetUninstallGameRegistryKey(launcherKey, gameRegistrationKey));
         }
 
         public List<InstalledGameInfo> GetInstalledGames(string launcherKey)
@@ -56,30 +56,39 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             return RegistryHelper.GetUninstallInfoKeys(gameKeysPrefix).Select(k => {
                 RegistryUninstallInfo uninstallInfo = RegistryHelper.GetUninstallInfo(k);
                 RegisterGameSoftwareInfo gameSoftwareInfo = uninstallInfo != null
-                  ? RegistryHelper.GetGameSoftwareData("Innova Co. SARL", launcherKey, uninstallInfo.Name)
-                  : null;
+                    ? RegistryHelper.GetGameSoftwareData(
+                        "Innova Co. SARL", launcherKey, uninstallInfo.Name)
+                    : null;
+
                 return new {
                     Key = k,
                     Info = uninstallInfo,
                     SoftwareInfo = gameSoftwareInfo
                 };
-            }).Where(e => e.Info != null && e.SoftwareInfo != null).Select(info => new InstalledGameInfo() {
-                GameKey = info.Key.Replace(gameKeysPrefix, ""),
-                GameName = info.Info.Name,
-                Path = info.Info.InstallationPath,
-                Version = info.Info.Version,
-                InstallationDate = new DateTime?(info.Info.InstallationDate),
-                IconPath = info.Info.IconPath
+            }).Where(e => e.Info != null && e.SoftwareInfo != null).Select(
+                info => new InstalledGameInfo {
+                    GameKey = info.Key.Replace(gameKeysPrefix, ""),
+                    GameName = info.Info.Name,
+                    Path = info.Info.InstallationPath,
+                    Version = info.Info.Version,
+                    InstallationDate = new DateTime?(info.Info.InstallationDate),
+                    IconPath = info.Info.IconPath
             }).ToList();
         }
 
-        private void CreateDesktopShortcut(GameRegistrationData registrationData, bool gameWasInstalled)
+        private void CreateDesktopShortcut(
+            GameRegistrationData registrationData,
+            bool gameWasInstalled)
         {
             try
             {
                 File.WriteAllBytes(registrationData.IconPath, registrationData.IconData);
+                
                 if (gameWasInstalled)
+                {
                     return;
+                }
+
                 //ShortcutHelper.CreateOrReplaceDesktopShortcut(registrationData.Name, registrationData.IconPath, registrationData.RunnerPath, registrationData.RunnerArgs);
             }
             catch (Exception)
@@ -91,27 +100,32 @@ namespace Unlakki.Bns.Launcher.Shared.Services
         private void RegisterInRegistry(GameRegistrationData registrationData)
         {
             string uninstallGameRegistryKey = GetUninstallGameRegistryKey(
-              registrationData.LauncherKey, registrationData.Key);
+                registrationData.LauncherKey, registrationData.Key);
             long? nullable = new long?();
             long result;
+
             if (long.TryParse(registrationData.Size, out result))
+            {
                 nullable = new long?(result);
+            }
+
             if (!RegistryHelper.TryRegisterUninstallInfo(
-              uninstallGameRegistryKey, new RegistryUninstallInfo() {
-                  Version = registrationData.Version,
-                  SizeBytes = nullable,
-                  InstallationPath = registrationData.InstallationPath,
-                  IconPath = registrationData.IconPath,
-                  Name = registrationData.Name,
-                  InstallationDate = registrationData.InstallationDate,
-                  UninstallCommand = registrationData.UninstallCommand,
-                  Publisher = "Innova Co. SARL"
-              }))
+                uninstallGameRegistryKey, new RegistryUninstallInfo() {
+                    Version = registrationData.Version,
+                    SizeBytes = nullable,
+                    InstallationPath = registrationData.InstallationPath,
+                    IconPath = registrationData.IconPath,
+                    Name = registrationData.Name,
+                    InstallationDate = registrationData.InstallationDate,
+                    UninstallCommand = registrationData.UninstallCommand,
+                    Publisher = "Innova Co. SARL"
+                }))
             {
                 throw new Exception(
-                  "Can't register game " + uninstallGameRegistryKey + " in unninstall registry");
+                  $"Can't register game {uninstallGameRegistryKey} in uninstall registry");
             }
-            if (!RegistryHelper.TryRegisterGameSoftwareData(new RegisterGameSoftwareInfo() {
+
+            if (!RegistryHelper.TryRegisterGameSoftwareData(new RegisterGameSoftwareInfo {
                 Publisher = "Innova Co. SARL",
                 LauncherKey = registrationData.LauncherKey,
                 Version = registrationData.Version,
@@ -121,8 +135,9 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             }))
             {
                 RegistryHelper.DeleteUninstallInfo(uninstallGameRegistryKey);
+
                 throw new Exception(
-                  "Can't register game " + uninstallGameRegistryKey + " in software registry");
+                    $"Can't register game {uninstallGameRegistryKey} in software registry");
             }
         }
 
@@ -133,7 +148,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
 
         private string GetUninstallGameRegistryKey(string launcherKey, string gameKey)
         {
-            return launcherKey + "_" + gameKey;
+            return $"{launcherKey}_{gameKey}";
         }
     }
 }

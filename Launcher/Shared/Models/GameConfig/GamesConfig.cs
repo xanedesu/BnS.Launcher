@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -16,17 +16,17 @@ namespace Unlakki.Bns.Launcher.Shared.Models.GameConfig
 
         public string GetGameIconUrl(string gameKey)
         {
-            return Path.Combine(Icons.IconsUrl, gameKey + ".ico");
+            return Path.Combine(Icons.IconsUrl, $"{gameKey}.ico");
         }
 
         public string GetGameLogoUrl(string gameKey)
         {
-            return Path.Combine(Icons.LogosUrl, gameKey + ".png");
+            return Path.Combine(Icons.LogosUrl, $"{gameKey}.png");
         }
 
         public string GetGameCoverUrl(string gameKey)
         {
-            return Path.Combine(Icons.CoversUrl, gameKey + ".png");
+            return Path.Combine(Icons.CoversUrl, "{gameKey}.png");
         }
 
         public GameConfig GetGameConfig(string gameKey)

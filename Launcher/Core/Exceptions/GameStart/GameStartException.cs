@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Unlakki.Bns.Launcher.Core.Exceptions.GameStart
 {
@@ -9,25 +9,25 @@ namespace Unlakki.Bns.Launcher.Core.Exceptions.GameStart
         public string Code { get; }
 
         public GameStartException(string gameKey, string code)
-          : base("Game problem. Code: " + code + " Game: " + gameKey)
+            : base($"Game problem. Code: {code} Game: {gameKey}")
         {
             Code = code;
             GameKey = gameKey;
         }
 
         public GameStartException(string gameKey, string code, string message)
-          : base(message + " Code: " + code + " Game: " + gameKey)
+            : base($"{message} Code: {code} Game: {gameKey}")
         {
             Code = code;
             GameKey = gameKey;
         }
 
         public GameStartException(
-          string gameKey,
-          string code,
-          string message,
-          Exception innerException)
-          : base(message + " Code: " + code + " Game:" + gameKey, innerException)
+            string gameKey,
+            string code,
+            string message,
+            Exception innerException)
+            : base($"{message} Code: {code} Game: {gameKey}", innerException)
         {
             Code = code;
             GameKey = gameKey;

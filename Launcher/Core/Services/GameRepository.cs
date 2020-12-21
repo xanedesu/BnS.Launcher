@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 using Unlakki.Bns.Launcher.Shared.Models;
 using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
@@ -20,7 +20,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
         public InstalledGameInfo GetOrDefault(string gameKey)
         {
             return _gameInSystemRegistrator
-              .GetInstalledGames("4game2.0").Find((gameInfo) => gameInfo.GameKey == gameKey);
+                .GetInstalledGames("4game2.0").Find((gameInfo) => gameInfo.GameKey == gameKey);
         }
     }
 }
