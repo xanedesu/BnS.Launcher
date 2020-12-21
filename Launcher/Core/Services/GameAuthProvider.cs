@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
@@ -11,55 +11,56 @@ using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Core.Services
 {
-  [Export(typeof(IGameAuthProvider))]
-  class GameAuthProvider : IGameAuthProvider
-  {
-    private WebSocket _ws;
-
-    [ImportingConstructor]
-    public GameAuthProvider(WebSocket ws)
+    [Export(typeof(IGameAuthProvider))]
+    class GameAuthProvider : IGameAuthProvider
     {
-      _ws = ws;
-    }
+        private readonly WebSocket _ws;
 
-    public async Task<GameTokenCode> GetGameTokenCode(string accessToken)
-    {
-      await _ws.ConnectAsync(accessToken);
-
-      JwtSecurityToken jwt = new JwtSecurityToken(accessToken);
-
-      await _ws.SendAsync(JsonConvert.SerializeObject(new WebSocketRequest
-      {
-        Id = Guid.NewGuid().ToString(),
-        Method = "getGameAccount",
-        Params = new GetGameAccountParams
+        [ImportingConstructor]
+        public GameAuthProvider(WebSocket ws)
         {
-          MasterId = jwt.Subject,
+            _ws = ws;
         }
-      }));
-      string gameAccountsString = await _ws.RecieveAsync();
-      GameAccount gameAccount = JsonConvert
-        .DeserializeObject<WebSocketResponse<GameAccount[]>>(gameAccountsString).Result[0];
 
-      await _ws.SendAsync(JsonConvert.SerializeObject(new WebSocketRequest
-      {
-        Id = Guid.NewGuid().ToString(),
-        Method = "createGameTokenCode",
-        Params = new CreateGameTokenCodeParams
+        public async Task<GameTokenCode> GetGameTokenCode(string accessToken)
         {
-          AccessToken = accessToken,
-          IgnoreLicenseAcceptance = false,
-          Login = gameAccount.Login,
-          MasterId = jwt.Subject
+            await _ws.ConnectAsync(accessToken);
+
+            JwtSecurityToken jwt = new JwtSecurityToken(accessToken);
+
+            await _ws.SendAsync(JsonConvert.SerializeObject(new WebSocketRequest {
+                Id = Guid.NewGuid().ToString(),
+                Method = "getGameAccount",
+                Params = new GetGameAccountParams {
+                    MasterId = jwt.Subject,
+                }
+            }));
+            string gameAccountsString = await _ws.RecieveAsync();
+            GameAccount gameAccount = JsonConvert
+              .DeserializeObject<WebSocketResponse<GameAccount[]>>(gameAccountsString).Result[0];
+
+            await _ws.SendAsync(JsonConvert.SerializeObject(new WebSocketRequest {
+                Id = Guid.NewGuid().ToString(),
+                Method = "createGameTokenCode",
+                Params = new CreateGameTokenCodeParams {
+                    AccessToken = accessToken,
+                    IgnoreLicenseAcceptance = false,
+                    Login = gameAccount.Login,
+                    MasterId = jwt.Subject 
+                }
+            }));
+            string responseString = await _ws.RecieveAsync();
+            WebSocketResponse<GameTokenCode> response = JsonConvert
+                .DeserializeObject<WebSocketResponse<GameTokenCode>>(responseString);
+
+            await _ws.DisconnectAsync();
+
+            if (response.Error == null)
+            {
+                return response.Result;
+            }
+
+            throw new Exception(response.Error.Code);
         }
-      }));
-      string gameTokenCodeString = await _ws.RecieveAsync();
-      GameTokenCode gameTokenCode = JsonConvert
-        .DeserializeObject<WebSocketResponse<GameTokenCode>>(gameTokenCodeString).Result;
-
-      await _ws.DisconnectAsync();
-
-      return gameTokenCode;
     }
-  }
 }
