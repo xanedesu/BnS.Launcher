@@ -73,7 +73,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
                     Version = info.Info.Version,
                     InstallationDate = new DateTime?(info.Info.InstallationDate),
                     IconPath = info.Info.IconPath
-            }).ToList();
+                }).ToList();
         }
 
         private void CreateDesktopShortcut(
@@ -83,7 +83,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             try
             {
                 File.WriteAllBytes(registrationData.IconPath, registrationData.IconData);
-                
+
                 if (gameWasInstalled)
                 {
                     return;

@@ -46,7 +46,7 @@ namespace Unlakki.Bns.Launcher
                 "/auth",
                 () => new LoginPage(launcherConfigProvider, forgameAuthProvider),
                 new RouteData { Title = "bns-ru: Login" });
-            
+
             _router.AddRoute(
                 "/auth/activate/{sessionId}",
                 () => new ActivationCodePage(launcherConfigProvider, forgameAuthProvider),

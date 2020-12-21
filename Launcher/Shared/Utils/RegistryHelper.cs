@@ -58,7 +58,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
                     registryKey1.SetValue(
                         RegistryConstants.Uninstall.InstallationDate,
                         info.InstallationDate.ToString(RegistryConstants.Uninstall.RegistryDateFormat));
-                    
+
                     long? sizeBytes = info.SizeBytes;
 
                     if (sizeBytes.HasValue)
@@ -101,7 +101,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
                     {
                         return false;
                     }
-                        
+
                     if (!string.IsNullOrWhiteSpace(info.Name))
                     {
                         registryKey1.SetValue(
@@ -543,7 +543,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
 
                     string str = registryKey.GetValue(
                         RegistryConstants.Software.InstallationDate)?.ToString();
-                    
+
                     return new RegisterGameSoftwareInfo {
                         Publisher = publisher,
                         LauncherKey = launcherKey,
@@ -579,7 +579,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
         public static DateTime? GetLastErrorCheckDate(string publisher, string launcherKey)
         {
             string launcherRegistryFolder = GetSoftwareLauncherRegistryFolder(publisher, launcherKey);
-            
+
             using (RegistryKey registryKey = _defaultRootKey.OpenSubKey(launcherRegistryFolder, true)
                 ?? _defaultRootKey.CreateSubKey(launcherRegistryFolder))
             {
@@ -604,7 +604,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
             {
                 string launcherRegistryFolder = GetSoftwareLauncherRegistryFolder(
                     publisher, launcherKey);
-                
+
                 using (RegistryKey registryKey = _defaultRootKey.OpenSubKey(
                     launcherRegistryFolder, true)
                     ?? _defaultRootKey.CreateSubKey(launcherRegistryFolder))
@@ -617,7 +617,7 @@ namespace Unlakki.Bns.Launcher.Shared.Utils
                     registryKey.SetValue(
                         RegistryConstants.Software.LastErrorCheckDate,
                         dateTime.ToString(RegistryConstants.Format.DateTimeFormat));
-                    
+
                     return true;
                 }
             }

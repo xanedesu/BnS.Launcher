@@ -38,7 +38,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 InstalledGameInfo gameInfo = _gameRepository.GetOrDefault(gameConfig.EnvKey);
 
                 string gameLaunchPath = GetFullGamePath(gameInfo.Path, data.Version);
-                
+
                 if (!File.Exists(gameLaunchPath))
                 {
                     throw new GameStartException(
@@ -56,7 +56,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                 };
 
                 Process process = Process.Start(startInfo);
-                
+
                 if (process == null || process.HasExited)
                 {
                     throw new GameStartException(

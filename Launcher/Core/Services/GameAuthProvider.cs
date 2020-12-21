@@ -47,7 +47,7 @@ namespace Unlakki.Bns.Launcher.Core.Services
                     AccessToken = accessToken,
                     IgnoreLicenseAcceptance = false,
                     Login = gameAccount.Login,
-                    MasterId = jwt.Subject 
+                    MasterId = jwt.Subject
                 }
             }));
 

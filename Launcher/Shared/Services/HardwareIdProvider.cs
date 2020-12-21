@@ -38,7 +38,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
             string str2 = hardDiskId != null ? hardDiskId.Replace(" ", "").SubstringOrSelf(0, 53) : null;
             string cpuId = GetCpuId();
             string str3 = cpuId != null ? cpuId.Replace(" ", "").SubstringOrSelf(0, 53) : null;
-            
+
             if (string.IsNullOrWhiteSpace(str1)
                 && string.IsNullOrWhiteSpace(str1) && string.IsNullOrWhiteSpace(str1))
             {

@@ -121,7 +121,7 @@ namespace Unlakki.Bns.Launcher.Shared.Services
                     InstallationDate = registrationData.InstallationDate,
                     UninstallCommand = registrationData.UninstallCommand,
                     Publisher = "Innova Co. SARL"
-            }))
+                }))
             {
                 throw new InvalidOperationException(
                     $"Can't register launcher {registrationData.Key} in unninstall registry");
