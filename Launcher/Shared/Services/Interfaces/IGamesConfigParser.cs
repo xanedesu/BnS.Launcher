@@ -2,8 +2,8 @@
 
 namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-  public interface IGamesConfigParser
-  {
-    GamesConfig Parse(string data);
-  }
+    public interface IGamesConfigParser
+    {
+        GamesConfig Parse(string data);
+    }
 }

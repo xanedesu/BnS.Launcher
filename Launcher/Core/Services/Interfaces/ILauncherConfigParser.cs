@@ -2,10 +2,10 @@
 
 namespace Unlakki.Bns.Launcher.Core.Services.Interfaces
 {
-  public interface ILauncherConfigParser
-  {
-    LauncherConfig Parse(string text);
+    public interface ILauncherConfigParser
+    {
+        LauncherConfig Parse(string text);
 
-    string Stringify(LauncherConfig config);
-  }
+        string Stringify(LauncherConfig config);
+    }
 }

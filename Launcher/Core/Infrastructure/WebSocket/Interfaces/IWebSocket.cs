@@ -2,14 +2,14 @@
 
 namespace Unlakki.Bns.Launcher.Core.Infrastructure.WebSocket.Interfaces
 {
-  public interface IWebSocket
-  {
-    Task ConnectAsync(string accessToken);
+    public interface IWebSocket
+    {
+        Task ConnectAsync(string accessToken);
 
-    Task SendAsync(string data);
+        Task SendAsync(string data);
 
-    Task<string> RecieveAsync();
+        Task<string> RecieveAsync();
 
-    Task DisconnectAsync();
-  }
+        Task DisconnectAsync();
+    }
 }

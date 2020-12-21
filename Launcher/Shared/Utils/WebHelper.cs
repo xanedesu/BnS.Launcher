@@ -5,24 +5,23 @@ using Unlakki.Bns.Launcher.Shared.Infrastructure.Internet;
 
 namespace Unlakki.Bns.Launcher.Shared.Utils
 {
-  public class WebHelper
-  {
-    public static async Task<T> TryToLoadJsonData<T>(HttpRequestMessage httpRequest)
+    public class WebHelper
     {
-      using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
-      {
-        HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
-        string content = await httpResponse.Content.ReadAsStringAsync();
-        if (httpResponse.IsSuccessStatusCode)
+        public static async Task<T> TryToLoadJsonData<T>(HttpRequestMessage httpRequest)
         {
-          return JsonConvert.DeserializeObject<T>(content);
-        }
+            using (HeaderedHttpClient httpClient = new HeaderedHttpClient())
+            {
+                HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest);
+                string content = await httpResponse.Content.ReadAsStringAsync();
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<T>(content);
+                }
 
-        throw new HttpRequestException(httpResponse.StatusCode.ToString())
-        {
-          Data = { { "content", content } }
-        };
-      }
+                throw new HttpRequestException(httpResponse.StatusCode.ToString()) {
+                    Data = { { "content", content } }
+                };
+            }
+        }
     }
-  }
 }

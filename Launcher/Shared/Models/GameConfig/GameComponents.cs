@@ -2,7 +2,7 @@
 
 namespace Unlakki.Bns.Launcher.Shared.Models.GameConfig
 {
-  public class GameComponents : List<GameComponentConfig>
-  {
-  }
+    public class GameComponents : List<GameComponentConfig>
+    {
+    }
 }

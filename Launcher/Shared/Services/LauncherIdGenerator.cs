@@ -4,13 +4,13 @@ using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Shared.Services
 {
-  [Export(typeof(ILauncherIdGenerator))]
-  [PartCreationPolicy(CreationPolicy.Shared)]
-  public class LauncherIdGenerator : ILauncherIdGenerator
-  {
-    public string GenegateNewId()
+    [Export(typeof(ILauncherIdGenerator))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class LauncherIdGenerator : ILauncherIdGenerator
     {
-      return Guid.NewGuid().ToString();
+        public string GenegateNewId()
+        {
+            return Guid.NewGuid().ToString();
+        }
     }
-  }
 }

@@ -2,15 +2,15 @@
 
 namespace Unlakki.Bns.Launcher.Core.Models.GameAccount
 {
-  public class GameTokenCode
-  {
-    [JsonProperty("login")]
-    public string Login { get; set; }
+    public class GameTokenCode
+    {
+        [JsonProperty("login")]
+        public string Login { get; set; }
 
-    [JsonProperty("password")]
-    public string Password { get; set; }
+        [JsonProperty("password")]
+        public string Password { get; set; }
 
-    [JsonProperty("expiration")]
-    public string Expiration { get; set; }
-  }
+        [JsonProperty("expiration")]
+        public string Expiration { get; set; }
+    }
 }

@@ -5,56 +5,56 @@ using Unlakki.Bns.Launcher.Shared.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Shared.Services
 {
-  [Export(typeof(ILauncherIdProvider))]
-  [PartCreationPolicy(CreationPolicy.Shared)]
-  public class LauncherIdProvider : ILauncherIdProvider
-  {
-    private readonly ILauncherInSystemRegistrator _launcherInSystemRegistrator;
-    private readonly ILauncherIdGenerator _launcherIdGenerator;
-    private Lazy<string> _launcherId;
-
-    [ImportingConstructor]
-    public LauncherIdProvider(
-      ILauncherInSystemRegistrator launcherInSystemRegistrator,
-      ILauncherIdGenerator launcherIdGenerator)
+    [Export(typeof(ILauncherIdProvider))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class LauncherIdProvider : ILauncherIdProvider
     {
-      _launcherIdGenerator = launcherIdGenerator;
-      _launcherInSystemRegistrator = launcherInSystemRegistrator;
-      RefreshValue();
-    }
+        private readonly ILauncherInSystemRegistrator _launcherInSystemRegistrator;
+        private readonly ILauncherIdGenerator _launcherIdGenerator;
+        private Lazy<string> _launcherId;
 
-    public string Get()
-    {
-      if (string.IsNullOrWhiteSpace(_launcherId.Value))
-      {
-        RefreshValue();
-      }
-      return _launcherId.Value;
-    }
-
-    private void RefreshValue()
-    {
-      _launcherId = new Lazy<string>(
-        new Func<string>(GetCore), LazyThreadSafetyMode.ExecutionAndPublication);
-    }
-
-    private string GetCore()
-    {
-      try
-      {
-        string launcherId = _launcherInSystemRegistrator
-          .GetLauncherSoftwareInfo("4game2.0").LauncherId;
-        if (string.IsNullOrEmpty(launcherId))
+        [ImportingConstructor]
+        public LauncherIdProvider(
+          ILauncherInSystemRegistrator launcherInSystemRegistrator,
+          ILauncherIdGenerator launcherIdGenerator)
         {
-          launcherId = _launcherIdGenerator.GenegateNewId();
-          _launcherInSystemRegistrator.SetLauncherIdIfNotExist("4game2.0", launcherId);
+            _launcherIdGenerator = launcherIdGenerator;
+            _launcherInSystemRegistrator = launcherInSystemRegistrator;
+            RefreshValue();
         }
-        return launcherId;
-      }
-      catch (Exception)
-      {
-        return string.Empty;
-      }
+
+        public string Get()
+        {
+            if (string.IsNullOrWhiteSpace(_launcherId.Value))
+            {
+                RefreshValue();
+            }
+            return _launcherId.Value;
+        }
+
+        private void RefreshValue()
+        {
+            _launcherId = new Lazy<string>(
+              new Func<string>(GetCore), LazyThreadSafetyMode.ExecutionAndPublication);
+        }
+
+        private string GetCore()
+        {
+            try
+            {
+                string launcherId = _launcherInSystemRegistrator
+                  .GetLauncherSoftwareInfo("4game2.0").LauncherId;
+                if (string.IsNullOrEmpty(launcherId))
+                {
+                    launcherId = _launcherIdGenerator.GenegateNewId();
+                    _launcherInSystemRegistrator.SetLauncherIdIfNotExist("4game2.0", launcherId);
+                }
+                return launcherId;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
     }
-  }
 }

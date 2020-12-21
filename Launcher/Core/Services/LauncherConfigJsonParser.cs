@@ -5,18 +5,18 @@ using Unlakki.Bns.Launcher.Core.Services.Interfaces;
 
 namespace Unlakki.Bns.Launcher.Core.Services
 {
-  [Export(typeof(GameRepositoryFactory))]
-  [PartCreationPolicy(CreationPolicy.Shared)]
-  public class LauncherConfigJsonParser : ILauncherConfigParser
-  {
-    public LauncherConfig Parse(string text)
+    [Export(typeof(GameRepositoryFactory))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class LauncherConfigJsonParser : ILauncherConfigParser
     {
-      return JsonConvert.DeserializeObject<LauncherConfig>(text);
-    }
+        public LauncherConfig Parse(string text)
+        {
+            return JsonConvert.DeserializeObject<LauncherConfig>(text);
+        }
 
-    public string Stringify(LauncherConfig config)
-    {
-      return JsonConvert.SerializeObject(config);
+        public string Stringify(LauncherConfig config)
+        {
+            return JsonConvert.SerializeObject(config);
+        }
     }
-  }
 }

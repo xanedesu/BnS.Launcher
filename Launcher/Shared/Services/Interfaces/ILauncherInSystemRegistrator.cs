@@ -2,22 +2,22 @@
 
 namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-  public interface ILauncherInSystemRegistrator
-  {
-    void Register(LauncherRegistrationData registrationData, bool createShortcut);
+    public interface ILauncherInSystemRegistrator
+    {
+        void Register(LauncherRegistrationData registrationData, bool createShortcut);
 
-    void Unregister(LauncherRegistrationData unregistrationData);
+        void Unregister(LauncherRegistrationData unregistrationData);
 
-    bool IsRegistered(string registrationKey);
+        bool IsRegistered(string registrationKey);
 
-    void SetLauncherIdIfNotExist(string launcherKey, string launcherId);
+        void SetLauncherIdIfNotExist(string launcherKey, string launcherId);
 
-    void Update(LauncherRegistrationDataUpdate updateData);
+        void Update(LauncherRegistrationDataUpdate updateData);
 
-    string GetInstallPath(string registrationKey);
+        string GetInstallPath(string registrationKey);
 
-    RegisterLauncherSoftwareInfo GetLauncherSoftwareInfo(string launcherKey);
+        RegisterLauncherSoftwareInfo GetLauncherSoftwareInfo(string launcherKey);
 
-    void UpdateSoftwareInfo(RegisterLauncherSoftwareInfo updateData);
-  }
+        void UpdateSoftwareInfo(RegisterLauncherSoftwareInfo updateData);
+    }
 }

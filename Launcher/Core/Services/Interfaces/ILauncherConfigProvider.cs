@@ -4,30 +4,30 @@ using Unlakki.Bns.Launcher.Core.Models.Account;
 
 namespace Unlakki.Bns.Launcher.Core.Services.Interfaces
 {
-  public interface ILauncherConfigProvider
-  {
-    void Init();
+    public interface ILauncherConfigProvider
+    {
+        void Init();
 
-    LauncherConfigProvider InitAndGet();
+        LauncherConfigProvider InitAndGet();
 
-    void AddOrUpdateAccount(Account account);
+        void AddOrUpdateAccount(Account account);
 
-    void UpdateLastUsedAccount(string lastUsedAccountUsername);
+        void UpdateLastUsedAccount(string lastUsedAccountUsername);
 
-    void UpdateGameVersion(GameVersion gameVersion);
+        void UpdateGameVersion(GameVersion gameVersion);
 
-    void UpdateStartGameArguments(string arguments);
+        void UpdateStartGameArguments(string arguments);
 
-    void UpdateAutoCloseLauncher(bool autoClose);
+        void UpdateAutoCloseLauncher(bool autoClose);
 
-    List<Account> GetAccounts();
+        List<Account> GetAccounts();
 
-    string GetLastUsedAccount();
+        string GetLastUsedAccount();
 
-    GameVersion GetGameVersion();
+        GameVersion GetGameVersion();
 
-    string GetGameArguments();
+        string GetGameArguments();
 
-    bool GetAutoCloseLauncher();
-  }
+        bool GetAutoCloseLauncher();
+    }
 }

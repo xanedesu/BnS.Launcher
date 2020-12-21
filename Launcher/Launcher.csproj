@@ -84,6 +84,7 @@
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.7.1\lib\net461\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -135,6 +136,7 @@
     <Compile Include="Core\Infrastructure\Crypto\Interfaces\IAesStorage.cs" />
     <Compile Include="Core\Infrastructure\Crypto\Interfaces\ICryptoManager.cs" />
     <Compile Include="Core\Infrastructure\WebSocket\Interfaces\IWebSocket.cs" />
+    <Compile Include="Core\Infrastructure\WebSocket\Models\Error.cs" />
     <Compile Include="Core\Infrastructure\WebSocket\Models\WebSocketRequest.cs" />
     <Compile Include="Core\Infrastructure\WebSocket\Models\WebSocketResponse.cs" />
     <Compile Include="Core\Infrastructure\WebSocket\WebSocket.cs" />
@@ -238,6 +240,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include=".editorconfig" />
     <None Include="app.manifest" />
     <None Include="LauncherKey.pfx" />
     <None Include="packages.config" />

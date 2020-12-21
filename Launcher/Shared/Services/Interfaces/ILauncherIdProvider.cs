@@ -1,7 +1,7 @@
 ﻿namespace Unlakki.Bns.Launcher.Shared.Services.Interfaces
 {
-  public interface ILauncherIdProvider
-  {
-    string Get();
-  }
+    public interface ILauncherIdProvider
+    {
+        string Get();
+    }
 }
