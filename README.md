@@ -1,3 +1,1 @@
-# RU BnsLauncher
-
-Запускатор бнс
+# BnS Launcher
