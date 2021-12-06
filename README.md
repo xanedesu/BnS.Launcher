@@ -1,1 +1,1 @@
-# BnS Launcher
+# bns-ru launcher
